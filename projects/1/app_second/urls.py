@@ -1,10 +1,11 @@
-from django.contrib import admin
-from django.urls import path, include
-from . import views
+from django.urls import path
+from .views import home, index, about, login
 
+# тут только "маршруты" - адрес страницы
 urlpatterns = [
-    
-    path('', views.index),
-    path('home/', views.home),
-    path('about/', views.about),
+    path('', home),
+    path('home/', home),
+    path('login/', login),
+    path('index/', index),
+    path('about/', about),
 ]
