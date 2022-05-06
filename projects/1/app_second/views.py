@@ -42,6 +42,33 @@ def origin_home(request):
 
 
 def todo_detail(request):
+    print(request)
+    if request.method == "GET":
+        print("это GET запрос")
+    if request.method == "POST":
+        print("это POST запрос")
+    if request.method == "PUT":
+        print("это PUT запрос")
+    if request.method == "DELETE":
+        print("это DELETE запрос")
+
+    # print("request.method: ", request.method)
+    # print("request.path: ", request.path)
+    # print("request.headers: ", request.headers)
+    # print("request.META: ", )
+
+    # пробегаемся по ключам словаря
+    # for key, value in request.META.keys():
+
+    # пробегаемся по значениям словаря
+    # for key, value in request.META.values():
+
+    # пробегаемся по парам: ключ-значение
+    # for key, value in request.META.items():
+    #     print(f"{key}: {value}")
+    # print("request.data: ", request.data)
+    # print("request.GET: ", request.GET)
+
     is_completed = False
     if is_completed:
         pass
@@ -51,7 +78,8 @@ def todo_detail(request):
     list = [1, 2, 3]
     for i in list:
         index = list.index(i)
-        print(i)
+        # print(i)
+        pass
 
     context = {"title": "Покормить кота!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
                                                           "typesetting "
@@ -69,35 +97,90 @@ def todo_detail(request):
     return render(request, 'app_second/pages/DetailTodo.html', context)
 
 
+def todo_list(request):
+    print(request)
+    if request.method == "GET":
+        print("это GET запрос")
+    if request.method == "POST":
+        print("это POST запрос")
+    if request.method == "PUT":
+        print("это PUT запрос")
+    if request.method == "DELETE":
+        print("это DELETE запрос")
+
+    # print("request.method: ", request.method)
+    # print("request.path: ", request.path)
+    # print("request.headers: ", request.headers)
+    # print("request.META: ", )
+
+    # пробегаемся по ключам словаря
+    # for key, value in request.META.keys():
+
+    # пробегаемся по значениям словаря
+    # for key, value in request.META.values():
+
+    # пробегаемся по парам: ключ-значение
+    # for key, value in request.META.items():
+    #     print(f"{key}: {value}")
+    # print("request.data: ", request.data)
+    # print("request.GET: ", request.GET)
+
+    is_completed = False
+    if is_completed:
+        pass
+    else:
+        pass
+
+    list = [1, 2, 3]
+    for i in list:
+        index = list.index(i)
+        # print(i)
+        pass
+
+    context = {"title": "Покормить кота!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
+                                                          "typesetting "
+                                                          "industry. Lorem Ipsum has been the industry's standard "
+                                                          "dummy text ever since the 1500s, when an unknown printer "
+                                                          "took a galley of type and scrambled it to make a type "
+                                                          "specimen book. It has survived not only five centuries, "
+                                                          "but also the leap into electronic typesetting, "
+                                                          "remaining essentially unchanged. It was popularised in the "
+                                                          "1960s with the release of Letraset sheets containing Lorem "
+                                                          "Ipsum passages, and more recently with desktop publishing "
+                                                          "software like Aldus PageMaker including versions of Lorem "
+                                                          "Ipsum.",
+               "list": [9, 2, 4, 4, 6, 7], "is_completed": True}
+    return render(request, 'app_second/pages/DetailTodo.html', context)
+
 # def idea_view(request, idea_int):
 
-    # detail = {
-    #     "title": "Выгулять собаку"
-    #     "description": "Нужно обязательно не забыть выгулять сегодня собаку",
-    #     "time": "2022-10-05",
-    #     "is_completed": False
-    # }
-    #
-    # list = {
-    #     "1": {
-    #         "title": "Выгулять собаку 1"
-    #         "description": "Нужно обязательно не забыть выгулять сегодня собаку",
-    #         "time": "2022-10-05",
-    #         "is_completed": False
-    #     },
-    #     "2": {
-    #         "title": "Купить еды"
-    #         "description": "Нужно обязательно купить еды",
-    #         "time": "2022-10-08",
-    #         "is_completed": True
-    #     },
-    #     "3": {
-    #         "title": "Купить собаке еды"
-    #         "description": "Нужно обязательно купить собаке еды",
-    #         "time": "2022-10-12",
-    #         "is_completed": False
-    #     }
-    # }
+# detail = {
+#     "title": "Выгулять собаку"
+#     "description": "Нужно обязательно не забыть выгулять сегодня собаку",
+#     "time": "2022-10-05",
+#     "is_completed": False
+# }
+#
+# list = {
+#     "1": {
+#         "title": "Выгулять собаку 1"
+#         "description": "Нужно обязательно не забыть выгулять сегодня собаку",
+#         "time": "2022-10-05",
+#         "is_completed": False
+#     },
+#     "2": {
+#         "title": "Купить еды"
+#         "description": "Нужно обязательно купить еды",
+#         "time": "2022-10-08",
+#         "is_completed": True
+#     },
+#     "3": {
+#         "title": "Купить собаке еды"
+#         "description": "Нужно обязательно купить собаке еды",
+#         "time": "2022-10-12",
+#         "is_completed": False
+#     }
+# }
 #     idea = IdeaTestModel.objects.get(id=idea_int)
 #     comments = IdeaTestCommentModel.objects.filter(idea_foreign_key_field=idea)
 #     page = PaginationClass.paginate(request=request, objects=comments, num_page=5)
