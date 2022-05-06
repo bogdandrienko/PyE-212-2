@@ -34,20 +34,6 @@ def about(request):
     return render(request, 'app_second/pages/about.html', context)
 
 
-def origin_home(request):
-    context = {
-
-    }
-    return render(request, 'app_second/pages/origin_home.html', context)
-
-
-def todo_detail(request):
-    context = {
-
-    }
-    return render(request, 'app_second/pages/DetailTodo.html', context)
-
-
 # def idea_view(request, idea_int):
 
     # detail = {

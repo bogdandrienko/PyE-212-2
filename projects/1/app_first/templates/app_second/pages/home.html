@@ -1,14 +1,8 @@
 {% extends "app_second/components/base.html" %}
 {% load static %}
 
-
-{% block head %}{% endblock head %}
-
-
 {% block navbar %}
-    <div class="p-1 m-1">
-      {% include 'app_second/components/navbar.html' %}
-    </div>
+    {% include 'app_second/components/navbar.html' %}
 {% endblock navbar %}
 
 {% block main %}
@@ -101,7 +95,6 @@
 </main>
 {% endblock main %}
 
-
 {% block footer %}
-  {% include 'app_second/components/footer.html' %}
+    {% include 'app_second/components/footer.html' %}
 {% endblock footer %}
