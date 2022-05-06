@@ -17,14 +17,13 @@
                         <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
                     </div>
                     <h2>{{i.title}}</h2>
-                    <a class="text-decoration-none text-dark" href="{% url '' %}">подробнее</a>
+                    <a class="text-decoration-none text-primary" href="{% url 'todo_detail' %}">подробнее</a>
                 {% else %}
-                    <div class="feature col">
-                        <div class="feature-icon bg-danger bg-gradient">
-                            <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
-                        </div>
-                        <h2>{{i.title}}</h2>
+                    <div class="feature-icon bg-danger bg-gradient">
+                        <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
                     </div>
+                    <h2>{{i.title}}</h2>
+                    <a class="text-decoration-none text-primary" href="{% url 'todo_detail' %}">подробнее</a>
                 {% endif %}
             </div>
         {% endfor %}
