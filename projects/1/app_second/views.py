@@ -13,7 +13,13 @@ def index(request):
     return render(request, 'app_second/pages/index.html', context)
 
 
+def func(description, name="Apple"):
+    pass
+
 def home(request):
+
+
+
     context = {
 
     }
