@@ -158,6 +158,7 @@ def todo_list(request):
                                                        "software like Aldus PageMaker including versions of Lorem "
                                                        "Ipsum.",
          "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 1},
+
         {"title": "Покормить кота!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
                                                     "typesetting "
                                                     "industry. Lorem Ipsum has been the industry's standard "
@@ -171,6 +172,7 @@ def todo_list(request):
                                                     "software like Aldus PageMaker including versions of Lorem "
                                                     "Ipsum.",
          "list": [9, 2, 4, 4, 6, 7], "is_completed": True, "link": 2},
+
         {"title": "Покормить собаку!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
                                                       "typesetting "
                                                       "industry. Lorem Ipsum has been the industry's standard "
@@ -184,6 +186,7 @@ def todo_list(request):
                                                       "software like Aldus PageMaker including versions of Lorem "
                                                       "Ipsum.",
          "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 3},
+
         {"title": "Покормить собаку 1!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
                                                       "typesetting "
                                                       "industry. Lorem Ipsum has been the industry's standard "
@@ -197,6 +200,7 @@ def todo_list(request):
                                                       "software like Aldus PageMaker including versions of Lorem "
                                                       "Ipsum.",
          "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 5},
+
         {"title": "Покормить собаку 2!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
                                                       "typesetting "
                                                       "industry. Lorem Ipsum has been the industry's standard "
