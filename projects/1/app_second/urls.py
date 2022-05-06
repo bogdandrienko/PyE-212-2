@@ -10,8 +10,9 @@ urlpatterns = [
     path('index/', index, name="index"),
     path('about/', about, name="about"),
 
-
-    path('todo_detail/', todo_detail, name="todo_detail"),
+    # <str:todo_id>
+    # <slug:todo_id>
+    path('todo_detail/<int:todo_id>/', todo_detail, name="todo_detail"),
     path(route='todo_list/', view=logic.todo_list, name="todo_list"),
 
     # path('todo_create/', idea_create, name='django_idea_create'),

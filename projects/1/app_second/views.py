@@ -47,7 +47,7 @@ def origin_home(request):
     return render(request, 'app_second/pages/origin_home.html', context)
 
 
-def todo_detail(request):
+def todo_detail(request, todo_id):
     print(request)
     if request.method == "GET":
         print("это GET запрос")
@@ -87,7 +87,8 @@ def todo_detail(request):
         # print(i)
         pass
 
-    context = {"title": "Покормить кота!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
+    context = {"title": f"Покормить кота №{todo_id}", "description": "ОПИСАНИЕ: is simply dummy text of the printing "
+                                                                     "and "
                                                           "typesetting "
                                                           "industry. Lorem Ipsum has been the industry's standard "
                                                           "dummy text ever since the 1500s, when an unknown printer "
@@ -156,7 +157,7 @@ def todo_list(request):
                                                        "Ipsum passages, and more recently with desktop publishing "
                                                        "software like Aldus PageMaker including versions of Lorem "
                                                        "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": False},
+         "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 1},
         {"title": "Покормить кота!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
                                                     "typesetting "
                                                     "industry. Lorem Ipsum has been the industry's standard "
@@ -169,7 +170,7 @@ def todo_list(request):
                                                     "Ipsum passages, and more recently with desktop publishing "
                                                     "software like Aldus PageMaker including versions of Lorem "
                                                     "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": True},
+         "list": [9, 2, 4, 4, 6, 7], "is_completed": True, "link": 2},
         {"title": "Покормить собаку!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
                                                       "typesetting "
                                                       "industry. Lorem Ipsum has been the industry's standard "
@@ -182,7 +183,7 @@ def todo_list(request):
                                                       "Ipsum passages, and more recently with desktop publishing "
                                                       "software like Aldus PageMaker including versions of Lorem "
                                                       "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": False},
+         "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 3},
         {"title": "Покормить собаку 1!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
                                                       "typesetting "
                                                       "industry. Lorem Ipsum has been the industry's standard "
@@ -195,7 +196,7 @@ def todo_list(request):
                                                       "Ipsum passages, and more recently with desktop publishing "
                                                       "software like Aldus PageMaker including versions of Lorem "
                                                       "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": False},
+         "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 5},
         {"title": "Покормить собаку 2!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
                                                       "typesetting "
                                                       "industry. Lorem Ipsum has been the industry's standard "
@@ -208,7 +209,7 @@ def todo_list(request):
                                                       "Ipsum passages, and more recently with desktop publishing "
                                                       "software like Aldus PageMaker including versions of Lorem "
                                                       "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": True}
+         "list": [9, 2, 4, 4, 6, 7], "is_completed": True, "link": 12}
     ]}
     return render(request, 'app_second/pages/todo_list.html', context)
 
