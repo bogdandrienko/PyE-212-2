@@ -8,11 +8,21 @@ class Task(models.Model):
     Класс с данными по нашей задаче
     """
 
-    # Символьный тип данных (<= 500 символов)
+    # скрыт из коробки
+    # id = models.BigAutoField
+
+    # Символьный тип данных (<= 254 символов)
     title = models.CharField(
         unique=False,
         max_length=254,
         # editable=
+        # default=""
     )
+    # Текстовый тип данных (большой объём)
+    description = models.TextField(
+        unique=False,
+        # editable=
+    )
+
 
     # title = models.
