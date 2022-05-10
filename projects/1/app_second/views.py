@@ -16,10 +16,8 @@ def index(request):
 def func(description, name="Apple"):
     pass
 
+
 def home(request):
-
-
-
     context = {
 
     }
@@ -89,17 +87,17 @@ def todo_detail(request, todo_id):
 
     context = {"title": f"Покормить кота №{todo_id}", "description": "ОПИСАНИЕ: is simply dummy text of the printing "
                                                                      "and "
-                                                          "typesetting "
-                                                          "industry. Lorem Ipsum has been the industry's standard "
-                                                          "dummy text ever since the 1500s, when an unknown printer "
-                                                          "took a galley of type and scrambled it to make a type "
-                                                          "specimen book. It has survived not only five centuries, "
-                                                          "but also the leap into electronic typesetting, "
-                                                          "remaining essentially unchanged. It was popularised in the "
-                                                          "1960s with the release of Letraset sheets containing Lorem "
-                                                          "Ipsum passages, and more recently with desktop publishing "
-                                                          "software like Aldus PageMaker including versions of Lorem "
-                                                          "Ipsum.",
+                                                                     "typesetting "
+                                                                     "industry. Lorem Ipsum has been the industry's standard "
+                                                                     "dummy text ever since the 1500s, when an unknown printer "
+                                                                     "took a galley of type and scrambled it to make a type "
+                                                                     "specimen book. It has survived not only five centuries, "
+                                                                     "but also the leap into electronic typesetting, "
+                                                                     "remaining essentially unchanged. It was popularised in the "
+                                                                     "1960s with the release of Letraset sheets containing Lorem "
+                                                                     "Ipsum passages, and more recently with desktop publishing "
+                                                                     "software like Aldus PageMaker including versions of Lorem "
+                                                                     "Ipsum.",
                "list": [9, 2, 4, 4, 6, 7], "is_completed": True}
     return render(request, 'app_second/pages/DetailTodo.html', context)
 
@@ -188,34 +186,44 @@ def todo_list(request):
          "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 3},
 
         {"title": "Покормить собаку 1!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
-                                                      "typesetting "
-                                                      "industry. Lorem Ipsum has been the industry's standard "
-                                                      "dummy text ever since the 1500s, when an unknown printer "
-                                                      "took a galley of type and scrambled it to make a type "
-                                                      "specimen book. It has survived not only five centuries, "
-                                                      "but also the leap into electronic typesetting, "
-                                                      "remaining essentially unchanged. It was popularised in the "
-                                                      "1960s with the release of Letraset sheets containing Lorem "
-                                                      "Ipsum passages, and more recently with desktop publishing "
-                                                      "software like Aldus PageMaker including versions of Lorem "
-                                                      "Ipsum.",
+                                                        "typesetting "
+                                                        "industry. Lorem Ipsum has been the industry's standard "
+                                                        "dummy text ever since the 1500s, when an unknown printer "
+                                                        "took a galley of type and scrambled it to make a type "
+                                                        "specimen book. It has survived not only five centuries, "
+                                                        "but also the leap into electronic typesetting, "
+                                                        "remaining essentially unchanged. It was popularised in the "
+                                                        "1960s with the release of Letraset sheets containing Lorem "
+                                                        "Ipsum passages, and more recently with desktop publishing "
+                                                        "software like Aldus PageMaker including versions of Lorem "
+                                                        "Ipsum.",
          "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 5},
 
         {"title": "Покормить собаку 2!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
-                                                      "typesetting "
-                                                      "industry. Lorem Ipsum has been the industry's standard "
-                                                      "dummy text ever since the 1500s, when an unknown printer "
-                                                      "took a galley of type and scrambled it to make a type "
-                                                      "specimen book. It has survived not only five centuries, "
-                                                      "but also the leap into electronic typesetting, "
-                                                      "remaining essentially unchanged. It was popularised in the "
-                                                      "1960s with the release of Letraset sheets containing Lorem "
-                                                      "Ipsum passages, and more recently with desktop publishing "
-                                                      "software like Aldus PageMaker including versions of Lorem "
-                                                      "Ipsum.",
+                                                        "typesetting "
+                                                        "industry. Lorem Ipsum has been the industry's standard "
+                                                        "dummy text ever since the 1500s, when an unknown printer "
+                                                        "took a galley of type and scrambled it to make a type "
+                                                        "specimen book. It has survived not only five centuries, "
+                                                        "but also the leap into electronic typesetting, "
+                                                        "remaining essentially unchanged. It was popularised in the "
+                                                        "1960s with the release of Letraset sheets containing Lorem "
+                                                        "Ipsum passages, and more recently with desktop publishing "
+                                                        "software like Aldus PageMaker including versions of Lorem "
+                                                        "Ipsum.",
          "list": [9, 2, 4, 4, 6, 7], "is_completed": True, "link": 12}
     ]}
     return render(request, 'app_second/pages/todo_list.html', context)
+
+
+def todo_create(request):
+    if request.method == "POST":
+        print("это POST запрос")
+
+        # приём и обработка данных
+    context = {}
+    return render(request, 'app_second/pages/CreateTodo.html', context)
+
 
 # def idea_view(request, idea_int):
 

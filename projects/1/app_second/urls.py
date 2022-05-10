@@ -14,6 +14,7 @@ urlpatterns = [
     # <slug:todo_id>
     path('todo_detail/<int:todo_id>/', todo_detail, name="todo_detail"),
     path(route='todo_list/', view=logic.todo_list, name="todo_list"),
+    path(route='todo_create/', view=logic.todo_create, name="todo_create"),
 
     # path('todo_create/', idea_create, name='django_idea_create'),
     # path('todo_detail/<int:todo_id>/', idea_change, name='django_idea_change'),
