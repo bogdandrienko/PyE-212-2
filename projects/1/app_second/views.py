@@ -217,13 +217,15 @@ def todo_list(request):
 
 
 def todo_create(request):
+    print("todo_create")
     if request.method == "POST":
         print("это POST запрос")
 
         # вызывается Exception (исключение)
         # title = request.POST["title"]
         title = request.POST.get("title", "заголовок по умолчанию")
-        print(f"title: {title}")
+        description = request.POST.get("description", "описание по умолчанию")
+
 
 
         # приём и обработка данных
