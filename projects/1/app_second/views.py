@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from . import models
 
 
 # тут только "логика" - функции для обработки и возврат данных
@@ -85,20 +86,12 @@ def todo_detail(request, todo_id):
         # print(i)
         pass
 
-    context = {"title": f"Покормить кота №{todo_id}", "description": "ОПИСАНИЕ: is simply dummy text of the printing "
-                                                                     "and "
-                                                                     "typesetting "
-                                                                     "industry. Lorem Ipsum has been the industry's standard "
-                                                                     "dummy text ever since the 1500s, when an unknown printer "
-                                                                     "took a galley of type and scrambled it to make a type "
-                                                                     "specimen book. It has survived not only five centuries, "
-                                                                     "but also the leap into electronic typesetting, "
-                                                                     "remaining essentially unchanged. It was popularised in the "
-                                                                     "1960s with the release of Letraset sheets containing Lorem "
-                                                                     "Ipsum passages, and more recently with desktop publishing "
-                                                                     "software like Aldus PageMaker including versions of Lorem "
-                                                                     "Ipsum.",
-               "list": [9, 2, 4, 4, 6, 7], "is_completed": True}
+    obj = models.Task.objects.get(id=todo_id)
+
+    context = {
+        "todo": obj
+    }
+
     return render(request, 'app_second/pages/DetailTodo.html', context)
 
 
@@ -142,77 +135,13 @@ def todo_list(request):
         # print(i)
         pass
 
-    context = {"list": [
-        {"title": "Покормить бабушку!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
-                                                       "typesetting "
-                                                       "industry. Lorem Ipsum has been the industry's standard "
-                                                       "dummy text ever since the 1500s, when an unknown printer "
-                                                       "took a galley of type and scrambled it to make a type "
-                                                       "specimen book. It has survived not only five centuries, "
-                                                       "but also the leap into electronic typesetting, "
-                                                       "remaining essentially unchanged. It was popularised in the "
-                                                       "1960s with the release of Letraset sheets containing Lorem "
-                                                       "Ipsum passages, and more recently with desktop publishing "
-                                                       "software like Aldus PageMaker including versions of Lorem "
-                                                       "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 1},
+    obj = models.Task.objects.all()
 
-        {"title": "Покормить кота!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
-                                                    "typesetting "
-                                                    "industry. Lorem Ipsum has been the industry's standard "
-                                                    "dummy text ever since the 1500s, when an unknown printer "
-                                                    "took a galley of type and scrambled it to make a type "
-                                                    "specimen book. It has survived not only five centuries, "
-                                                    "but also the leap into electronic typesetting, "
-                                                    "remaining essentially unchanged. It was popularised in the "
-                                                    "1960s with the release of Letraset sheets containing Lorem "
-                                                    "Ipsum passages, and more recently with desktop publishing "
-                                                    "software like Aldus PageMaker including versions of Lorem "
-                                                    "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": True, "link": 2},
+    print(f"obj: {obj}")
+    print(f"obj count: {obj.count()}")
 
-        {"title": "Покормить собаку!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
-                                                      "typesetting "
-                                                      "industry. Lorem Ipsum has been the industry's standard "
-                                                      "dummy text ever since the 1500s, when an unknown printer "
-                                                      "took a galley of type and scrambled it to make a type "
-                                                      "specimen book. It has survived not only five centuries, "
-                                                      "but also the leap into electronic typesetting, "
-                                                      "remaining essentially unchanged. It was popularised in the "
-                                                      "1960s with the release of Letraset sheets containing Lorem "
-                                                      "Ipsum passages, and more recently with desktop publishing "
-                                                      "software like Aldus PageMaker including versions of Lorem "
-                                                      "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 3},
+    context = {"list": obj}
 
-        {"title": "Покормить собаку 1!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
-                                                        "typesetting "
-                                                        "industry. Lorem Ipsum has been the industry's standard "
-                                                        "dummy text ever since the 1500s, when an unknown printer "
-                                                        "took a galley of type and scrambled it to make a type "
-                                                        "specimen book. It has survived not only five centuries, "
-                                                        "but also the leap into electronic typesetting, "
-                                                        "remaining essentially unchanged. It was popularised in the "
-                                                        "1960s with the release of Letraset sheets containing Lorem "
-                                                        "Ipsum passages, and more recently with desktop publishing "
-                                                        "software like Aldus PageMaker including versions of Lorem "
-                                                        "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": False, "link": 5},
-
-        {"title": "Покормить собаку 2!", "description": "ОПИСАНИЕ: is simply dummy text of the printing and "
-                                                        "typesetting "
-                                                        "industry. Lorem Ipsum has been the industry's standard "
-                                                        "dummy text ever since the 1500s, when an unknown printer "
-                                                        "took a galley of type and scrambled it to make a type "
-                                                        "specimen book. It has survived not only five centuries, "
-                                                        "but also the leap into electronic typesetting, "
-                                                        "remaining essentially unchanged. It was popularised in the "
-                                                        "1960s with the release of Letraset sheets containing Lorem "
-                                                        "Ipsum passages, and more recently with desktop publishing "
-                                                        "software like Aldus PageMaker including versions of Lorem "
-                                                        "Ipsum.",
-         "list": [9, 2, 4, 4, 6, 7], "is_completed": True, "link": 12}
-    ]}
     return render(request, 'app_second/pages/todo_list.html', context)
 
 
@@ -223,9 +152,14 @@ def todo_create(request):
 
         # вызывается Exception (исключение)
         # title = request.POST["title"]
-        title = request.POST.get("title", "заголовок по умолчанию")
-        description = request.POST.get("description", "описание по умолчанию")
+        title1 = request.POST.get("title", "заголовок по умолчанию")
+        description1 = request.POST.get("description", "описание по умолчанию")
 
+        obj = models.Task.objects.create(
+            title=title1,
+            description=description1
+        )
+        obj.save()
 
 
         # приём и обработка данных

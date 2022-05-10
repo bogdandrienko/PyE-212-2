@@ -8,21 +8,28 @@ class Task(models.Model):
     Класс с данными по нашей задаче
     """
 
-    # скрыт из коробки
-    # id = models.BigAutoField
+    # id = AutoIncrement
 
-    # Символьный тип данных (<= 254 символов)
+    # Символьный тип данных (<= 500 символов)
     title = models.CharField(
+        primary_key=False,
         unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default="заголовок",
+        verbose_name="Заголовок:",
+        help_text='<small class="text-muted">это наш заголовок</small><hr><br>',
+
         max_length=254,
-        # editable=
-        # default=""
     )
-    # Текстовый тип данных (большой объём)
     description = models.TextField(
         unique=False,
         # editable=
     )
-
+    is_completed = models.BooleanField(
+        default=False,
+        # editable=
+    )
 
     # title = models.
