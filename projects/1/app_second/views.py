@@ -220,6 +220,12 @@ def todo_create(request):
     if request.method == "POST":
         print("это POST запрос")
 
+        # вызывается Exception (исключение)
+        # title = request.POST["title"]
+        title = request.POST.get("title", "заголовок по умолчанию")
+        print(f"title: {title}")
+
+
         # приём и обработка данных
     context = {}
     return render(request, 'app_second/pages/CreateTodo.html', context)
