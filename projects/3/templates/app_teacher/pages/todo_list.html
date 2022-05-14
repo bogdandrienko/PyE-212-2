@@ -1,0 +1,37 @@
+{% extends "app_second/components/base.html" %}
+{% load static %}
+
+{% block head %}{% endblock head %}
+
+{% block navbar %}
+    {% include 'app_second/components/navbar.html' %}
+{% endblock navbar %}
+
+{% block main %}
+<main class="flex-shrink-0 bg-light">
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+        {% for i in list %}
+            <div class="feature col">
+                {% if i.is_completed %}
+                    <div class="feature-icon bg-success bg-gradient">
+                        <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
+                    </div>
+                    <h2>{{i.title}}</h2>
+                    <a class="text-decoration-none text-primary" href="{% url 'todo_detail' i.id %}">подробнее</a>
+                {% else %}
+                    <div class="feature-icon bg-danger bg-gradient">
+                        <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
+                    </div>
+                    <h2>{{i.title}}</h2>
+                    <a class="text-decoration-none text-primary" href="{% url 'todo_detail' i.id %}">подробнее</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock main %}
+
+
+{% block footer %}
+  {% include 'app_second/components/footer.html' %}
+{% endblock footer %}

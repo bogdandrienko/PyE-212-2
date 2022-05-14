@@ -41,8 +41,10 @@ django-admin startapp app_second
 # python manage.py createsuperuser
 python manage.py createsuperuser --username Bogdan --email bogdandrienko@gmail.com
 
+
 # создание миграций к базе данных
 python manage.py makemigrations
+
 # применение миграций к бд
 python manage.py migrate
 

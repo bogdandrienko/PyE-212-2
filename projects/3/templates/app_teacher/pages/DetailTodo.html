@@ -1,0 +1,43 @@
+{% extends "app_second/components/base.html" %}
+{% load static %}
+
+
+{% block head %}{% endblock head %}
+
+{% block navbar %}
+    {% include 'app_second/components/navbar.html' %}
+{% endblock navbar %}
+
+{% block main %}
+<main class="flex-shrink-0 bg-light">
+
+    <a class="text-decoration-none text-primary" href="{% url 'todo_list' %}">назад</a>
+
+    <div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+    <h1 class="display-5 fw-bold">{{ todo.title }}</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">{{ todo.description }}</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Primary button</button>
+
+          {% if todo.is_completed %}
+            Кнопку не видим!
+          {% else %}
+            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>
+          {% endif %}
+
+          {% for i in list %}
+            <div>{{i}}</div>
+          {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock main %}
+
+
+{% block footer %}
+  {% include 'app_second/components/footer.html' %}
+{% endblock footer %}
