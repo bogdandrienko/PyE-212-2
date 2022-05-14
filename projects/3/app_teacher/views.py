@@ -53,3 +53,14 @@ def todo_delete(request, todo_id):
     obj = models.Task.objects.get(id=todo_id)
     obj.delete()
     return redirect(reverse('todo_list', args=()))
+
+
+def todo_update_status(request, todo_id):
+    obj = models.Task.objects.get(id=todo_id)
+    # obj.is_completed = not obj.is_completed
+    if obj.is_completed:
+        obj.is_completed = False
+    else:
+        obj.is_completed = True
+    obj.save()
+    return redirect(reverse('todo_list', args=()))

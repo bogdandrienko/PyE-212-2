@@ -19,6 +19,7 @@
                     <h2>{{i.title}}</h2>
                     <a class="text-decoration-none text-primary" href="{% url 'todo_detail' i.id %}">подробнее</a>
                     <a class="text-decoration-none text-danger" href="{% url 'todo_delete' i.id %}">удалить</a>
+                    <a class="text-decoration-none text-warning" href="{% url 'todo_update_status' i.id %}">переключить статус</a>
                 {% else %}
                     <div class="feature-icon bg-danger bg-gradient">
                         <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
@@ -26,6 +27,7 @@
                     <h2>{{i.title}}</h2>
                     <a class="text-decoration-none text-primary" href="{% url 'todo_detail' i.id %}">подробнее</a>
                     <a class="text-decoration-none text-danger" href="{% url 'todo_delete' i.id %}">удалить</a>
+                    <a class="text-decoration-none text-warning" href="{% url 'todo_update_status' i.id %}">переключить статус</a>
                 {% endif %}
             </div>
         {% endfor %}
