@@ -5,93 +5,27 @@ from . import models
 
 # тут только "логика" - функции для обработки и возврат данных
 
-
 def index(request):
-    # return HttpResponse("Это чистая индекс страница")
-    context = {
-
-    }
-    return render(request, 'app_teacher/pages/index.html', context)
-
-
-def func(description, name="Apple"):
-    pass
+    return render(request, 'app_teacher/pages/index.html')
 
 
 def home(request):
-    context = {
-
-    }
-    return render(request, 'app_teacher/pages/home.html', context)
-
-
-def login(request):
-    context = {
-
-    }
-    return render(request, 'app_teacher/pages/login.html', context)
+    return render(request, 'app_teacher/pages/home.html')
 
 
 def about(request):
-    context = {
-
-    }
-    return render(request, 'app_teacher/pages/about.html', context)
+    return render(request, 'app_teacher/pages/about.html')
 
 
 def origin_home(request):
-    context = {
-
-    }
-    return render(request, 'app_teacher/pages/origin_home.html', context)
+    return render(request, 'app_teacher/pages/origin_home.html')
 
 
 def todo_detail(request, todo_id):
-    print(request)
-    if request.method == "GET":
-        print("это GET запрос")
-    if request.method == "POST":
-        print("это POST запрос")
-    if request.method == "PUT":
-        print("это PUT запрос")
-    if request.method == "DELETE":
-        print("это DELETE запрос")
-
-    # print("request.method: ", request.method)
-    # print("request.path: ", request.path)
-    # print("request.headers: ", request.headers)
-    # print("request.META: ", )
-
-    # пробегаемся по ключам словаря
-    # for key, value in request.META.keys():
-
-    # пробегаемся по значениям словаря
-    # for key, value in request.META.values():
-
-    # пробегаемся по парам: ключ-значение
-    # for key, value in request.META.items():
-    #     print(f"{key}: {value}")
-    # print("request.data: ", request.data)
-    # print("request.GET: ", request.GET)
-
-    is_completed = False
-    if is_completed:
-        pass
-    else:
-        pass
-
-    list = [1, 2, 3]
-    for i in list:
-        index = list.index(i)
-        # print(i)
-        pass
-
     obj = models.Task.objects.get(id=todo_id)
-
     context = {
         "todo": obj
     }
-
     return render(request, 'app_teacher/pages/DetailTodo.html', context)
 
 
