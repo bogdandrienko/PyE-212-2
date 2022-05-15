@@ -3,6 +3,10 @@
 
 {% block head %}{% endblock head %}
 
+{% block title %}
+    Список задач
+{% endblock title %}
+
 {% block navbar %}
     {% include 'app_teacher/components/navbar.html' %}
 {% endblock navbar %}
@@ -13,6 +17,9 @@
         {% for i in list %}
             <div class="feature col">
                 {% if i.is_completed %}
+                    <div>
+                        <i class="fa-solid fa-tag"></i>
+                    </div>
                     <div class="feature-icon bg-success bg-gradient">
                         <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
                     </div>
@@ -22,6 +29,9 @@
                     <a class="text-decoration-none text-warning" href="{% url 'todo_update_status' i.id %}">переключить статус</a>
                     <a class="text-decoration-none text-secondary" href="{% url 'todo_change_data' i.id %}">изменить задачу</a>
                 {% else %}
+                    <div>
+                        <i class="fa-solid fa-tag"></i>
+                    </div>
                     <div class="feature-icon bg-danger bg-gradient">
                         <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
                     </div>

@@ -2,8 +2,13 @@
 {% load static %}
 
 
-{% block head %}{% endblock head %}
+{% block head %}
+    <link rel="icon" href="{% static 'img/logo512.png' %}" type="image/png">
+{% endblock head %}
 
+{% block title %}
+    Домашняя страница
+{% endblock title %}
 
 {% block navbar %}
     <div class="p-1 m-1">
@@ -97,6 +102,11 @@
           <p>Paragraph of text beneath the heading to explain the heading.</p>
         </div>
       </div>
+    </div>
+    <div class="overflow-hidden" style="max-height: 30vh;">
+        <div class="container px-5">
+            <img src="{% static 'img/logo512.png' %}" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Example image" width="700" height="500" loading="lazy">
+        </div>
     </div>
 </main>
 {% endblock main %}

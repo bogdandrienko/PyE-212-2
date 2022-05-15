@@ -49,6 +49,9 @@ python manage.py makemigrations
 python manage.py migrate
 
 
+# сбор статических файлов
+python manage.py collectstatic --noinput
+
 
 # запускает "development"(сервер для разработки) 0.0.0.0:88
 python manage.py runserver 127.0.0.1:8000
