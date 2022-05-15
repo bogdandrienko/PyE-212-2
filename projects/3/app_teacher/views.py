@@ -79,8 +79,14 @@ def todo_update_status(request, todo_id):
 def todo_change_data(request, todo_id):
     obj = models.Task.objects.get(id=todo_id)
 
-
-
+    if request.method == "POST":
+        title1 = request.POST.get("title", "заголовок по умолчанию")
+        description1 = request.POST.get("description", "описание по умолчанию")
+        if obj.title != title1:
+            obj.title = title1
+        if obj.description != description1:
+            obj.description = description1
+        obj.save()
     context = {
         "todo": obj
     }

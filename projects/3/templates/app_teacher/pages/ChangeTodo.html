@@ -21,14 +21,14 @@
         style="width: 350px"
     >
         {% csrf_token %}
-        <h1 class="h3 mb-3 fw-normal">Создать новую задачу</h1>
+        <h1 class="h3 mb-3 fw-normal">Изменяем уже созданную задачу {{ todo.title }}: {{ todo.id }}</h1>
 
         <div class="form-floating">
-          <input type="text" class="form-control" id="floatingInput" placeholder="введи название тут..." name="title">
+          <input type="text" class="form-control" id="floatingInput" placeholder="введи название тут..." name="title" value="{{ todo.title }}">
           <label for="floatingInput">Введите название задачи:</label>
         </div>
         <div class="form-floating">
-          <input type="text" class="form-control" id="floatingPassword" placeholder="Pasвведи описание тут...sword" name="description">
+          <input type="text" class="form-control" id="floatingPassword" placeholder="Введи описание тут...sword" name="description" value="{{ todo.description }}">
           <label for="floatingPassword">Введите описание задачи:</label>
         </div>
 
