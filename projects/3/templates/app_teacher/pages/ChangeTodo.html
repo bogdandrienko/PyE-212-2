@@ -1,0 +1,51 @@
+{% extends "app_teacher/components/base.html" %}
+{% load static %}
+
+
+{% block head %}{% endblock head %}
+
+{% block navbar %}
+    {% include 'app_teacher/components/navbar.html' %}
+{% endblock navbar %}
+
+{% block main %}
+<main class="flex-shrink-0 bg-light container">
+    <div class="d-flex text-center">
+
+    <form
+        action="{% url 'todo_change_data' todo.id %}"
+        method="POST"
+        enctype="multipart/form-data"
+        target="_self"
+        class="form-control form-control-lg m-1 p-1"
+        style="width: 350px"
+    >
+        {% csrf_token %}
+        <h1 class="h3 mb-3 fw-normal">Создать новую задачу</h1>
+
+        <div class="form-floating">
+          <input type="text" class="form-control" id="floatingInput" placeholder="введи название тут..." name="title">
+          <label for="floatingInput">Введите название задачи:</label>
+        </div>
+        <div class="form-floating">
+          <input type="text" class="form-control" id="floatingPassword" placeholder="Pasвведи описание тут...sword" name="description">
+          <label for="floatingPassword">Введите описание задачи:</label>
+        </div>
+
+        <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">submit</button>
+        <button class="w-100 btn btn-lg btn-outline-danger" type="reset">reset</button>
+        <p class="mt-5 mb-3 text-muted">© 2017–2021</p>
+      </form>
+    </div>
+</main>
+{% endblock main %}
+
+
+{% block footer %}
+  {% include 'app_teacher/components/footer.html' %}
+{% endblock footer %}

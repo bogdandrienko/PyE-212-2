@@ -6,6 +6,16 @@ from . import models
 
 # тут только "логика" - функции для обработки и возврат данных
 
+# class Todo:
+#     def __init__(self, description, name="name1"):
+#         self.description = description
+#         self.name = name
+#
+# obj = Todo("sdomethi", "name2")
+#
+# obj.description
+# obj.name
+
 def index(request):
     return render(request, 'app_teacher/pages/index.html')
 
@@ -64,3 +74,14 @@ def todo_update_status(request, todo_id):
         obj.is_completed = True
     obj.save()
     return redirect(reverse('todo_list', args=()))
+
+
+def todo_change_data(request, todo_id):
+    obj = models.Task.objects.get(id=todo_id)
+
+
+
+    context = {
+        "todo": obj
+    }
+    return render(request, 'app_teacher/pages/ChangeTodo.html', context)
