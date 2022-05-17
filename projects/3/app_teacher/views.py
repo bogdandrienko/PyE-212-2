@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.core.paginator import Paginator
 from . import models
-
+from . import utils
 
 # тут только "логика" - функции для обработки и возврат данных
 
@@ -55,10 +55,11 @@ def todo_detail(request, todo_id):
 
 
 def todo_list(request):
-    objs = models.Task.objects.all()
-    page = Paginator(objs, 2)
-    page_number = request.GET.get('page')
-    page_obj = page.get_page(page_number)
+    page_obj = utils.CustomPaginator.get_page(
+        objs=models.Task.objects.all(),
+        limit=2,
+        current_page=request.GET.get('page')
+    )
     context = {"list": None, "page": page_obj}
     return render(request, 'app_teacher/pages/todo_list.html', context)
 

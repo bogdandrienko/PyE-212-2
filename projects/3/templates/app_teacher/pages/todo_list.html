@@ -13,12 +13,12 @@
 
 {% block main %}
 <main class="flex-shrink-0 bg-light">
-    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-
-
         <div>
             {% include 'app_teacher/components/paginator.html' %}
         </div>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+
+
 
         {% if not page %}
 
@@ -59,24 +59,6 @@
                 </div>
             {% endfor %}
         {% endif %}
-
-        <div class="pagination">
-            <span class="step-links">
-                {% if page.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ page.previous_page_number }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ page.number }} of {{ page.paginator.num_pages }}.
-                </span>
-
-                {% if page.has_next %}
-                    <a href="?page={{ page.next_page_number }}">next</a>
-                    <a href="?page={{ page.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
 
         {% if list %}
             {% for i in list %}
