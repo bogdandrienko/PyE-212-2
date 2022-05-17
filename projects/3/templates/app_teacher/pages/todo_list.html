@@ -15,15 +15,68 @@
 <main class="flex-shrink-0 bg-light">
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
 
-        {% if not list %}
+
+        <div>
+            {% include 'app_teacher/components/paginator.html' %}
+        </div>
+
+        {% if not page %}
+
             <div class="text-center">
                 No data!
             </div>
+
+        {% else %}
+            {% for i in page %}
+                <div class="feature col">
+                    {% if i.is_completed %}
+                        <div>
+                            <i class="fa-solid fa-tag"></i>
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="feature-icon bg-success bg-gradient">
+                            <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
+                        </div>
+                        <h2>{{i.title}}</h2>
+                        <a class="text-decoration-none text-primary" href="{% url 'todo_detail' i.id %}">подробнее</a>
+                        <a class="text-decoration-none text-danger" href="{% url 'todo_delete' i.id %}">удалить</a>
+                        <a class="text-decoration-none text-warning" href="{% url 'todo_update_status' i.id %}">переключить статус</a>
+                        <a class="text-decoration-none text-secondary" href="{% url 'todo_change_data' i.id %}">изменить задачу</a>
+                    {% else %}
+                        <div>
+                            <i class="fa-solid fa-tag"></i>
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div class="feature-icon bg-danger bg-gradient">
+                            <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
+                        </div>
+                        <h2>{{i.title}}</h2>
+                        <a class="text-decoration-none text-primary" href="{% url 'todo_detail' i.id %}">подробнее</a>
+                        <a class="text-decoration-none text-danger" href="{% url 'todo_delete' i.id %}">удалить</a>
+                        <a class="text-decoration-none text-warning" href="{% url 'todo_update_status' i.id %}">переключить статус</a>
+                        <a class="text-decoration-none text-secondary" href="{% url 'todo_change_data' i.id %}">изменить задачу</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
         {% endif %}
 
+        <div class="pagination">
+            <span class="step-links">
+                {% if page.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page.previous_page_number }}">previous</a>
+                {% endif %}
 
+                <span class="current">
+                    Page {{ page.number }} of {{ page.paginator.num_pages }}.
+                </span>
 
-
+                {% if page.has_next %}
+                    <a href="?page={{ page.next_page_number }}">next</a>
+                    <a href="?page={{ page.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
 
         {% if list %}
             {% for i in list %}
@@ -59,7 +112,7 @@
             {% endfor %}
         {% else %}
             <div class="text-center">
-                No data!
+
             </div>
         {% endif %}
     </div>

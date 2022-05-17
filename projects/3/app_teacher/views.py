@@ -57,7 +57,9 @@ def todo_detail(request, todo_id):
 def todo_list(request):
     objs = models.Task.objects.all()
     page = Paginator(objs, 2)
-    context = {"list": objs, "page": page}
+    page_number = request.GET.get('page')
+    page_obj = page.get_page(page_number)
+    context = {"list": None, "page": page_obj}
     return render(request, 'app_teacher/pages/todo_list.html', context)
 
 
