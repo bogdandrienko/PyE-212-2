@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
+from django.core.paginator import Paginator
 from . import models
 
 
@@ -10,11 +10,25 @@ from . import models
 #     def __init__(self, description, name="name1"):
 #         self.description = description
 #         self.name = name
+#         self.value = 0
+#
+#     def counter(self, external_value):
+#         self.value += external_value
+#
+#     @staticmethod
+#     def count(value, extra):
+#         return (value + extra) * 1000
+
+
 #
 # obj = Todo("sdomethi", "name2")
 #
 # obj.description
 # obj.name
+
+# Todo.counter()
+# Todo.count()
+
 
 def index(request):
     return render(request, 'app_teacher/pages/index.html')
@@ -41,8 +55,9 @@ def todo_detail(request, todo_id):
 
 
 def todo_list(request):
-    obj = models.Task.objects.all()
-    context = {"list": obj}
+    objs = models.Task.objects.all()
+    page = Paginator(objs, 2)
+    context = {"list": objs, "page": page}
     return render(request, 'app_teacher/pages/todo_list.html', context)
 
 

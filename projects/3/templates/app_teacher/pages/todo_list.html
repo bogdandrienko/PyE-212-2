@@ -14,6 +14,17 @@
 {% block main %}
 <main class="flex-shrink-0 bg-light">
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+
+        {% if not list %}
+            <div class="text-center">
+                No data!
+            </div>
+        {% endif %}
+
+
+
+
+
         {% if list %}
             {% for i in list %}
                 <div class="feature col">
