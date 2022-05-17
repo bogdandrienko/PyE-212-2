@@ -1,0 +1,45 @@
+{% extends "app_teacher/components/base.html" %}
+{% load static %}
+
+
+{% block head %}{% endblock head %}
+
+{% block title %}
+    Модератор
+{% endblock title %}
+
+{% block navbar %}
+    {% include 'app_teacher/components/navbar.html' %}
+{% endblock navbar %}
+
+{% block main %}
+<main class="flex-shrink-0 bg-light container">
+    <div class="d-flex text-center">
+
+    <form
+        action="{% url 'admin_page' %}"
+        method="POST"
+        enctype="multipart/form-data"
+        target="_self"
+        class="form-control form-control-lg m-1 p-1"
+        style="width: 350px"
+    >
+        {% csrf_token %}
+        <h1 class="h3 mb-3 fw-normal">Создать задачи массово</h1>
+
+        <div class="form-control">
+          <input type="file" class="form-control" id="floatingInput" placeholder="введи название тут..." name="excel" accept=".xlsx,.xls">
+          <label for="floatingInput">Вставьте excel-файл:</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">submit</button>
+        <button class="w-100 btn btn-lg btn-outline-danger" type="reset">reset</button>
+        <p class="mt-5 mb-3 text-muted">© 2017–2021</p>
+      </form>
+    </div>
+</main>
+{% endblock main %}
+
+
+{% block footer %}
+  {% include 'app_teacher/components/footer.html' %}
+{% endblock footer %}
