@@ -7,7 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # "Добавляет" пути в общий путь маршрутизации, которые лежат в 'app_teacher.urls'
-    path('', include('app_teacher.urls')),
+    path('teacher/', include('app_teacher.urls')),
     path('', include('app_student.urls')),
 ]
 
