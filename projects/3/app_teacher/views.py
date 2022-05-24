@@ -43,7 +43,8 @@ def index(request):
 
 
 def home(request):
-    return render(request, 'app_teacher/pages/home.html')
+    # return render(request, 'app_teacher/pages/home.html')
+    return render(request, 'index2.html')
 
 
 def about(request):

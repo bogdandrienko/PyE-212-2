@@ -58,7 +58,7 @@ ROOT_URLCONF = 'settings.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +66,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'app_teacher.context_processors.todo_count',
             ],
         },
     },
@@ -125,6 +127,7 @@ if DEBUG:
     STATIC_DIR = Path(BASE_DIR / 'static')
     STATICFILES_DIRS = [
         Path(BASE_DIR / 'static_external'),
+        Path(BASE_DIR / 'dist'),
         # Path(BASE_DIR / 'static'),
     ]
 else:
@@ -133,6 +136,7 @@ else:
     STATIC_DIR = Path(BASE_DIR / 'static')
     STATICFILES_DIRS = [
         Path(BASE_DIR / 'static_external'),
+        Path(BASE_DIR / 'dist'),
         # Path(BASE_DIR / 'static'),
     ]
 
