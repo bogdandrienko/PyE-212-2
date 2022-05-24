@@ -1,8 +1,10 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.core.paginator import Paginator
 from . import models
 from . import utils
+from django.conf import settings as my_settings
 
 
 # тут только "логика" - функции для обработки и возврат данных
@@ -32,7 +34,12 @@ from . import utils
 
 
 def index(request):
-    return render(request, 'app_teacher/pages/index.html')
+    if my_settings.DEBUG:
+        context = {"name": "Ally", "age": 25}
+    else:
+        context = {"name": "Ally", "age": 22}
+
+    return HttpResponse()
 
 
 def home(request):
