@@ -5,6 +5,8 @@ from django.core.paginator import Paginator
 from . import models
 from . import utils
 from django.conf import settings as my_settings
+import openpyxl
+import datetime
 
 
 # тут только "логика" - функции для обработки и возврат данных
@@ -32,6 +34,36 @@ from django.conf import settings as my_settings
 # Todo.counter()
 # Todo.count()
 
+def external_excel():
+    def create_new_excel():
+        workbook = openpyxl.Workbook()
+        # grab the active worksheet
+        worksheet = workbook.active
+        # Data can be assigned directly to cells
+        worksheet['A1'] = 42
+        # Rows can also be appended
+        worksheet.append([1, 2, 3])
+        # Python types will automatically be converted
+        worksheet['A2'] = datetime.datetime.now()
+        # Save the file
+        workbook.save("./static/temp/sample.xlsx")
+
+    def load_excel():
+        path = "./static/temp/sample.xlsx"
+        workbook = openpyxl.load_workbook(path)
+        worksheet = workbook.active
+        max_num_rows = worksheet.max_row
+
+        global_list = []
+        for num in range(1, max_num_rows):
+            local_list = []
+            for char in "ABC":
+                local_list.append(worksheet[f'{char}{num}'].value)
+            global_list.append(local_list)
+        print("global_list: ", global_list)
+
+    load_excel()
+
 
 def index(request):
     if my_settings.DEBUG:
@@ -43,8 +75,9 @@ def index(request):
 
 
 def home(request):
-    # return render(request, 'app_teacher/pages/home.html')
-    return render(request, 'index2.html')
+    external_excel()
+    return render(request, 'app_teacher/pages/home.html')
+    # return render(request, 'index2.html')
 
 
 def about(request):
@@ -72,7 +105,9 @@ def todo_list(request):
         limit=count_object_on_one_page,
         current_page=current_page_from_request_parametr
     )
-    context = {"list": None, "page": page_obj}
+    context = {"list": None, "page": page_obj, "iterator": range(0, 20),
+               "value": [11274.25234533463, 1474.25234463, 174.2523453463],
+               "values": [3274.00, 14232374.00, 23441234.00]}
     return render(request, 'app_teacher/pages/todo_list.html', context)
 
 
@@ -124,9 +159,7 @@ def todo_change_data(request, todo_id):
 
 
 def admin_page(request):
-
     if request.method == "POST":
-        import openpyxl
         excel = request.FILES.get("excel", None)
         print(excel)
         workbook = openpyxl.load_workbook(excel)
@@ -134,7 +167,7 @@ def admin_page(request):
         # local_value = sheet['B2'].value
 
         global_list = []
-        for num in range(1, 20+1):
+        for num in range(1, 20 + 1):
             local_list = []
             for char in "ABC":
                 local_list.append(sheet[f'{char}{num}'].value)

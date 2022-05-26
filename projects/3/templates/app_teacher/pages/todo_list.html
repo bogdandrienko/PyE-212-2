@@ -1,20 +1,41 @@
 {% extends "app_teacher/components/base.html" %}
 {% load static %}
+{% load extras %}
+
 
 {% block head %}{% endblock head %}
 
 {% block title %}
-    Список задач
+   {% upper_case 'Список задач' %}
 {% endblock title %}
 
 {% block navbar %}
     {% include 'app_teacher/components/navbar.html' %}
 {% endblock navbar %}
 
+     10 628.50
+  1 000 000.68
+
 {% block main %}
 <main class="flex-shrink-0 bg-light">
+
+
+    {% split_string_to_list "Яблоко, банан, груша, киви" "," %}
+
+    <ul>
+        {% for number in value %}
+        <li>{% custom_ceil number 4 %} </li>
+        {% endfor %}
+    </ul>
+
+    <ul>
+        {% for number in values %}
+            <li class="text-end">{% beautiful_number number %}</li>
+        {% endfor %}
+    </ul>
+
     <div>
-        <li>Количество созданных задач: {{todo_count}}</li>
+        <li>{% upper_case 'Количество созданных задач:' %} {{todo_count}}</li>
     </div>
     <div>
         {% include 'app_teacher/components/paginator.html' %}
@@ -31,6 +52,7 @@
                         <div>
                             <i class="fa-solid fa-tag"></i>
                             <i class="fa-solid fa-user"></i>
+                            #{{ forloop.counter }}
                         </div>
                         <div class="feature-icon bg-success bg-gradient">
                             <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
@@ -44,6 +66,7 @@
                         <div>
                             <i class="fa-solid fa-tag"></i>
                             <i class="fa-solid fa-user"></i>
+                            #{{ forloop.counter }}
                         </div>
                         <div class="feature-icon bg-danger bg-gradient">
                             <svg class="bi" width="1em" height="1em"><use xlink:href="#collection"></use></svg>
