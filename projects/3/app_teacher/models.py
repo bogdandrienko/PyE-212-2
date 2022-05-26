@@ -33,6 +33,10 @@ class Task(models.Model):
         # editable=
     )
 
+    def return_clear_data(self):
+        title = self.title
+        return str(title).strip() + " banana"
+
     # One to one
     # One to many
     # Many to manu

@@ -3,6 +3,11 @@ from django import template
 register = template.Library()
 
 
+@register.filter(is_safe=True)
+def my_filter(value):
+    return str(value).strip()[:-2] + "new new"
+
+
 @register.simple_tag
 def upper_case(value):
     return str(value).upper()
@@ -17,9 +22,6 @@ def beautiful_number(value):
 
     if len(str1) > 6:
         return str(value)[0:-5:1] + " " + str(value)[-5::1] + " " + str(value)[-8::1]
-
-
-
 
 
 @register.simple_tag

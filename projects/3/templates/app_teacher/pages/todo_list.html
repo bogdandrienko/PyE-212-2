@@ -13,12 +13,13 @@
     {% include 'app_teacher/components/navbar.html' %}
 {% endblock navbar %}
 
-     10 628.50
-  1 000 000.68
+
 
 {% block main %}
 <main class="flex-shrink-0 bg-light">
 
+
+    {{ new|my_filter }}
 
     {% split_string_to_list "Яблоко, банан, груша, киви" "," %}
 
@@ -48,6 +49,7 @@
         {% else %}
             {% for i in page %}
                 <div class="feature col">
+                    {{i.return_clear_data}}
                     {% if i.is_completed %}
                         <div>
                             <i class="fa-solid fa-tag"></i>

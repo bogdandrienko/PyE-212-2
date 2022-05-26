@@ -6,6 +6,7 @@ from . import models
 from . import utils
 from django.conf import settings as my_settings
 import openpyxl
+from openpyxl.utils import get_column_letter
 import datetime
 
 
@@ -60,9 +61,39 @@ def external_excel():
             for char in "ABC":
                 local_list.append(worksheet[f'{char}{num}'].value)
             global_list.append(local_list)
-        print("global_list: ", global_list)
 
-    load_excel()
+    def update_excel():
+        path = "./static/temp/sample.xlsx"
+        workbook = openpyxl.load_workbook(path)
+        worksheet = workbook.active
+        max_num_rows = worksheet.max_row
+
+        global_list = []
+        for num in range(1, max_num_rows):
+            local_list = []
+            for char in "ABC":
+                local_list.append(worksheet[f'{char}{num}'].value)
+            global_list.append(local_list)
+
+        workbook = openpyxl.Workbook()
+        # grab the active worksheet
+        worksheet = workbook.active
+
+        index_i = 0
+        for i in global_list:
+            index_i += 1
+            index_j = 0
+            for j in i:
+                index_j += 1
+                worksheet[f'{get_column_letter(index_i)}{index_j}'] = str(j) + " Bogdan"
+
+        # Save the file
+        workbook.save("./static/temp/sample.xlsx")
+
+    def beatiful_new_excel():  # TODO нужно реализовать !!!!!!!!!!!
+        pass
+
+    update_excel()
 
 
 def index(request):
@@ -107,7 +138,7 @@ def todo_list(request):
     )
     context = {"list": None, "page": page_obj, "iterator": range(0, 20),
                "value": [11274.25234533463, 1474.25234463, 174.2523453463],
-               "values": [3274.00, 14232374.00, 23441234.00]}
+               "values": [3274.00, 14232374.00, 23441234.00], "new": "Bananas"}
     return render(request, 'app_teacher/pages/todo_list.html', context)
 
 
