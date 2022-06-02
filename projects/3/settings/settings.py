@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']  # 192.168.15.87
 # Application definition
 
 INSTALLED_APPS = [
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

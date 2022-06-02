@@ -5,7 +5,7 @@ register = template.Library()
 
 @register.filter(is_safe=True)
 def my_filter(value):
-    return str(value).strip()[:-2] + "new new"
+    return str(value).strip() + " is awesome!"
 
 
 @register.simple_tag

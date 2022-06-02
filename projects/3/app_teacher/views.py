@@ -138,7 +138,7 @@ def todo_list(request):
     )
     context = {"list": None, "page": page_obj, "iterator": range(0, 20),
                "value": [11274.25234533463, 1474.25234463, 174.2523453463],
-               "values": [3274.00, 14232374.00, 23441234.00], "new": "Bananas"}
+               "values": [3274.00, 14232374.00, 23441234.00], "new": "Python"}
     return render(request, 'app_teacher/pages/todo_list.html', context)
 
 

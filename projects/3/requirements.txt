@@ -1,5 +1,6 @@
 asgiref==3.5.1
 Django==4.0.4
+django-grappelli==3.0.3
 et-xmlfile==1.1.0
 openpyxl==3.0.9
 Pillow==9.1.0

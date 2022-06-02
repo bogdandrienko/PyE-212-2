@@ -1,6 +1,7 @@
 from django.db import models
 from app_student.models import Country
 
+
 # Create your models here.
 
 
@@ -32,6 +33,9 @@ class Task(models.Model):
         default=False,
         # editable=
     )
+
+    def __str__(self):  # возвращает строкове представление объекта
+        return f'{self.title} [{self.id}]'
 
     def return_clear_data(self):
         title = self.title

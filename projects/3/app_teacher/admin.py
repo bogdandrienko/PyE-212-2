@@ -3,4 +3,4 @@ from . import models
 
 # Register your models here.
 
-admin.site.register(models.Task)
+admin.site.register(models.Task)  # отображение модели Task в админке
