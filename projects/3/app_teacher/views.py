@@ -1,3 +1,5 @@
+import requests
+from bs4 import BeautifulSoup
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -8,6 +10,8 @@ from django.conf import settings as my_settings
 import openpyxl
 from openpyxl.utils import get_column_letter
 import datetime
+from django.contrib.auth.models import User, Group
+from . import parse
 
 
 # тут только "логика" - функции для обработки и возврат данных
@@ -213,3 +217,29 @@ def admin_page(request):
     context = {
     }
     return render(request, 'app_teacher/pages/AdminPage.html', context)
+
+
+from django.http import JsonResponse
+
+
+def get_users(request):
+    return JsonResponse({"user_count": User.objects.all().count()})
+    # return HttpResponse(User.objects.all().count())
+
+
+def get_values(request):  #
+    return HttpResponse("<h1>Ответ строкой</h1>")  # возвращает строку с HTML вёрстку
+    # return HttpResponse(User.objects.all().count())
+
+
+def get_weather(request):  #
+    url = 'https://www.google.com/search?q=%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0&rlz=1C1IXYC_ruKZ978KZ978&oq=gjujlf&aqs=chrome.1.69i57j0i10i131i433l9.1695j1j7&sourceid=chrome&ie=UTF-8'
+    url = 'https://www.google.com/search?q=gjujlf+fkvf&oq=gjujlf+fkvf&aqs=chrome..69i57j0i10.3059j1j7&sourceid=chrome&ie=UTF-8'
+    response = requests.get(url)  # делаем запрос, возвращаем всю страницу в байтах
+
+    soup = BeautifulSoup(response.content, 'html.parser')  # принимайте страницу в байтах
+
+    weather = soup.findAll(name="div", attrs={"class": "BNeawe iBp4i AP7Wnd"})[0]
+
+    return HttpResponse(weather)  # возвращает строку с HTML вёрстку
+    # return HttpResponse(User.objects.all().count())

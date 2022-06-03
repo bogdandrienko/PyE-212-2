@@ -1,7 +1,4 @@
 import requests
-import json
-import time
-from bs4 import BeautifulSoup
 
 url = f'https://myfin.by/converter.html'
 headers = {
@@ -33,15 +30,58 @@ print(len(small_html1))
 
 print('3 \n\n\n\n\n')
 
-str3 = 'type="tel"'
+str3 = 'class="converter-container__item-input-wrapper"'
 str4 = 'type="tel"'
 
 # small_html2 = small_html1.split(str3)[-1].split('value="')[-1].split('"')[0]
-small_html2 = small_html1.split(sep='value="')  # возвращает массив разделенных объектов по сепаратору
+small_html2 = small_html1.split(sep=str3)  # возвращает массив разделенных объектов по сепаратору
+
+# print(small_html2)
 
 all_list = []
-for i in small_html2:
-    all_list.append(i.split('"')[0])
+for value in small_html2[1::1]:
+    print(value + '\n\n')
+
+    separator1 = 'class="converter-container__item-currency-name">'
+    name1 = value.split(separator1)  # разделили предыдущую строку по сепаратору на 2 части
+    print(name1)
+    name2 = name1[1]  # взяли только вторую часть (нижнюю)
+    print(name2)
+    separator2 = '</div>'
+    name3 = name2.split(separator2)  # разделили предыдущую строку по сепаратору на 2 части
+    print(name2)
+    name4 = name3[0]  # взяли только первую часть (верхнюю)
+    print(name4)
+    name5 = name4.strip()  # очистили пробелы и отступы по краям
+    print(name5)
+
+    value1 = value.split('value="')[1].split('"/>')[0]
+
+    abbr1 = value.split('<span class="converter-container__item-currency-abbr">')[1].split('<')[0]
+
+    print(f'валюта: {name5}, значение: {value1}, аббреиватура: {abbr1}')
+    # all_list.append((value1, name5, abbr1))
+    # all_list.append([value1, name5, abbr1])
+    all_list.append({"значение": value1, "валюта": name5, "аббреиватура": abbr1})
+    # all_list.append(i.split('"')[0])
+
+    # print(value.split('</div>')[0].strip())
+
+print(all_list)
+for i in all_list:
+    print(type(i))
+    print(f'валюта: {i["валюта"]}, значение: {i["значение"]}')
+
+print('3 \n\n\n\n\n')
+print('3 \n\n\n\n\n')
+print('3 \n\n\n\n\n')
+print('3 \n\n\n\n\n')
+print('3 \n\n\n\n\n')
+print('3 \n\n\n\n\n')
+print('3 \n\n\n\n\n')
+print('3 \n\n\n\n\n')
+print('3 \n\n\n\n\n')
+print('3 \n\n\n\n\n')
 
 print(all_list)
 
@@ -78,4 +118,17 @@ print('6 \n\n\n\n\n')
 str7 = str6.split('</span>')[0].strip()
 print(str7)
 print(type(str7))
+
+
+
+# url = f'https://www.google.com/search?q=google+%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0&rlz=1C1IXYC_ruKZ978KZ978&oq=google+%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0&aqs=chrome..69i57j0i457i512j0i512l8.7400j1j7&sourceid=chrome&ie=UTF-8'
+# headers = {
+#     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"}
+# response = requests.get(url=url, headers=headers)  # http запрос
+#
+# soup = BeautifulSoup(response.content, 'html.parser')
+#
+# weather = soup.findAll("span")
+# print(f"weather: {weather}")
+
 

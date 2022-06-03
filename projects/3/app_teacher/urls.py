@@ -17,6 +17,9 @@ urlpatterns = [
     path(route='todo_change_data/<int:todo_id>/', view=logic.todo_change_data, name="todo_change_data"),
 
     path(route='admin_page/', view=logic.admin_page, name="admin_page"),
+    path(route='user_count/', view=logic.get_users, name="get_users"),
+    path(route='get_values/', view=logic.get_values, name="get_values"),
+    path(route='get_weather/', view=logic.get_weather, name="get_weather"),
 ]
 
 # CRUD create read(list/one) update(many field / one field) delete
