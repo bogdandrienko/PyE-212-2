@@ -1,0 +1,79 @@
+{% extends "app_teacher/components/base.html" %}
+{% load static %}
+
+
+{% block head %}{% endblock head %}
+
+{% block title %}
+    Страница с вакансиями
+{% endblock title %}
+
+{% block navbar %}
+    {% include 'app_teacher/components/navbar.html' %}
+{% endblock navbar %}
+
+{% block main %}
+<main class="flex-shrink-0 bg-light container">
+    <div class="d-flex text-center">
+
+    <form
+        action="{% url 'get_vacancies' %}"
+        method="POST"
+        enctype="multipart/form-data"
+        target="_self"
+        class="form-control form-control-lg m-1 p-1"
+        style="width: 350px"
+    >
+        {% csrf_token %}
+        <h1 class="h3 mb-3 fw-normal">Найти вакансии по профессии</h1>
+
+        <div class="form-control">
+            <select name="vacancie">
+                <option value="None">None</option>
+                <option value="Программист">Программист</option>
+                <option selected value="Дизайнер">Дизайнер</option>
+            </select>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">submit</button>
+      </form>
+    </div>
+
+    {% if vacancie %}
+        <div class="card">
+            <div class="card-header">
+                Выбранная профессия:
+            </div>
+            <div class="card-body">
+                {% if vacancies %}
+
+                    <ul>
+                        {% for vacancie in vacancies %}
+                            <li class="text-end">
+                                <div>
+                                    <h6><a href="{{ vacancie.alternate_url }}">{{ vacancie.name }}</a></h6>
+                                    <div class="small fw-bold">от {{ vacancie.salary.from }}  и до {{ vacancie.salary.to }} {{ vacancie.salary.currency }}</div>
+                                </div>
+                            </li>
+                            {{ vacancie }}
+                        {% endfor %}
+                    </ul>
+
+                {% else %}
+                    Вакансии не найдены!
+                {% endif %}
+
+            </div>
+            <div class="card-footer">
+                {{ vacancie }}
+            </div>
+        </div>
+    {% endif %}
+
+</main>
+{% endblock main %}
+
+
+{% block footer %}
+  {% include 'app_teacher/components/footer.html' %}
+{% endblock footer %}
