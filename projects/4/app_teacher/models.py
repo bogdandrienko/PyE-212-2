@@ -86,6 +86,24 @@ class Receipt(models.Model):
         to=ReceiptCategory,
         on_delete=models.SET_NULL,  # CASCADE SET_NULL DO_NOTHING
     )
+    author = models.ForeignKey(
+        db_index=True,
+        error_messages=False,
+        primary_key=False,
+        unique_for_date=False,
+        unique_for_month=False,
+        unique_for_year=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name='Автор блюда',
+        help_text='<small class="text-muted">автор</small><hr><br>',
+
+        to=User,
+        on_delete=models.SET_NULL,  # CASCADE SET_NULL DO_NOTHING
+    )
 
     description = models.TextField(
         primary_key=False,
