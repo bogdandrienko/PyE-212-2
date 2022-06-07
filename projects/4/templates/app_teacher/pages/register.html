@@ -1,0 +1,49 @@
+{% extends "app_teacher/components/base.html" %}
+{% load static %}
+
+{% block main %}
+<main class="form-signin container text-center">
+    <form
+        action="{% url 'register' %}"
+        method="POST"
+        enctype="multipart/form-data"
+        target="_self"
+        class="form-control form-control-lg m-1 p-1"
+        style="width: 350px"
+    >
+      {% csrf_token %}
+
+    <img class="mb-4" src="{% static 'img/logo512.png' %}" alt="" width="72" height="57">
+    <h1 class="h3 mb-3 fw-normal">Зарегистрироваться</h1>
+
+    <div class="form-floating">
+      <input type="text" class="form-control" id="floatingInput" placeholder="введите имя пользователя" name="username">
+      <label for="floatingInput">имя пользователя</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword1" placeholder="Введите пароль" name="password">
+      <label for="floatingPassword1">Введите пароль</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword2" placeholder="Повторите введёный пароль" name="password2">
+      <label for="floatingPassword2">Повторите введёный пароль</label>
+    </div>
+
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword2" placeholder="Повторите введёный пароль" name="password2">
+      <label for="floatingPassword2">Повторите введёный пароль</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword2" placeholder="Повторите введёный пароль" name="password2">
+      <label for="floatingPassword2">Повторите введёный пароль</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control" id="floatingPassword2" placeholder="Повторите введёный пароль" name="password2">
+      <label for="floatingPassword2">Повторите введёный пароль</label>
+    </div>
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    <p class="mt-5 mb-3 text-muted">© 2017–2021</p>
+  </form>
+</main>
+{% endblock main %}

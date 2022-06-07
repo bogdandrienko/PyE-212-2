@@ -18,16 +18,15 @@ class ReceiptAdmin(admin.ModelAdmin):
         'image',
         'description',
         'is_completed',
-        'category',
         'author',
     )
+    filter_horizontal = ('ingredients', 'category',)  # только для полей формата many_to_many_field
     list_display_links = (  # поля-ссылка
         'title',
         'description',
     )
     list_editable = (  # поля для редактирования объекта на лету
         'is_completed',
-        'category',
         'author',
     )
     list_filter = (  # поля для фильтрации
@@ -35,13 +34,13 @@ class ReceiptAdmin(admin.ModelAdmin):
         'image',
         'description',
         'is_completed',
-        'category',
         'author',
     )
     fieldsets = (  # подзаголовки для визуального отделения блоков друг от друга
         ('Основное', {'fields': (
             'title',
             'description',
+            'ingredients',
         )}),
         ('Дополнительно', {'fields': (
             'image',
@@ -57,7 +56,6 @@ class ReceiptAdmin(admin.ModelAdmin):
         'image',
         'description',
         'is_completed',
-        'category',
         'author',
     ]
 

@@ -88,7 +88,7 @@ class Receipt(models.Model):
 
         validators=[MinValueValidator(1), MaxValueValidator(9999)],
     )
-    category = models.ForeignKey(
+    category = models.ManyToManyField(
         db_column='country_db_column',
         db_index=True,
         db_tablespace='country_db_tablespace',
@@ -100,14 +100,11 @@ class Receipt(models.Model):
         unique=False,
         editable=True,
         blank=True,
-        null=True,
         default=None,
         verbose_name='Категория блюда',
         help_text='<small class="text-muted">категория</small><hr><br>',
 
         to=ReceiptCategory,
-        on_delete=models.CASCADE,  # CASCADE - удаляет всю запись, при удалении связанной записи
-        # SET_NULL - зануляет всю запись, при удалении связанной записи DO_NOTHING - ничего не делать
     )
     author = models.ForeignKey(
         db_index=True,
@@ -125,20 +122,20 @@ class Receipt(models.Model):
         help_text='<small class="text-muted">автор</small><hr><br>',
 
         to=User,
-        on_delete=models.SET_NULL,  # CASCADE SET_NULL DO_NOTHING
+        on_delete=models.SET_NULL,  # CASCADE - удаляет всю запись, при удалении связанной записи
+        # SET_NULL - зануляет всю запись, при удалении связанной записи DO_NOTHING - ничего не делать
     )
-    # ingredients = models.ManyToManyField(
-    #     primary_key=False,
-    #     unique=False,
-    #     editable=True,
-    #     blank=True,
-    #     null=True,
-    #     default=None,
-    #     verbose_name='Ингредиенты блюда',
-    #     help_text='<small class="text-muted">ингредиенты</small><hr><br>',
-    #
-    #     to=ReceiptIngredient,
-    # )
+    ingredients = models.ManyToManyField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        default=None,
+        verbose_name='Ингредиенты блюда',
+        help_text='<small class="text-muted">ингредиенты</small><hr><br>',
+
+        to=ReceiptIngredient,
+    )
 
     description = models.TextField(
         primary_key=False,

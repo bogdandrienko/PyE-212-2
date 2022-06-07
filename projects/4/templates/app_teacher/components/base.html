@@ -1,0 +1,24 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}заголовок страницы{% endblock title %}
+    </title>
+    <link rel="icon" href="{% static 'img/logo512.png' %}" type="image/png">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/my.css' %}">
+    <link rel="stylesheet" href="{% static 'fa/css/all.css' %}">
+    {% block head %}{% endblock head %}
+</head>
+<body class="d-flex flex-column h-100" style="min-height: 100vh;">
+    {% block navbar %}{% endblock navbar %}
+    <div class="flex-shrink-0" style="min-height: 80vh;">
+        {% block main %}тело страницы{% endblock main %}
+    </div>
+    {% block footer %}{% endblock footer %}
+    <script src="{% static 'js/bootstrap/bootstrap.js' %}"></script>
+</body>
+</html>
