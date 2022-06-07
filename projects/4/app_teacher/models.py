@@ -29,6 +29,28 @@ class ReceiptCategory(models.Model):
         return f'{self.title}'
 
 
+class ReceiptIngredient(models.Model):
+    name = models.TextField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default="Название",
+        verbose_name="Название:",
+        help_text='<small class="text-muted">это наше название</small><hr><br>',
+    )
+
+    class Meta:
+        app_label = 'app_teacher'
+        ordering = ('name',)
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+
+    def __str__(self):  # возвращает строкове представление объекта
+        return f'{self.name}'
+
+
 class Receipt(models.Model):
     title = models.CharField(
         primary_key=False,
@@ -84,7 +106,8 @@ class Receipt(models.Model):
         help_text='<small class="text-muted">категория</small><hr><br>',
 
         to=ReceiptCategory,
-        on_delete=models.SET_NULL,  # CASCADE SET_NULL DO_NOTHING
+        on_delete=models.CASCADE,  # CASCADE - удаляет всю запись, при удалении связанной записи
+        # SET_NULL - зануляет всю запись, при удалении связанной записи DO_NOTHING - ничего не делать
     )
     author = models.ForeignKey(
         db_index=True,
@@ -104,6 +127,18 @@ class Receipt(models.Model):
         to=User,
         on_delete=models.SET_NULL,  # CASCADE SET_NULL DO_NOTHING
     )
+    # ingredients = models.ManyToManyField(
+    #     primary_key=False,
+    #     unique=False,
+    #     editable=True,
+    #     blank=True,
+    #     null=True,
+    #     default=None,
+    #     verbose_name='Ингредиенты блюда',
+    #     help_text='<small class="text-muted">ингредиенты</small><hr><br>',
+    #
+    #     to=ReceiptIngredient,
+    # )
 
     description = models.TextField(
         primary_key=False,
@@ -162,7 +197,7 @@ class ReceiptRating(models.Model):
         help_text='<small class="text-muted">Пользователь</small><hr><br>',
 
         to=User,
-        on_delete=models.SET_NULL,  # CASCADE SET_NULL DO_NOTHING
+        on_delete=models.CASCADE,  # CASCADE SET_NULL DO_NOTHING
     )
     receipt = models.ForeignKey(
         error_messages=False,
@@ -237,7 +272,7 @@ class ReceiptComment(models.Model):
         help_text='<small class="text-muted">Рецепт</small><hr><br>',
 
         to=Receipt,
-        on_delete=models.SET_NULL,  # CASCADE SET_NULL DO_NOTHING
+        on_delete=models.CASCADE,  # CASCADE SET_NULL DO_NOTHING
     )
 
     class Meta:
