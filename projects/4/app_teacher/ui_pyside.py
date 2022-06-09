@@ -1,0 +1,120 @@
+import sys
+import random
+from PySide6 import QtCore, QtWidgets, QtGui
+import sys
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QDateEdit,
+    QDateTimeEdit,
+    QDial,
+    QDoubleSpinBox,
+    QFontComboBox,
+    QLabel,
+    QLCDNumber,
+    QLineEdit,
+    QMainWindow,
+    QProgressBar,
+    QPushButton,
+    QRadioButton,
+    QSlider,
+    QSpinBox,
+    QTimeEdit,
+    QVBoxLayout,
+    QWidget,
+)
+
+
+class MyWidget(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Image Analyse")
+
+        # self.hello = ["Hallo Welt", "Hei maailma", "Hola Mundo", "Привет мир"]
+        # self.button = QtWidgets.QPushButton("File")
+        # self.text = QtWidgets.QLabel("Hello World")
+        # self.layout = QtWidgets.QVBoxLayout(self)
+        # self.layout.addWidget(self.text)
+        # self.layout.addWidget(self.button)
+        #
+        # self.button.clicked.connect(self.magic)
+
+        # self.layout1 = QVBoxLayout()
+        # self.layout1 = QtWidgets.QVBoxLayout(self)
+        # widgets = [
+        #     QCheckBox,
+        #     QComboBox,
+        #     QDateEdit,
+        #     QDateTimeEdit,
+        #     QDial,
+        #     QDoubleSpinBox,
+        #     QFontComboBox,
+        #     QLCDNumber,
+        #     QLabel,
+        #     QLineEdit,
+        #     QProgressBar,
+        #     QPushButton,
+        #     QRadioButton,
+        #     QSlider,
+        #     QSpinBox,
+        #     QTimeEdit,
+        # ]
+        #
+        # for w in widgets:
+        #     self.layout1.addWidget(w())
+        # self.layout3 = QtWidgets.QVBoxLayout(self)
+
+        self.layout1 = QVBoxLayout()
+        self.layout1 = QtWidgets.QVBoxLayout(self)
+        widgets = [
+            QCheckBox,
+            QComboBox,
+            QDateEdit,
+            QDateTimeEdit,
+            QDial,
+            QDoubleSpinBox,
+            QFontComboBox,
+            QLCDNumber,
+            QLabel,
+            QLineEdit,
+            QProgressBar,
+            QPushButton,
+            QRadioButton,
+            QSlider,
+            QSpinBox,
+            QTimeEdit,
+        ]
+
+        for w in widgets:
+            self.layout1.addWidget(w())
+        self.layout3 = QtWidgets.QVBoxLayout(self)
+
+        # widget = QWidget()
+        # widget.setLayout(layout1)
+
+        # Set the central widget of the Window. Widget will expand
+        # to take up all the space in the window by default.
+        # self.setCentralWidget(widget)
+
+    @QtCore.Slot()
+    def magic(self):
+        self.text.setText(random.choice(self.hello))
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication([])
+
+    widget = MyWidget()
+    widget.resize(1280, 720)
+    widget.show()
+
+    sys.exit(app.exec())
+
+
+# Subclass QMainWindow to customize your application's main window
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
