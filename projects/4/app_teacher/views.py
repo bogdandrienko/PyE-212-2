@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as django_login
 from django.contrib.auth.models import User
 from . import models
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 from django.urls import reverse
@@ -81,6 +82,7 @@ def register(request):
     return render(request, 'app_teacher/pages/register.html', context)
 
 
+@csrf_exempt
 def api_result(request):
     if request.method == "POST":
         data = request.POST.get("value", "данные не пришли!")
