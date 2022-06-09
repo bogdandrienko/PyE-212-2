@@ -1,7 +1,6 @@
 import sys
 import random
 from PySide6 import QtCore, QtWidgets, QtGui
-import sys
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QApplication,
@@ -23,7 +22,7 @@ from PySide6.QtWidgets import (
     QSpinBox,
     QTimeEdit,
     QVBoxLayout,
-    QWidget,
+    QWidget, QGridLayout,
 )
 
 
@@ -67,33 +66,39 @@ class MyWidget(QtWidgets.QWidget):
         #     self.layout1.addWidget(w())
         # self.layout3 = QtWidgets.QVBoxLayout(self)
 
-        self.layout1 = QVBoxLayout()
-        self.layout1 = QtWidgets.QVBoxLayout(self)
-        widgets = [
-            QCheckBox,
-            QComboBox,
-            QDateEdit,
-            QDateTimeEdit,
-            QDial,
-            QDoubleSpinBox,
-            QFontComboBox,
-            QLCDNumber,
-            QLabel,
-            QLineEdit,
-            QProgressBar,
-            QPushButton,
-            QRadioButton,
-            QSlider,
-            QSpinBox,
-            QTimeEdit,
-        ]
+        # self.layout1 = QVBoxLayout()
+        # self.layout1 = QtWidgets.QVBoxLayout(self)
+        # widgets = [
+        #     QCheckBox,
+        #     QComboBox,
+        #     QDateEdit,
+        #     QDateTimeEdit,
+        #     QDial,
+        #     QDoubleSpinBox,
+        #     QFontComboBox,
+        #     QLCDNumber,
+        #     QLabel,
+        #     QLineEdit,
+        #     QProgressBar,
+        #     QPushButton,
+        #     QRadioButton,
+        #     QSlider,
+        #     QSpinBox,
+        #     QTimeEdit,
+        # ]
+        #
+        # for w in widgets:
+        #     self.layout1.addWidget(w())
 
-        for w in widgets:
-            self.layout1.addWidget(w())
-        self.layout3 = QtWidgets.QVBoxLayout(self)
-
-        # widget = QWidget()
-        # widget.setLayout(layout1)
+        self.layout5 = QGridLayout()
+        self.layout5 = QtWidgets.QGridLayout(self)
+        self.layout5.addWidget(QLabel("path"), 0, 1)
+        self.layout5.addWidget(QLabel("params"), 0, 2)
+        self.layout5.addWidget(QLabel("result"), 0, 3)
+        self.layout5.addWidget(QLineEdit(""), 1, 1)
+        self.layout5.addWidget(QLineEdit(""), 1, 2)
+        self.layout5.addWidget(QLineEdit(""), 1, 3)
+        self.layout5.addWidget(QPushButton("request"), 2, 2)
 
         # Set the central widget of the Window. Widget will expand
         # to take up all the space in the window by default.
@@ -101,20 +106,13 @@ class MyWidget(QtWidgets.QWidget):
 
     @QtCore.Slot()
     def magic(self):
-        self.text.setText(random.choice(self.hello))
+        # self.text.setText(random.choice(self.hello))
+        pass
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-
     widget = MyWidget()
     widget.resize(1280, 720)
     widget.show()
-
     sys.exit(app.exec())
-
-
-# Subclass QMainWindow to customize your application's main window
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
