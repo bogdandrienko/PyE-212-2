@@ -24,6 +24,9 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidget, QGridLayout,
 )
+import aiohttp
+import asyncio
+import json
 
 
 class MyWidget(QtWidgets.QWidget):
@@ -90,24 +93,80 @@ class MyWidget(QtWidgets.QWidget):
         # for w in widgets:
         #     self.layout1.addWidget(w())
 
+        # мы создаём сетку для отображения всех виджетов
         self.layout5 = QGridLayout()
         self.layout5 = QtWidgets.QGridLayout(self)
+
+        # создаём кнопку
+        self.button = QPushButton("request")
+        self.layout5.addWidget(self.button, 2, 2)
+        # присоединяем к кнопке
+        self.button.clicked.connect(self.request)
+
+        # наименование api-пути
         self.layout5.addWidget(QLabel("path"), 0, 1)
+
+        # значение api-пути
+        self.path_edit = QLineEdit("http://192.168.1.121/api/result/")
+        self.layout5.addWidget(self.path_edit, 1, 1)
+
         self.layout5.addWidget(QLabel("params"), 0, 2)
-        self.layout5.addWidget(QLabel("result"), 0, 3)
-        self.layout5.addWidget(QLineEdit(""), 1, 1)
-        self.layout5.addWidget(QLineEdit(""), 1, 2)
-        self.layout5.addWidget(QLineEdit(""), 1, 3)
-        self.layout5.addWidget(QPushButton("request"), 2, 2)
+
+        self.params_edit = QLineEdit("")
+        self.layout5.addWidget(self.params_edit, 1, 2)
+
+        self.result_label = QLabel("result")
+        self.layout5.addWidget(self.result_label, 3, 1)
 
         # Set the central widget of the Window. Widget will expand
         # to take up all the space in the window by default.
         # self.setCentralWidget(widget)
 
     @QtCore.Slot()
-    def magic(self):
-        # self.text.setText(random.choice(self.hello))
-        pass
+    def request(self):
+        path = self.path_edit.text()
+        params = {"value": self.params_edit.text()}
+
+        async def main():
+            async with aiohttp.ClientSession() as session:
+
+                if len(params["value"]) > 0:
+                    async with session.post(path, data=params) as response:
+                        html = await response.text()
+                else:
+                    async with session.get(path) as response:
+                        # print("Status:", response.status)
+                        # print("Content-type:", response.headers['content-type'])
+
+                        # html = await response.text()
+                        html = await response.text()
+                        print(type(html))
+                        html = json.loads(html)
+                        print(type(html))
+                        print("Body:", html)
+
+
+                        # if type(html["recepts"]) == type(""):
+                        #     self.result_label.setText(html["recepts"])
+                        # elif type(html["recepts"]) == type([]):
+                        #     for i in html["recepts"]:
+                        #         str1 += f'{i}\n'
+                        #     self.result_label.setText(str1)
+                        # else:
+                        #     self.result_label.setText("ошибка")
+                        if isinstance(html["recepts"], str):
+                            # печатает текст отсутствия рецепта
+                            self.result_label.setText(html["recepts"])
+                        elif isinstance(html["recepts"], list):
+                            str1 = ''
+                            for i in html["recepts"]:
+                                str1 += f'{i}\n'
+                            self.result_label.setText(str1)
+                        else:
+                            self.result_label.setText("ошибка")
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
 
 
 if __name__ == "__main__":
