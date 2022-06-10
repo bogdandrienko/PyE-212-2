@@ -1,0 +1,66 @@
+{% extends "app_teacher/components/base.html" %}
+{% load static %}
+{% load extras %}
+
+{% block head %}
+    <link rel="icon" href="{% static 'img/logo512.png' %}" type="image/png">
+{% endblock head %}
+
+{% block title %}
+    Домашняя страница
+{% endblock title %}
+
+{% block navbar %}
+    <div class="p-1 m-1">
+      {% include 'app_teacher/components/navbar.html' %}
+    </div>
+{% endblock navbar %}
+
+{% block main %}
+<main class="flex-shrink-0 bg-light">
+<div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-2 row-cols-sm-2 row-cols-md-2 g-3 text-center d-flex justify-content-center">
+          <div class="col">
+            <div class="card shadow-sm text-center">
+               <div class="card-header lead">
+                {{ receipt.title }}
+              </div>
+
+              {% if receipt.image %}
+                <img src="{{ receipt.image.url }}" alt="img" class="image-fluid" style="height:400px;width:400px;">
+              {% else %}
+                <img src="{% static 'media/img/receipt/default/default_receipt.jpg' %}" alt="img">
+              {% endif %}
+
+
+              <div class="card-body">
+                <p class="card-text">{{ receipt.description }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a href="{% url 'receipt' receipt.id %}" class="btn btn-sm btn-outline-primary">
+                        детали
+                      </a>
+                    {% if receipt.instructions %}
+                      <a href="{{ receipt.instructions.url }}" class="text-decoration-none btn btn-sm btn-outline-warning">
+                        инструкция
+                      </a>
+                    {% endif %}
+
+                  </div>
+                  <small class="text-muted">{% time_convert receipt.time_to_cook 85 %}</small>
+                </div>
+              </div>
+            </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock main %}
+
+
+{% block footer %}
+  {% include 'app_teacher/components/footer.html' %}
+{% endblock footer %}

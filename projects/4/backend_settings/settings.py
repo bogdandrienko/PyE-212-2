@@ -67,6 +67,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'app_teacher.context_processors.receipt_count',
             ],
         },
     },
@@ -121,11 +123,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = Path(BASE_DIR / 'static')
+# STATIC_ROOT = Path(BASE_DIR / 'static')
 STATIC_DIR = Path(BASE_DIR / 'static')
 STATICFILES_DIRS = [
     Path(BASE_DIR / 'static_external'),
-    # Path(BASE_DIR / 'static'),
+    Path(BASE_DIR / 'static')
 ]
 
 MEDIA_URL = 'media/'

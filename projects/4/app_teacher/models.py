@@ -74,6 +74,7 @@ class Receipt(models.Model):
         help_text='<small class="text-muted">это наша заставка</small><hr><br>',
 
         validators=[FileExtensionValidator(['jpg', 'png'])],
+        upload_to='img/receipt',
         max_length=100,
     )
     time_to_cook = models.IntegerField(  # BigIntegerField SmallIntegerField PositiveIntegerField ...
@@ -151,6 +152,20 @@ class Receipt(models.Model):
         default=False,
         # editable=
     )
+    instructions = models.FileField(
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name="Инструкция:",
+        help_text='<small class="text-muted">Инструкция</small><hr><br>',
+
+        validators=[FileExtensionValidator(['PDF', 'XLSX'])],
+
+        upload_to='file/pdf',
+        max_length=100,
+    )
 
     class Meta:
         app_label = 'app_teacher'
@@ -158,7 +173,7 @@ class Receipt(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
-    def __str__(self):  # возвращает строкове представление объекта
+    def __str__(self):  # возвращает строковое представление объекта
         return f'{self.title}'
 
     def return_clear_data(self):
