@@ -54,6 +54,51 @@
               </div>
             </div>
 
+        <div class="d-flex text-center">
+            <form
+                action="{% url 'receipt_comment_create' receipt.id %}"
+                method="POST"
+                enctype="multipart/form-data"
+                target="_self"
+                class="card p-2"
+            >
+              {% csrf_token %}
+
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="текст комментария" name="comment_text">
+                <button type="submit" class="btn btn-secondary">отправить</button>
+              </div>
+            </form>
+        </div>
+
+
+      <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white" style="width: 380px;">
+          <a href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+            <svg class="bi me-2" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+            <span class="fs-5 fw-semibold">Комментарии ({{comments.count}})</span>
+          </a>
+          <div class="list-group list-group-flush border-bottom scrollarea">
+
+
+            {% for comment in comments %}
+
+            <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
+              <div class="d-flex w-100 align-items-center justify-content-between">
+                  {% if comment.user.is_superuser %}
+                    <strong class="mb-1 text-danger">{{comment.user.username}}</strong>
+                  {% else %}
+                    <strong class="mb-1 text-primary">{{comment.user.username}}</strong>
+                  {% endif %}
+                <strong class="mb-1">{{comment.time}}</strong>
+              </div>
+              <div class="col-10 mb-1 small">{{ comment.comment_text }}</div>
+            </a>
+
+            {% endfor %}
+
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

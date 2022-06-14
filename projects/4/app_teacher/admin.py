@@ -120,9 +120,87 @@ class ReceiptIngredientAdmin(admin.ModelAdmin):
         'name',
     ]
 
+
+class ReceiptCommentAdmin(admin.ModelAdmin):
+    """
+    Настройки отображения, фильтрации и поиска модели:'ReceiptIngredient' на панели администратора
+    """
+
+    list_display = (  # поля для отображения
+        'comment_text',
+        'user',
+        'receipt',
+        'time',
+    )
+    list_display_links = (  # поля-ссылка
+        'comment_text',
+    )
+    list_editable = (  # поля для редактирования объекта на лету
+    )
+    list_filter = (  # поля для редактирования объекта на лету
+        'comment_text',
+        'user',
+        'receipt',
+        'time',
+    )
+    fieldsets = (  # подзаголовки для визуального отделения блоков друг от друга
+        ('Основное', {'fields': (
+            'comment_text',
+            'user',
+            'receipt',
+            'time',
+        )}),
+    )
+    search_fields = [  # поле для поиска
+        'comment_text',
+        'user',
+        'receipt',
+        'time',
+    ]
+
+
+class ReceiptRatingAdmin(admin.ModelAdmin):
+    """
+    Настройки отображения, фильтрации и поиска модели:'ReceiptIngredient' на панели администратора
+    """
+
+    list_display = (  # поля для отображения
+        'is_liked',
+        'rating_value',
+        'user',
+        'receipt',
+    )
+    list_display_links = (  # поля-ссылка
+        'is_liked',
+    )
+    list_editable = (  # поля для редактирования объекта на лету
+        'is_liked',
+    )
+    list_filter = (  # поля для редактирования объекта на лету
+        'is_liked',
+        'rating_value',
+        'user',
+        'receipt',
+    )
+    fieldsets = (  # подзаголовки для визуального отделения блоков друг от друга
+        ('Основное', {'fields': (
+            'is_liked',
+            'rating_value',
+            'user',
+            'receipt',
+        )}),
+    )
+    search_fields = [  # поле для поиска
+        'is_liked',
+        'rating_value',
+        'user',
+        'receipt',
+    ]
+
+
 admin.site.register(ReceiptCategory, ReceiptCategoryAdmin)
 admin.site.register(ReceiptIngredient, ReceiptIngredientAdmin)
 # admin.site.register(ReceiptIngredient)
 admin.site.register(Receipt, ReceiptAdmin)
 admin.site.register(ReceiptRating)
-admin.site.register(ReceiptComment)
+admin.site.register(ReceiptComment, ReceiptCommentAdmin)

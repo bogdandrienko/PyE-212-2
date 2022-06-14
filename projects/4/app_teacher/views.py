@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as django_login
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 from . import models
 from django.views.decorators.csrf import csrf_exempt
 
@@ -17,7 +19,6 @@ def home(request, filter_category=""):
     # return HttpResponse("<h1>HOME PAGE</h1>")
 
     categories = models.ReceiptCategory.objects.all()
-
 
     # receipts = models.Receipt.objects.all().filter(category=models.ReceiptCategory.objects.get(title="Борщ"))
     receipts = models.Receipt.objects.all()
@@ -54,9 +55,35 @@ def receipt(request, receipt_id):
 
     # receipts = models.Receipt.objects.all().filter(title)
 
-    receipt = get_object_or_404(models.Receipt, pk=receipt_id)
-    context = {"receipt": receipt}
+    # receipt = get_object_or_404(models.Receipt, pk=receipt_id)
+    receipt = models.Receipt.objects.get(id=receipt_id)
+    print(receipt)
+    print(type(receipt))
+
+    comments = models.ReceiptComment.objects.all().filter(receipt=receipt).order_by('-time', '-comment_text')
+    print(comments)
+    print(type(comments))
+
+    # comments[0].time = timezone.now()
+    # comments[0].time.save()
+
+    context = {"receipt": receipt, "comments": comments}
     return render(request, 'app_teacher/pages/receipt.html', context)
+
+
+def receipt_comment_create(request, receipt_id: int):
+
+    if request.method == "POST":
+        comment_text = request.POST.get("comment_text", "")
+        if comment_text:
+            models.ReceiptComment.objects.create(
+                comment_text=comment_text,
+                user=request.user,
+                receipt=models.Receipt.objects.get(id=receipt_id),
+            )
+
+    return redirect(reverse('receipt', args=(receipt_id, )))
+
 
 
 def login(request):

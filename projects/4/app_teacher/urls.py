@@ -6,9 +6,10 @@ from app_teacher import views
 urlpatterns = [
     path(route='', view=home, name=""),
     path(route='home/', view=home, name="home"),
-    path(route='home/<str:filter_category>', view=home, name="home"),
+    path(route='home/<str:filter_category>/', view=home, name="home"),
 
-    path(route='receipt/<int:receipt_id>', view=views.receipt, name="receipt"),
+    path(route='receipt/<int:receipt_id>/', view=views.receipt, name="receipt"),
+    path(route='receipt/<int:receipt_id>/comment_create/', view=views.receipt_comment_create, name="receipt_comment_create"),
 
     path(route='login/', view=login, name="login"),
     path(route='register/', view=register, name="register"),
