@@ -84,6 +84,11 @@
 
             <a href="#" class="list-group-item list-group-item-action py-3 lh-tight">
               <div class="d-flex w-100 align-items-center justify-content-between">
+
+                  {% if request.user.is_superuser %}
+                    <button class="btn btn-outline-danger">удалить</button>
+                  {% endif %}
+
                   {% if comment.user.is_superuser %}
                     <strong class="mb-1 text-danger">{{comment.user.username}}</strong>
                   {% else %}
