@@ -2,6 +2,8 @@ from operator import concat
 
 from django import template
 
+from app_teacher import models
+
 register = template.Library()
 
 
@@ -22,9 +24,32 @@ def substr(desc: str):
 
 @register.simple_tag
 def time_convert(value, converter):
-
     if int(value) > int(converter):
         if value % 60 == 0:
             return str(int(value / 60)) + " hours"
-        return str(round(value/60, 2)) + " hours"
+        return str(round(value / 60, 2)) + " hours"
     return str(value) + " mins"
+
+
+@register.simple_tag(takes_context=True)
+def check_like(context, receipt_id):
+    request = context['request']
+    try:
+        receipt = models.ReceiptRating.objects.filter(
+            user=request.user,
+            receipt=models.Receipt.objects.get(id=receipt_id),
+        )[0]
+        print(receipt)
+        print(receipt.is_liked)
+        if receipt.is_liked is True:
+            return True
+        else:
+            return False
+    except Exception as error:
+        return False
+
+
+# @register.simple_tag(takes_context=True)
+# def current_time(context, format_string):
+#     timezone = context['timezone']
+#     return your_get_current_time_method(timezone, format_string)

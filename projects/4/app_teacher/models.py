@@ -169,6 +169,7 @@ class Receipt(models.Model):
         upload_to='file/pdf',
         max_length=100,
     )
+
     # is_show = models.BooleanField(
     #     default=False,
     #     # editable=
@@ -186,6 +187,21 @@ class Receipt(models.Model):
     def return_clear_data(self):
         title = self.title
         return str(title).strip() + " banana"
+
+    def get_rating(self):
+        ratings = ReceiptRating.objects.filter(
+            receipt=Receipt.objects.get(id=self.id),
+        )
+
+        like_count = 0
+        dislike_count = 0
+        for rating in ratings:
+            if rating.is_liked:
+                like_count += 1
+            else:
+                dislike_count += 1
+
+        return dict(total=ratings.count, like_count=like_count, dislike_count=dislike_count)
 
 
 class ReceiptComment(models.Model):

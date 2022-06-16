@@ -25,6 +25,31 @@
           <div class="col">
             <div class="card shadow-sm text-center">
                <div class="card-header lead">
+
+                    {% check_like receipt.id as liked %}
+                    {% if is_my_like %}
+                        <a href="{% url 'receipt_like_create' receipt.id %}" class="btn btn-outline-success"><i class="fa-solid fa-heart"></i></a>
+                    {% else %}
+                        <a href="{% url 'receipt_like_create' receipt.id %}" class="btn btn-outline-danger"><i class="fa-solid fa-heart"></i></a>
+                    {% endif %}
+              </div>
+
+
+
+                <span class="badge bg-primary rounded-pill m-1 p-1">{{receipt.return_clear_data}}</span>
+                <span class="badge bg-primary rounded-pill m-1 p-1">{{receipt.get_rating.total}}</span>
+                <span class="badge bg-success rounded-pill m-1 p-1">{{receipt.get_rating.like_count}}</span>
+                <span class="badge bg-danger rounded-pill m-1 p-1">{{receipt.get_rating.dislike_count}}</span>
+
+                {% for like in likes %}
+                    {% if like.is_liked %}
+                        <div class="text-success">{{like.receipt}}: {{like.user}}</div>
+                    {% else %}
+                        <div class="text-danger">{{like.receipt}}: {{like.user}}</div>
+                    {% endif %}
+                {% endfor %}
+
+               <div class="card-header lead">
                 {{ receipt.title }}
               </div>
 

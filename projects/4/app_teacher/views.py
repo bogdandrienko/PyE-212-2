@@ -57,22 +57,36 @@ def receipt(request, receipt_id):
 
     # receipt = get_object_or_404(models.Receipt, pk=receipt_id)
     receipt = models.Receipt.objects.get(id=receipt_id)
-    print(receipt)
-    print(type(receipt))
+    # print(receipt)
+    # print(type(receipt))
 
     comments = models.ReceiptComment.objects.all().filter(receipt=receipt).order_by('-time', '-comment_text')
-    print(comments)
-    print(type(comments))
+    # print(comments)
+    # print(type(comments))
 
     # comments[0].time = timezone.now()
     # comments[0].time.save()
 
-    context = {"receipt": receipt, "comments": comments}
+    likes = models.ReceiptRating.objects.all().filter(receipt=receipt)
+    # print(likes)
+    # print(type(likes))
+
+    obj1 = models.ReceiptRating.objects.filter(
+        user=request.user,
+        receipt=models.Receipt.objects.get(id=receipt_id),
+    )[0]
+    print(obj1)
+    print(obj1.is_liked)
+    if obj1.is_liked is True:
+        is_my_like = True
+    else:
+        is_my_like = False
+
+    context = {"receipt": receipt, "comments": comments, "likes": likes, "is_my_like": is_my_like}
     return render(request, 'app_teacher/pages/receipt.html', context)
 
 
 def receipt_comment_create(request, receipt_id: int):
-
     if request.method == "POST":
         comment_text = request.POST.get("comment_text", "")
         if comment_text:
@@ -82,11 +96,42 @@ def receipt_comment_create(request, receipt_id: int):
                 receipt=models.Receipt.objects.get(id=receipt_id),
             )
 
-    return redirect(reverse('receipt', args=(receipt_id, )))
+    return redirect(reverse('receipt', args=(receipt_id,)))
 
+
+def receipt_like_create(request, receipt_id: int):
+    # if request.method == "POST":
+    #     comment_text = request.POST.get("comment_text", "")
+    #     if comment_text:
+    #         models.ReceiptComment.objects.create(
+    #             comment_text=comment_text,
+    #             user=request.user,
+    #             receipt=models.Receipt.objects.get(id=receipt_id),
+    #         )
+
+    try:
+        obj = models.ReceiptRating.objects.filter(
+            user=request.user,
+            receipt=models.Receipt.objects.get(id=receipt_id),
+        )[0]
+        print(obj)
+        obj.is_liked = not obj.is_liked
+        obj.rating_value = 0
+        obj.save()
+    except Exception as error:
+        models.ReceiptRating.objects.create(
+            is_liked=True,
+            rating_value=0,
+            user=request.user,
+            receipt=models.Receipt.objects.get(id=receipt_id),
+        )
+
+    return redirect(reverse('receipt', args=(receipt_id,)))
 
 
 def login(request):
+    if request.user.is_authenticated:
+        return redirect(reverse('home', args=()))
     if request.method == "POST":
         username = request.POST.get("username", "")
         password = request.POST.get("password", "")

@@ -25,6 +25,7 @@
     <div class="row py-lg-5">
       <div class="col-lg-6 col-md-8 mx-auto">
         <h1 class="fw-light">Банк рецептов <i class="btn btn-outline-danger">{{receipt_count}}</i></h1>
+
         <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
         <p>
           <a href="{% url 'home' %}" class="btn btn-primary my-2">Все</a>
@@ -64,6 +65,12 @@
 
                 <div class="d-flex justify-content-between">
                   <div>{{ receipt.title }}</div>
+                    <div>
+               <span class="badge bg-primary rounded-pill m-1 p-1">{{receipt.get_rating.total}}</span>
+                <span class="badge bg-success rounded-pill m-1 p-1">{{receipt.get_rating.like_count}}</span>
+                <span class="badge bg-danger rounded-pill m-1 p-1">{{receipt.get_rating.dislike_count}}</span>
+
+          </div>
                   <div class="btn-group">
                     {% for category in receipt.category.all %}
                       <div class="btn btn-outline-secondary">

@@ -10,6 +10,7 @@ urlpatterns = [
 
     path(route='receipt/<int:receipt_id>/', view=views.receipt, name="receipt"),
     path(route='receipt/<int:receipt_id>/comment_create/', view=views.receipt_comment_create, name="receipt_comment_create"),
+    path(route='receipt/<int:receipt_id>/like_create/', view=views.receipt_like_create, name="receipt_like_create"),
 
     path(route='login/', view=login, name="login"),
     path(route='register/', view=register, name="register"),
