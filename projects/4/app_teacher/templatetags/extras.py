@@ -1,6 +1,7 @@
 from operator import concat
 
 from django import template
+from django.contrib.auth.models import Group, User
 
 from app_teacher import models
 
@@ -48,6 +49,28 @@ def check_like(context, receipt_id):
     except Exception as error:
         return False
 
+
+@register.simple_tag(takes_context=True)
+def check_is_have_group(context, group_name=""):
+    request = context['request']
+    try:
+        # return request.user.groups.filter(name=group_name).exists()  # проверка, что такая группа у пользователя есть
+        # return len(request.user.groups.filter(name=group_name)) > 0  # проверка, что групп у этого пользователя с таким именем больше нуля
+
+        user = request.user
+        groups = user.groups
+        # print(groups)
+        # print(type(groups))
+        # print(groups.all())
+        # print(type(groups.all()))
+        # print(User.objects.all())
+        # print(type(User.objects.all()))
+        for group in groups.all():
+            if str(group.name).lower() == str(group_name).lower():
+                return True
+        return False
+    except Exception as error:
+        return False
 
 # @register.simple_tag(takes_context=True)
 # def current_time(context, format_string):

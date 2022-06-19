@@ -23,6 +23,14 @@
 
     <form action="{% url 'receipt_create' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {{ ReceiptCreateForm2 }}
+        <input type="submit" value="Submit">
+    </form>
+
+    <hr/>
+
+    <form action="{% url 'receipt_create' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
         <input type="file" accept="image/png, image/jpeg" class="form-control">
         {{ ReceiptCreateForm }}
         <input type="submit" value="Submit">

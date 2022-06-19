@@ -1,8 +1,26 @@
 {% extends "app_teacher/components/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block main %}
 <main class="form-signin container text-center">
+
+    <hr/>
+    <form action="{% url 'register' %}" method="post" enctype="multipart/form-data" class="uniForm">
+        {% csrf_token %}
+        {{ 123form|crispy }}
+        <input type="submit" value="Submit">
+    </form>
+
+    <hr/>
+
+    <form action="{% url 'register' %}" method="post" enctype="multipart/form-data" class="uniForm">
+        {% csrf_token %}
+        {{ UserCreateForm|crispy }}
+        <input type="submit" value="Submit">
+    </form>
+    <hr/>
+
     <form
         action="{% url 'register' %}"
         method="POST"
@@ -13,6 +31,7 @@
     >
       {% csrf_token %}
 
+    <hr/>
     <img class="mb-4" src="{% static 'img/logo512.png' %}" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Зарегистрироваться</h1>
 

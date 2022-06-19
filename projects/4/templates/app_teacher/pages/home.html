@@ -57,10 +57,22 @@
 
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 text-center d-flex justify-content-center">
 
+
+        {% check_is_have_group "Superuser" as access_denied %}
         {% for receipt in receipts %}
 
           <div class="col">
             <div class="card shadow-sm">
+
+
+
+                <div class="lead">
+                    {% if access_denied %}
+                        {{receipt.author.username}}
+                    {% else %}
+                        Доступа на просмотр нет!
+                    {% endif %}
+                </div>
               <a href="{% url 'receipt' receipt.id %}" class="text-decoration-none text-dark card-header lead">
 
                 <div class="d-flex justify-content-between">

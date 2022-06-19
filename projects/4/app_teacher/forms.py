@@ -1,6 +1,8 @@
 import datetime
 
 from django import forms
+from django.contrib.auth.models import User
+from . import models
 
 
 class ReceiptCreateForm(forms.Form):
@@ -58,3 +60,23 @@ class ReceiptCreateForm(forms.Form):
     )
     body = forms.CharField(widget=forms.Textarea(attrs={'name': 'body', 'rows': '3', 'cols': '5'}), required=False)
     cc_myself = forms.BooleanField(required=False)
+
+
+class ReceiptCreateForm2(forms.ModelForm):
+    class Meta:
+        model = models.Receipt
+        fields = '__all__'
+
+
+class ReceiptCommentCreateForm(forms.ModelForm):
+    class Meta:
+        model = models.ReceiptComment
+        fields = '__all__'
+        # fields = ["username", "password", "email"]
+
+
+class UserCreateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        # fields = '__all__'
+        fields = ["username", "password", "email"]

@@ -54,12 +54,15 @@ def receipt_create(request):
         title = request.POST.get("title", "")
         print(f"title: {title}")
 
-        form = forms.ReceiptCreateForm(request.POST)
-        if form.is_valid():
-            # form.
-            pass
+        form1 = forms.ReceiptCreateForm2(request.POST)
+        if form1.is_valid():
+            form1.save()
+            return redirect(reverse('receipt_create', args=()))
 
-    context = {"ReceiptCreateForm": forms.ReceiptCreateForm()}  # создание инстанса формы для создания рецепта
+    context = {
+        "ReceiptCreateForm": forms.ReceiptCreateForm(),  # создание инстанса формы для создания рецепта
+        "ReceiptCreateForm2": forms.ReceiptCreateForm2()  # создание инстанса формы2 для создания рецепта
+    }
     return render(request, 'app_teacher/pages/receipt_create.html', context)
 
 
@@ -239,7 +242,7 @@ def register(request):
             # )
             # obj.set_password(password)
             # obj.save()
-    context = {}
+    context = {"UserCreateForm": forms.UserCreateForm(), "123form": forms.ReceiptCommentCreateForm()}
     return render(request, 'app_teacher/pages/register.html', context)
 
 
