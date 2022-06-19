@@ -24,6 +24,14 @@
       <div class="row row-cols-2 row-cols-sm-2 row-cols-md-2 g-3 text-center d-flex justify-content-center">
           <div class="col">
             <div class="card shadow-sm text-center">
+
+              {% if request.user.username == receipt.author.username %}
+                   <div class="card-header lead">
+                        <a href="{% url 'receipt_delete' receipt.id %}" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+
+                   </div>
+                {% endif %}
+
                <div class="card-header lead">
 
                     {% check_like receipt.id as liked %}
@@ -111,7 +119,7 @@
               <div class="d-flex w-100 align-items-center justify-content-between">
 
                   {% if request.user.is_superuser %}
-                    <button class="btn btn-outline-danger">удалить</button>
+                    <a href="{% url 'receipt_comment_delete' comment.id %}" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
                   {% endif %}
 
                   {% if comment.user.is_superuser %}

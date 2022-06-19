@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 from . import models
+from . import forms
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
@@ -48,6 +49,20 @@ def home(request, filter_category=""):
     return render(request, 'app_teacher/pages/home.html', context)
 
 
+def receipt_create(request):
+    if request.method == "POST":
+        title = request.POST.get("title", "")
+        print(f"title: {title}")
+
+        form = forms.ReceiptCreateForm(request.POST)
+        if form.is_valid():
+            # form.
+            pass
+
+    context = {"ReceiptCreateForm": forms.ReceiptCreateForm()}  # создание инстанса формы для создания рецепта
+    return render(request, 'app_teacher/pages/receipt_create.html', context)
+
+
 def receipt(request, receipt_id):
     if request.user.is_authenticated is False:
         return redirect(reverse('login', args=()))
@@ -74,16 +89,26 @@ def receipt(request, receipt_id):
     obj1 = models.ReceiptRating.objects.filter(
         user=request.user,
         receipt=models.Receipt.objects.get(id=receipt_id),
-    )[0]
-    print(obj1)
-    print(obj1.is_liked)
-    if obj1.is_liked is True:
-        is_my_like = True
+    )
+    if len(obj1) > 0:
+        obj1 = obj1[0]
+        print(obj1)
+        print(obj1.is_liked)
+        if obj1.is_liked is True:
+            is_my_like = True
+        else:
+            is_my_like = False
     else:
         is_my_like = False
 
     context = {"receipt": receipt, "comments": comments, "likes": likes, "is_my_like": is_my_like}
     return render(request, 'app_teacher/pages/receipt.html', context)
+
+
+def receipt_delete(request, receipt_id: int):
+    models.Receipt.objects.get(id=receipt_id).delete()
+
+    return redirect(reverse('', args=()))
 
 
 def receipt_comment_create(request, receipt_id: int):
@@ -95,6 +120,27 @@ def receipt_comment_create(request, receipt_id: int):
                 user=request.user,
                 receipt=models.Receipt.objects.get(id=receipt_id),
             )
+
+    return redirect(reverse('receipt', args=(receipt_id,)))
+
+
+def receipt_comment_delete(request, comment_id: int):
+    comment = models.ReceiptComment.objects.get(id=comment_id)  # Django ORM
+    # f"""
+    # SELECT *
+    # FROM ReceiptComment.db
+    # WHERE id = {comment_id}
+    # """
+    receipt_id = comment.receipt.id
+    comment_author_username = comment.user.username
+    print(comment_author_username)
+    recept_author_username = comment.receipt.author.username
+    print(recept_author_username)
+    print(comment_author_username)
+    print(comment.receipt.title)
+    print(comment.receipt.description)
+    print(receipt_id)
+    comment.delete()
 
     return redirect(reverse('receipt', args=(receipt_id,)))
 

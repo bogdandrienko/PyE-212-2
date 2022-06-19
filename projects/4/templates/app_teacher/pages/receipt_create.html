@@ -1,0 +1,69 @@
+{% extends "app_teacher/components/base.html" %}
+{% load static %}
+{% load extras %}
+
+{% block head %}
+    <link rel="icon" href="{% static 'img/logo512.png' %}" type="image/png">
+{% endblock head %}
+
+{% block title %}
+    Домашняя страница
+{% endblock title %}
+
+{% block navbar %}
+    <div class="p-1 m-1">
+      {% include 'app_teacher/components/navbar.html' %}
+    </div>
+{% endblock navbar %}
+
+{% block main %}
+<main class="flex-shrink-0 bg-light">
+
+<div class="">
+
+    <form action="{% url 'receipt_create' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" accept="image/png, image/jpeg" class="form-control">
+        {{ ReceiptCreateForm }}
+        <input type="submit" value="Submit">
+    </form>
+
+
+
+    <form
+        action="{% url 'receipt_create' %}"
+        method="POST"
+        enctype="multipart/form-data"
+        target="_self"
+        class="form-control form-control-lg row mb-2"
+    >
+        {% csrf_token %}
+        <div class="col-md-6">
+            <div>
+
+        <input type="text" maxlength="100" minlength="10" class="form-control" id="floatingPassword" placeholder="Pasвведи описание тут...sword" name="description">
+
+          <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+
+              <div class="col p-4 d-flex flex-column position-static">
+              <strong class="d-inline-block mb-2 text-primary">World</strong>
+              <h3 class="mb-0">Featured post</h3>
+              <div class="mb-1 text-muted">Nov 12</div>
+              <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
+              <a href="#" class="stretched-link">Continue reading</a>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+                <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+            </div>
+          </div>
+            </div>
+        </div>
+    </form>
+
+</main>
+{% endblock main %}
+
+
+{% block footer %}
+  {% include 'app_teacher/components/footer.html' %}
+{% endblock footer %}
