@@ -95,7 +95,6 @@ class Receipt(models.Model):
     category = models.ManyToManyField(
         db_column='country_db_column',
         db_index=True,
-        db_tablespace='country_db_tablespace',
         error_messages=False,
         primary_key=False,
         unique_for_date=False,

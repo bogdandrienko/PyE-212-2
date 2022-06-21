@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login as django_login
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.views.generic import ListView
 
 from . import models
 from . import forms
@@ -22,7 +23,7 @@ def home(request, filter_category=""):
     categories = models.ReceiptCategory.objects.all()
 
     # receipts = models.Receipt.objects.all().filter(category=models.ReceiptCategory.objects.get(title="Борщ"))
-    receipts = models.Receipt.objects.all()
+    receipts = models.Receipt.objects.all()  # получаем все рецепты
     print(receipts)
     print(type(receipts))
     print(receipts[0].description)
@@ -49,15 +50,32 @@ def home(request, filter_category=""):
     return render(request, 'app_teacher/pages/home.html', context)
 
 
+class ReceiptListView(ListView):
+    queryset = models.Receipt.objects.all()
+    context_object_name = 'receipts'
+    paginate_by = 5
+    template_name = 'app_teacher/pages/receipt_list_class.html'
+
+
 def receipt_create(request):
     if request.method == "POST":
         title = request.POST.get("title", "")
         print(f"title: {title}")
+        image = request.FILES.get("image", None)
+        print(f"image: {image}")
 
-        form1 = forms.ReceiptCreateForm2(request.POST)
+        # request.POST - в нём лежат все типы данных, кроме файловых
+        # request.FILES - в нём файловые типы данных
+
+        form1 = forms.ReceiptCreateForm2(request.POST, request.FILES)
         if form1.is_valid():
             form1.save()
             return redirect(reverse('receipt_create', args=()))
+
+        # models.Receipt.objects.create(
+        #     title=request.POST.get("title", ""),
+        #     image=request.FILES.get("image", None),
+        # )
 
     context = {
         "ReceiptCreateForm": forms.ReceiptCreateForm(),  # создание инстанса формы для создания рецепта
@@ -137,8 +155,8 @@ def receipt_comment_delete(request, comment_id: int):
     receipt_id = comment.receipt.id
     comment_author_username = comment.user.username
     print(comment_author_username)
-    recept_author_username = comment.receipt.author.username
-    print(recept_author_username)
+    # recept_author_username = comment.receipt.author.username
+    # print(recept_author_username)
     print(comment_author_username)
     print(comment.receipt.title)
     print(comment.receipt.description)

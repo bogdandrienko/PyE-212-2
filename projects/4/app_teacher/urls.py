@@ -6,6 +6,7 @@ from app_teacher import views
 urlpatterns = [
     path(route='', view=home, name=""),
     path(route='home/', view=home, name="home"),
+    path(route='receipt_list/', view=views.ReceiptListView.as_view(), name='receipt_list'),
     path(route='home/<str:filter_category>/', view=home, name="home"),
 
     path(route='receipt/create/', view=views.receipt_create, name="receipt_create"),

@@ -19,6 +19,20 @@
 {% block main %}
 <main class="flex-shrink-0 bg-light">
 
+    <script>
+    function myPrint() {
+       window.print()
+      }
+    function myAlarm() {
+       window.alert()
+      }
+    function myLog() {
+       console.log('123124124124')
+      }
+    </script>
+
+    <button onclick="myAlarm()">script</button>
+
     <div class="p-0 m-0">
       {% include 'app_teacher/components/receipt_list.html' %}
     </div>
