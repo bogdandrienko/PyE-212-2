@@ -1,0 +1,111 @@
+{% load static %}
+{% load extras %}
+
+<div>
+  <input type="file" accept="application/pdf">
+
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Банк рецептов <i class="btn btn-outline-danger">{{receipt_count}}</i></h1>
+
+        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+        <p>
+          <a href="{% url 'home' %}" class="btn btn-primary my-2">Все</a>
+          {% for category in categories %}
+
+            <a href="{% url 'home' category.title %}"
+               class=
+                       {% if forloop.counter0 == 0 %}
+                          "btn btn-danger my-2"
+                       {% endif %}
+                       {% if forloop.counter0 == 1 %}
+                          "btn btn-success my-2"
+                       {% endif %}
+                       {% if forloop.counter0 == 2 %}
+                          "btn btn-dark my-2"
+                       {% endif %}
+                       {% if forloop.counter0 > 2 %}
+                          "btn btn-warning my-2"
+                       {% endif %}
+            >{{category.title}}</a>
+          {% endfor %}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 text-center d-flex justify-content-center">
+
+
+        {% check_is_have_group "Superuser" as access_denied %}
+        {% for receipt in receipts %}
+
+          <div class="col">
+            <div class="card shadow-sm">
+
+
+
+                <div class="lead">
+                    {% if access_denied %}
+                        {{receipt.author.username}}
+                    {% else %}
+                        Доступа на просмотр нет!
+                    {% endif %}
+                </div>
+              <a href="{% url 'receipt' receipt.id %}" class="text-decoration-none text-dark card-header lead">
+
+                <div class="d-flex justify-content-between">
+                  <div>{{ receipt.title }}</div>
+                    <div>
+               <span class="badge bg-primary rounded-pill m-1 p-1">{{receipt.get_rating.total}}</span>
+                <span class="badge bg-success rounded-pill m-1 p-1">{{receipt.get_rating.like_count}}</span>
+                <span class="badge bg-danger rounded-pill m-1 p-1">{{receipt.get_rating.dislike_count}}</span>
+
+          </div>
+                  <div class="btn-group">
+                    {% for category in receipt.category.all %}
+                      <div class="btn btn-outline-secondary">
+                        {{ category.title }}
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </a>
+              <a href="{% url 'receipt' receipt.id %}" class="text-decoration-none text-dark">
+                {% if receipt.image %}
+                <img src="{{ receipt.image.url }}" alt="img" class="image-fluid" style="height:400px;width:400px;">
+              {% else %}
+                <img src="{% static 'media/img/receipt/default/default_receipt.jpg' %}" alt="img">
+              {% endif %}
+              </a>
+
+              <div class="card-body">
+                <p class="card-text">{{ receipt.description|substr }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a href="{% url 'receipt' receipt.id %}" class="btn btn-sm btn-outline-primary">
+                        детали
+                      </a>
+                    {% if receipt.instructions %}
+                      <a href="{{ receipt.instructions.url }}" class="text-decoration-none btn btn-sm btn-outline-warning">
+                        инструкция
+                      </a>
+                    {% endif %}
+
+                  </div>
+                  <small class="text-muted">{% time_convert receipt.time_to_cook 85 %}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</div>
