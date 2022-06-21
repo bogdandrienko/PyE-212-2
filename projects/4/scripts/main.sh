@@ -19,7 +19,6 @@ pip install --upgrade pip
 pip install wheel
 pip install Django gunicorn psycopg2 pyodbc django-cors-headers Pillow
 pip install -r requirements.txt
-django-admin startproject backend_settings .
 
 sudo su - postgres
 createuser dbdjango
