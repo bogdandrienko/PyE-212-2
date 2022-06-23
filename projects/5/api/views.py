@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 from django.shortcuts import render
 
 
@@ -11,3 +13,8 @@ def home(request):
 def test(request):
     context = {}
     return render(request, 'public/index.html', context)
+
+
+def get_users_count(request):
+    users = User.objects.all().count()
+    return JsonResponse({"users": users})
