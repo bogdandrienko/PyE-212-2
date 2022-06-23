@@ -10,6 +10,8 @@ sudo apt -y install gunicorn python3-pip python3-dev python3-venv build-essentia
 
 sudo usermod -aG bogdan www-data
 
+ip a
+
 cd ~
 mkdir web
 cd web
@@ -148,6 +150,8 @@ sudo service nginx start
 sudo ufw allow 'Nginx Full'
 sudo systemctl reload nginx.service
 # sudo nginx -t
+
+sudo reboot
 
 STATIC_URL = '/static/'
 STATIC_ROOT = Path(BASE_DIR / 'static')
