@@ -5,4 +5,9 @@ from django.shortcuts import render
 
 def home(request):
     context = {}
-    return render(request, 'index.html', context)
+    return render(request, 'build/index.html', context)
+
+
+def test(request):
+    context = {}
+    return render(request, 'public/index.html', context)
