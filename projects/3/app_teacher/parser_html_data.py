@@ -1,9 +1,19 @@
 import requests
+from bs4 import BeautifulSoup
 
 url = f'https://myfin.by/converter.html'
 headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"}
 response = requests.get(url=url, headers=headers)  # http запрос
+
+soup = BeautifulSoup(response.content, 'html.parser')
+data1 = soup.find_all('span', itemprop="text")
+
+
+print()
+
+
+
 
 # локальное сохранение HTML
 with open(file='new.html', mode='w', encoding="utf-8") as file:

@@ -10,6 +10,7 @@ export default function Home() {
   //    getter   setter   react hook   default
   const [userCount, setUserCount] = useState(0);
   const [text, setText] = useState(22222222222);
+  const [arr1, setArr1] = useState([]);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -29,21 +30,52 @@ export default function Home() {
     console.log(value);
   }
 
-  async function getRequest() {
+  async function getRequest1() {
+
+      const config = {
+        method: "GET",
+        timeout: 3000,
+        url: `/api/get_users/`,
+        data: null,
+      };
+
+      axios(config)
+      .then(res => {
+        const {result} = res.data;
+        console.log(result);
+        setArr1(res.data["ingredients"]);
+      });
+
+      // axios.get(`/api/get_users`)
+      //   .then(res => {
+      //     console.log(res.data);
+      //     console.log(typeof(res.data)); // object
+      //     console.log(typeof(res.data["ingredients"])); // array
+      //     console.log(typeof(res.data.ingredients)); // array
+      //     // setArr1(res.data["ingredients"]);
+
+      //     // res.data["ingredients"].forEach(element => console.log(element));
+      //   });
+  }
+
+  async function getRequest2() {
     // let req = new XMLHttpRequests();
     // axios.get(`https://jsonplaceholder.typicode.com/users`)
     //   .then(res => {
     //     const persons = res.data;
     //     console.log({ persons });
     //   });
-      axios.get(`/api/get_users/`)
+
+      axios.get(`/api/get_users`)
         .then(res => {
-          const {users} = res.data;
-          console.log(users);
-          setUserCount(users);
+          console.log(res.data);
+
+          // const {users} = res.data;
+          // console.log(users);
+          // setUserCount(users);
         });
 
-        let value = true
+        // let value = true
 
 
     // const response = await fetch('api/result/');
@@ -111,6 +143,18 @@ export default function Home() {
         <div>
           Количество пользователей: {userCount}
         </div>
+
+        {arr1.length <= 0 ? (
+          <div>Пустой массив!</div>
+        ) : (
+          <ul>
+            {arr1.map(x => (
+              <li>{x.username} {x.last_login}</li>
+            )
+            )}
+          </ul>
+        )}
+
         <div className="card">
         <form>
             <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"/>
@@ -170,7 +214,8 @@ export default function Home() {
             ></input>
           </div>
           <div>
-            <button onClick={()=> getRequest()}>get</button>
+            <button onClick={()=> getRequest1()}>get 1</button>
+            <button onClick={()=> getRequest2()}>get 2</button>
             <button onClick={()=> postRequest()}>post</button>
           </div>
         </div>

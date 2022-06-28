@@ -21,6 +21,9 @@ export default function Navbar() {
           <Link to="/about" className='btn btn-lg btn-outline-primary m-1'>About</Link>
         </li>
         <li class="nav-item">
+          <Link to="/login" className='btn btn-lg btn-outline-primary m-1'>Login</Link>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="#">Features</a>
         </li>
         <li class="nav-item">

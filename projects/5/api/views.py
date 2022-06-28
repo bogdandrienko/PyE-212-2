@@ -1,8 +1,12 @@
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from django.contrib.auth import authenticate
 
+from . import models
 from . import serializers
 
 # Create your views here.
@@ -19,22 +23,57 @@ def test(request):
     return render(request, 'public/index.html', context)
 
 
+@api_view(http_method_names=["GET", "POST"])
+@permission_classes([AllowAny])
+@csrf_exempt
 def get_users(request):
-    users = User.objects.all()
-    print(type(users))
-    print(users)
-    serialized_users = serializers.UserSerializer(instance=users, many=True).data
-    print(type(serialized_users))
+    if request.method == "POST":  # create
+        pass
+    if request.method == "GET":  # read one object / read list of objects
+        pass
+    if request.method == "PUT":  # update
+        pass
+    if request.method == "DELETE":  # delete
+        pass
+
+
+    # ingredients = models.ReceiptIngredient.objects.all()
+    # serialized_ingredients = serializers.IngredientSerializer(instance=ingredients, many=True)
+    # return Response({"ingredients": serialized_ingredients.data})
+
+    # ручная сериализация
+    # ingredients = []
+    # for i in models.ReceiptIngredient.objects.all():
+    #     ingredient = {
+    #         "name": i.name,
+    #     }
+    #     ingredients.append(ingredient)
+    # return JsonResponse({"ingredients": ingredients})
+
+    # получаем объекты (строка) с базы
+    users_from_db = User.objects.all()
+    print(users_from_db)
+    print(type(users_from_db))  # QuerySet <class 'django.db.models.query.QuerySet'>
+
+    # сериализуем(превращаем в удобоваримый вариант для JSON) данные
+    serialized_users = serializers.UserSerializer(instance=users_from_db, many=True).data  # JSON
     print(serialized_users)
-    # return JsonResponse({"users": serialized_users})
-    return Response(serialized_users)
+    print(type(serialized_users))  # JSON <class 'rest_framework.utils.serializer_helpers.ReturnList'>
+
+    # возвращаем данные через DRF
+    return Response({"ingredients": serialized_users})  # Response(JSON)
 
 
+@api_view(http_method_names=["GET", "POST"])
+@permission_classes([AllowAny])
+@csrf_exempt
 def get_users_count(request):
     users = User.objects.all().count()
     return JsonResponse({"users": users})
 
 
+@api_view(http_method_names=["GET", "POST"])
+@permission_classes([AllowAny])
 @csrf_exempt
 def create_user(request):
     # логика создания пользователя
@@ -57,3 +96,56 @@ def create_user(request):
 
     # логика создания пользователя
     return JsonResponse({"result": "Пользователь успешно создан!"})
+
+
+@api_view(http_method_names=["GET", "POST", "PUT", "DELETE"])
+@permission_classes([AllowAny])
+@csrf_exempt
+def check_user(request):
+    if request.method == "GET":
+        try:
+            username = request.GET.get("username", "")
+            User.objects.get(username=username)
+            return JsonResponse({"result": "Пользователь успешно проверен!"})
+        except Exception as error:
+            return JsonResponse({"result": "Пользователя не существует!"})
+    else:
+        return JsonResponse({"result": "Такой метод не реализован!"})
+
+
+@api_view(http_method_names=["GET", "POST", "PUT", "DELETE"])
+@permission_classes([AllowAny])
+@csrf_exempt
+def login_user(request):
+    if request.method == "POST":
+        try:
+            username = request.POST.get("username", None)
+            print(username)
+            password = request.POST.get("password", None)
+            print(password)
+            apps = request.POST.get("apps", None)
+            if apps is not None:
+                print('have data')
+            print(apps)
+            someText = request.POST.get("someText", None)
+            print(someText)
+            
+            user = authenticate(username=username, password=password)
+            print(user)
+            print(type(user))
+            
+            # сериализуем(превращаем в удобоваримый вариант для JSON) данные
+            serialized_user = serializers.UserSerializer(instance=user, many=False).data  # JSON
+            print(serialized_user)
+            print(type(serialized_user))  # JSON <class 'rest_framework.utils.serializer_helpers.ReturnList'>
+
+            # возвращаем данные через DRF
+            return Response({"result": serialized_user})  # Response(JSON)
+
+            # User.objects.get(username=username)
+            return JsonResponse({"result": "Пользователь успешно проверен!"})
+        except Exception as error:
+            return JsonResponse({"result": "Некорректные данные!"})
+    else:
+        return JsonResponse({"result": "Такой метод не реализован!"})
+

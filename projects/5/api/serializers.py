@@ -8,3 +8,10 @@ class UserSerializer(serializers.ModelSerializer):  # сериализатор(�
     class Meta:
         model = User
         fields = '__all__'
+
+
+class IngredientSerializer(serializers.ModelSerializer):  # сериализатор(конвертер данные из объекта модели в JSON)
+
+    class Meta:
+        model = models.ReceiptIngredient
+        fields = '__all__'

@@ -41,7 +41,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 INSTALLED_APPS = [
     'grappelli',
     "corsheaders",
-    'rest_framework',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,6 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'api',
+
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -162,3 +163,13 @@ MEDIA_ROOT = Path(BASE_DIR, 'static/media')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}

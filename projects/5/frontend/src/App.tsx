@@ -7,6 +7,7 @@ import {
 import './App.css';
 import Home from './pages/home';
 import About from './pages/about';
+import Login from './pages/login';
 import "./css/my.css";
 import "./css/bootstrap/bootstrap.css";
 // import "static/css/font_awesome_6_0_0/css/all.min.css";
@@ -21,6 +22,8 @@ function App() {
         </Route>
         
         <Route path="/about" element={<About />}>
+        </Route>
+        <Route path="/login" element={<Login />}>
         </Route>
       </Routes>
     </BrowserRouter>
