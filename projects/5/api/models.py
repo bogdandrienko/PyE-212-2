@@ -23,3 +23,26 @@ class ReceiptIngredient(models.Model):
 
     def __str__(self):  # возвращает строкове представление объекта
         return f'{self.name}'
+
+class TextModel(models.Model):
+    text = models.CharField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default="",
+        verbose_name="текст сообщения:",
+        help_text='<small class="text-muted">это наше сообщение</small><hr><br>',
+        
+        max_length=500,
+    )
+
+    class Meta:
+        app_label = 'api'
+        ordering = ('text',)
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
+
+    def __str__(self):  # возвращает строкове представление объекта
+        return f'{self.text[:30:1]}'

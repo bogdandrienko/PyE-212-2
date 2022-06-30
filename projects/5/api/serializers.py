@@ -15,3 +15,10 @@ class IngredientSerializer(serializers.ModelSerializer):  # сериализат
     class Meta:
         model = models.ReceiptIngredient
         fields = '__all__'
+
+
+class TextModelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.TextModel
+        fields = '__all__'

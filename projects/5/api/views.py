@@ -134,18 +134,60 @@ def login_user(request):
             print(user)
             print(type(user))
             
-            # сериализуем(превращаем в удобоваримый вариант для JSON) данные
-            serialized_user = serializers.UserSerializer(instance=user, many=False).data  # JSON
-            print(serialized_user)
-            print(type(serialized_user))  # JSON <class 'rest_framework.utils.serializer_helpers.ReturnList'>
+            if user:
+                # сериализуем(превращаем в удобоваримый вариант для JSON) данные
+                serialized_user = serializers.UserSerializer(instance=user, many=False).data  # JSON
+                print(serialized_user)
+                print(type(serialized_user))  # JSON <class 'rest_framework.utils.serializer_helpers.ReturnList'>
 
-            # возвращаем данные через DRF
-            return Response({"result": serialized_user})  # Response(JSON)
-
-            # User.objects.get(username=username)
-            return JsonResponse({"result": "Пользователь успешно проверен!"})
+                # возвращаем данные через DRF
+                return Response({"result": serialized_user})  # Response(JSON)
+            else:
+                return Response({"result": "Некорректные данные! Проверьте пароль!"})
         except Exception as error:
             return JsonResponse({"result": "Некорректные данные!"})
     else:
         return JsonResponse({"result": "Такой метод не реализован!"})
 
+
+@api_view(http_method_names=["GET", "POST", "PUT", "DELETE"])
+@permission_classes([AllowAny])
+@csrf_exempt
+def chat_create(request):
+    try:
+        text = request.POST.get("text", None)
+        if text:
+            models.TextModel.objects.create(
+                text=text
+            )
+            return JsonResponse({"result": "Сообщение успешно отправлено!"})
+        return JsonResponse({"result": "ошибка отправки!"})
+    except Exception as error:
+        print(f"Error(chat_create): {error}")
+        return JsonResponse({"result": "ошибка отправки!"})
+
+@api_view(http_method_names=["GET", "POST", "PUT", "DELETE"])
+@permission_classes([AllowAny])
+@csrf_exempt
+def chat_read(request):
+    try:
+        texts = models.TextModel.objects.all()
+        serialized_texts = serializers.TextModelSerializer(instance=texts, many=True).data
+        return JsonResponse({"result": serialized_texts})
+    except Exception as error:
+        print(f"Error(chat_create): {error}")
+        return JsonResponse({"result": []})
+
+@api_view(http_method_names=["GET", "POST", "PUT", "DELETE"])
+@permission_classes([AllowAny])
+@csrf_exempt
+def chat_read_id(request, sms_id):
+    
+    fake_dict = {f"text {sms_id}": "the some text", "id": sms_id}
+    list1 = [{f"text {x}": "the some text", "id": x} for x in range(1, 100)]
+    
+    # list1 = []
+    # for x in range(1, 100):
+    #     list1.append({f"text {x}": "the some text", "id": x})
+    
+    return JsonResponse({"result": {"one": fake_dict, "list": list1}})

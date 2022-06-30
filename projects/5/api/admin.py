@@ -31,3 +31,31 @@ class ReceiptIngredientAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.ReceiptIngredient, ReceiptIngredientAdmin)
+
+class TextModelAdmin(admin.ModelAdmin):
+    """
+    Настройки отображения, фильтрации и поиска модели:'TextModel' на панели администратора
+    """
+
+    list_display = (  # поля для отображения
+        'text',
+    )
+    list_display_links = (  # поля-ссылка
+        'text',
+    )
+    list_editable = (  # поля для редактирования объекта на лету
+    )
+    list_filter = (  # поля для редактирования объекта на лету
+        'text',
+    )
+    fieldsets = (  # подзаголовки для визуального отделения блоков друг от друга
+        ('Основное', {'fields': (
+            'text',
+        )}),
+    )
+    search_fields = [  # поле для поиска
+        'text',
+    ]
+
+
+admin.site.register(models.TextModel, TextModelAdmin)
