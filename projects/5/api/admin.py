@@ -39,6 +39,7 @@ class TextModelAdmin(admin.ModelAdmin):
 
     list_display = (  # поля для отображения
         'text',
+        'created_datetime',
     )
     list_display_links = (  # поля-ссылка
         'text',
@@ -47,14 +48,17 @@ class TextModelAdmin(admin.ModelAdmin):
     )
     list_filter = (  # поля для редактирования объекта на лету
         'text',
+        'created_datetime',
     )
     fieldsets = (  # подзаголовки для визуального отделения блоков друг от друга
         ('Основное', {'fields': (
             'text',
+            'created_datetime',
         )}),
     )
     search_fields = [  # поле для поиска
         'text',
+        'created_datetime',
     ]
 
 

@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 # Create your models here.
 
 
@@ -37,7 +37,19 @@ class TextModel(models.Model):
         
         max_length=500,
     )
+    created_datetime = models.DateTimeField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=timezone.now,
+        verbose_name="время создания:",
+        help_text='<small class="text-muted">время создания</small><hr><br>',
 
+        auto_now_add=False,
+        auto_now=False,
+    )
     class Meta:
         app_label = 'api'
         ordering = ('text',)

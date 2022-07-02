@@ -27,13 +27,7 @@ export default function Navbar() {
           <Link to="/chat" className='btn btn-lg btn-outline-primary m-1'>Chat</Link>
         </li>
         <li className="nav-item">
-          <a className="nav-link" href="#">Features</a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link" href="#">Pricing</a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link" href="#">About</a>
+          <Link to="/redux" className='btn btn-lg btn-outline-primary m-1'>Redux</Link>
         </li>
       </ul>
       <form className="form-inline">

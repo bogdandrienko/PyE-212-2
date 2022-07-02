@@ -1,6 +1,9 @@
+import time
+from datetime import datetime
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -35,7 +38,6 @@ def get_users(request):
         pass
     if request.method == "DELETE":  # delete
         pass
-
 
     # ingredients = models.ReceiptIngredient.objects.all()
     # serialized_ingredients = serializers.IngredientSerializer(instance=ingredients, many=True)
@@ -129,11 +131,11 @@ def login_user(request):
             print(apps)
             someText = request.POST.get("someText", None)
             print(someText)
-            
+
             user = authenticate(username=username, password=password)
             print(user)
             print(type(user))
-            
+
             if user:
                 # сериализуем(превращаем в удобоваримый вариант для JSON) данные
                 serialized_user = serializers.UserSerializer(instance=user, many=False).data  # JSON
@@ -156,9 +158,14 @@ def login_user(request):
 def chat_create(request):
     try:
         text = request.POST.get("text", None)
+
+        date_time = request.POST.get("dateTime", datetime.now())
+        print(date_time)
+
         if text:
             models.TextModel.objects.create(
-                text=text
+                text=text,
+                created_datetime=date_time
             )
             return JsonResponse({"result": "Сообщение успешно отправлено!"})
         return JsonResponse({"result": "ошибка отправки!"})
@@ -166,28 +173,54 @@ def chat_create(request):
         print(f"Error(chat_create): {error}")
         return JsonResponse({"result": "ошибка отправки!"})
 
+
 @api_view(http_method_names=["GET", "POST", "PUT", "DELETE"])
 @permission_classes([AllowAny])
 @csrf_exempt
 def chat_read(request):
     try:
-        texts = models.TextModel.objects.all()
+        if request.method == "DELETE":
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        # texts = models.TextModel.objects.all()
+        texts = models.TextModel.objects.order_by('created_datetime', "-id")  # получаем объекты
+        lenght1 = texts.count()  # получаем количество объектов
+        texts = texts[lenght1 - 5:lenght1]  # берём последние 5
         serialized_texts = serializers.TextModelSerializer(instance=texts, many=True).data
-        return JsonResponse({"result": serialized_texts})
+        time.sleep(3)
+        return Response({"result": serialized_texts})
     except Exception as error:
         print(f"Error(chat_create): {error}")
-        return JsonResponse({"result": []})
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @api_view(http_method_names=["GET", "POST", "PUT", "DELETE"])
 @permission_classes([AllowAny])
 @csrf_exempt
 def chat_read_id(request, sms_id):
     
-    fake_dict = {f"text {sms_id}": "the some text", "id": sms_id}
-    list1 = [{f"text {x}": "the some text", "id": x} for x in range(1, 100)]
+    obj = models.TextModel.objects.get(id=sms_id)
+    serialized_obj = serializers.TextModelSerializer(instance=obj, many=False).data
     
+    # fake_dict = {f"text": "the some text", "id": sms_id}
+    list1 = [{f"text {x}": "the some text", "id": x} for x in range(1, 100)]
+
     # list1 = []
     # for x in range(1, 100):
     #     list1.append({f"text {x}": "the some text", "id": x})
-    
-    return JsonResponse({"result": {"one": fake_dict, "list": list1}})
+
+    return JsonResponse({"result": {"one": serialized_obj, "list": list1}})
+
+
+@api_view(http_method_names=["GET", "POST", "PUT", "DELETE"])
+@permission_classes([AllowAny])
+@csrf_exempt
+def chat_delete_id(request, sms_id):
+    try:
+        if request.method == "DELETE":
+            models.TextModel.objects.get(id=sms_id).delete()
+            return JsonResponse({"result": "Сообщение успешно удалено!"})
+        return JsonResponse({"result": "Ошибка запроса!"})
+    except Exception as error:
+        print(f"Error(chat_delete_id): {error}")
+        return JsonResponse({"result": "Ошибка удаления"})
