@@ -1,11 +1,9 @@
 sudo apt-get update -y
 sudo apt upgrade -y
 
-sudo apt -y install openssh-server
-sudo systemctl start ssh
-sudo systemctl enable ssh
+sudo apt -y install openssh-server & systemctl start ssh & systemctl enable ssh
 
-sudo apt -y install net-tools htop git curl nginx
+sudo apt -y install htop git curl nginx
 sudo apt -y install gunicorn python3-pip python3-dev python3-venv build-essential libpq-dev unixodbc-dev postgresql postgresql-contrib
 
 sudo usermod -aG bogdan www-data
