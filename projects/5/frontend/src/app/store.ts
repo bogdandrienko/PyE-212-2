@@ -3,12 +3,15 @@ import { combineReducers } from "redux";
 import thunk from "redux-thunk";
 
 import counterReducer from '../features/counter/counterSlice';
-import {ReduxExampleReducer} from '../pages/ReduxExamplePage'
-
+import {ReduxExampleReducer} from '../pages/ReduxExamplePage';
+import {CheckUserReducer} from '../pages/login';
+import {GetUsersReducer} from '../pages/Users';
 
 const globalReducer = combineReducers({
   counter: counterReducer,
   ReduxExampleStore: ReduxExampleReducer,
+  CheckUserStore: CheckUserReducer,
+  GetUsersStore: GetUsersReducer,
 });
 
 const initialState = {

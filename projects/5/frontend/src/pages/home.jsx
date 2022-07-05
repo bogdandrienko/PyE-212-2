@@ -157,34 +157,34 @@ export default function Home() {
 
         <div className="card">
         <form>
-            <img class="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"/>
-            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+            <img className="mb-4" src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"/>
+            <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
 
-            <div class="form-floating">
-              <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} class="form-control" id="floatingInput" placeholder="name@example.com"/>
+            <div className="form-floating">
+              <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} className="form-control" id="floatingInput" placeholder="name@example.com"/>
               <label for="floatingInput">Username address</label>
             </div>
-            <div class="form-floating">
-              <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} class="form-control" id="floatingPassword" placeholder="Password"/>
+            <div className="form-floating">
+              <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="form-control" id="floatingPassword" placeholder="Password"/>
               <label for="floatingPassword">Password</label>
             </div>
 
-            <div class="form-floating">
-              <input type="text" value={user.username} onChange={(event) => setUser({"usename": event.target.value, "password": user.password})} class="form-control" id="floatingInput" placeholder="name@example.com"/>
+            <div className="form-floating">
+              <input type="text" value={user.username} onChange={(event) => setUser({"usename": event.target.value, "password": user.password})} className="form-control" id="floatingInput" placeholder="name@example.com"/>
               <label for="floatingInput">Email address</label>
             </div>
-            <div class="form-floating">
-              <input type="password" value={user.password} onChange={(event) => setUser({"usename": user.username, "password": event.target.value})} class="form-control" id="floatingPassword" placeholder="Password"/>
+            <div className="form-floating">
+              <input type="password" value={user.password} onChange={(event) => setUser({"usename": user.username, "password": event.target.value})} className="form-control" id="floatingPassword" placeholder="Password"/>
               <label for="floatingPassword">Password</label>
             </div>
 
-            <div class="checkbox mb-3">
+            <div className="checkbox mb-3">
               <label>
                 <input type="checkbox" value="remember-me"/> Remember me
               </label>
             </div>
-            <button class="w-100 btn btn-lg btn-primary" type="button" onClick={()=> postRequest()}>create</button>
-            <p class="mt-5 mb-3 text-muted">© 2017–2021</p>
+            <button className="w-100 btn btn-lg btn-primary" type="button" onClick={()=> postRequest()}>create</button>
+            <p className="mt-5 mb-3 text-muted">© 2017–2021</p>
           </form>
         </div>
         <div>

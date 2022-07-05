@@ -29,6 +29,9 @@ export default function Navbar() {
         <li className="nav-item">
           <Link to="/redux" className='btn btn-lg btn-outline-primary m-1'>Redux</Link>
         </li>
+        <li className="nav-item">
+          <Link to="/users" className='btn btn-lg btn-outline-primary m-1'>Users</Link>
+        </li>
       </ul>
       <form className="form-inline">
         <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>

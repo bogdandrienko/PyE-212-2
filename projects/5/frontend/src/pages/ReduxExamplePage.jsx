@@ -10,6 +10,23 @@ export const LOGIN_ERROR = "LOGIN_ERROR_CONSTANT";
 export const LOGIN_FAIL = "LOGIN_FAIL_CONSTANT";
 export const LOGIN_RESET = "LOGIN_RESET_CONSTANT";
 
+export const ReduxExampleReducer = (state = {}, action = null) => {
+  switch (action.type) {
+    case LOGIN_LOAD:
+      return { load: true };
+    case LOGIN_DATA:
+      return { load: false, data: action.payload };
+    case LOGIN_ERROR:
+      return { error: "ошибка на сервере" };
+    case LOGIN_FAIL:
+      return { fail: "ошибка на клиенте" };
+    case LOGIN_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
 export const ReduxExampleAction = () => async (dispatch, getState) => {
   try {
     dispatch({
@@ -48,23 +65,6 @@ export const ReduxExampleAction = () => async (dispatch, getState) => {
   }
 };
 
-export const ReduxExampleReducer = (state = {}, action = null) => {
-  switch (action.type) {
-    case LOGIN_LOAD:
-      return { load: true };
-    case LOGIN_DATA:
-      return { load: false, data: action.payload };
-    case LOGIN_ERROR:
-      return { error: "ошибка на сервере" };
-    case LOGIN_FAIL:
-      return { fail: "ошибка на клиенте" };
-    case LOGIN_RESET:
-      return {};
-    default:
-      return state;
-  }
-};
-
 export function ReduxExamplePage() {
   const dispatch = useDispatch();
 
@@ -74,6 +74,7 @@ export function ReduxExamplePage() {
     data: data,
     error: error,
     fail: fail,
+    reset: reset,
   } = ReduxExampleStore;
 
   const checkReducer = () => {

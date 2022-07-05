@@ -52,6 +52,8 @@ def get_users(request):
     #     ingredients.append(ingredient)
     # return JsonResponse({"ingredients": ingredients})
 
+    time.sleep(2)
+
     # получаем объекты (строка) с базы
     users_from_db = User.objects.all()
     print(users_from_db)
@@ -63,7 +65,7 @@ def get_users(request):
     print(type(serialized_users))  # JSON <class 'rest_framework.utils.serializer_helpers.ReturnList'>
 
     # возвращаем данные через DRF
-    return Response({"ingredients": serialized_users})  # Response(JSON)
+    return Response({"users": serialized_users})  # Response(JSON)
 
 
 @api_view(http_method_names=["GET", "POST"])
@@ -106,6 +108,8 @@ def create_user(request):
 def check_user(request):
     if request.method == "GET":
         try:
+            time.sleep(2)
+            
             username = request.GET.get("username", "")
             User.objects.get(username=username)
             return JsonResponse({"result": "Пользователь успешно проверен!"})
