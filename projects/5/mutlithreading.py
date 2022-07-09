@@ -1,7 +1,12 @@
+import asyncio
+import multiprocessing
 import threading
 import time
 import datetime
 import concurrent.futures
+import requests
+import aiohttp
+import aiofiles
 
 
 def decorator_time_measuring(function):  # ссылка на функцию
@@ -127,29 +132,120 @@ def threads():
 
 # multiprocessing = процесс 1: грузим картинку 1, пишем картинку 1 в файл
 # процесс 2: грузим картинку 2, пишем картинку 2 в файл
-from multiprocessing import Process
+
+def measuring_time(function):
+    def decorator(*args, **kwargs):
+        time_start = time.perf_counter()
+        result = function(*args, **kwargs)
+        print(function, time.perf_counter() - time_start)
+        return result
+
+    return decorator
 
 
-# a task to execute in another process
-def task(process_name: str, time_to_sleep: float):
-    print(f'This is start another process {process_name}', flush=True, end='\n')
-    time.sleep(time_to_sleep)
-    print(f'This is end another process {process_name}', flush=True, end='\n')
+def task(task_name: str):
+    print(f'BEGIN {task_name}', flush=True, end='\n')
+
+    url = "https://picsum.photos/370/250"
+    headers = {
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+                      'AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/102.0.0.0 Safari/537.36'
+    }
+    response = requests.get(url=url, headers=headers)
+    with open(f'temp/{task_name}_image.jpg', 'wb') as file:
+        file.write(response.content)
+
+    print(f'END {task_name}', flush=True, end='\n')
+    return response
+
+
+async def task_async(task_name: str):
+    print(f'BEGIN {task_name}', flush=True, end='\n')
+
+    async with aiohttp.ClientSession() as session:
+        async with session.get("https://picsum.photos/370/250") as response:
+            data = await response.read()
+    with open(f'temp/{task_name}_image.jpg', 'wb') as file:
+        file.write(data)
+
+    print(f'END {task_name}', flush=True, end='\n')
+    return response
+
+
+@measuring_time
+def sync_tasks():
+    # start sync
+    # task('sync_1')
+
+    sync_list = [f'sync_{x}' for x in range(1, 11)]
+    for sync in sync_list:
+        task(sync)
+
+
+def async_tasks():
+    time_start = time.perf_counter()
+
+    # start async
+    # async def async_tasks_start():
+    #     await asyncio.gather(task_async(f'async_1'))
+    # asyncio.get_event_loop().run_until_complete(async_tasks_start())
+
+    async def async_tasks_start():
+        await asyncio.gather(
+            *[task_async(f'async_{x}') for x in range(1, 11)]
+        )
+
+    asyncio.get_event_loop().run_until_complete(async_tasks_start())
+
+    print('async', time.perf_counter() - time_start)
+
+
+@measuring_time
+def threading_tasks():
+    # # define thread
+    # thread_1 = threading.Thread(target=task, args=('thread_1',), kwargs={})
+    # thread_2 = threading.Thread(target=task, args=('thread_2',), kwargs={})
+    # # start thread
+    # thread_1.start()  # start the task in a new thread
+    # thread_2.start()  # start the task in a new thread
+    # # join thread
+    # thread_1.join()  # wait for the task to complete
+    # thread_2.join()  # wait for the task to complete
+
+    threading_list = [threading.Thread(target=task, args=(f'thread_{x}',), kwargs={}) for x in range(1, 11)]
+    for thread in threading_list:
+        thread.start()
+    for thread in threading_list:
+        thread.join()
+
+
+@measuring_time
+def process_tasks():
+    # # define processes
+    # process_1 = multiprocessing.Process(target=task, args=('process_1',), kwargs={})
+    # process_2 = multiprocessing.Process(target=task, args=('process_2',), kwargs={})
+    # # start processes
+    # process_1.start()  # start the task in a new process
+    # process_2.start()  # start the task in a new process
+    # # join processes
+    # process_1.join()  # wait for the task to complete
+    # process_2.join()  # wait for the task to complete
+    # # kill processes
+    # process_1.terminate()  # wait for the task to complete
+    # process_2.terminate()  # wait for the task to complete
+
+    process_list = [multiprocessing.Process(target=task, args=(f'process_{x}',), kwargs={}) for x in range(1, 11)]
+    for process in process_list:
+        process.start()
+    for process in process_list:
+        process.join()
 
 
 # entry point for the program
 if __name__ == '__main__':
-    p1 = Process(target=task, args=('p1', 3.5))  # define a task to run in a new process
-    p1.start()  # start the task in a new process
-
-    p2 = Process(target=task, args=('p2', 6.5))  # define a task to run in a new process
-    p2.start()  # start the task in a new process
-
-    p3 = Process(target=task, args=('p3', 5.5))  # define a task to run in a new process
-    p3.start()  # start the task in a new process
-
-
-
-    p1.join()  # wait for the task to complete
-    p2.join()  # wait for the task to complete
-    p3.join()  # wait for the task to complete
+    # async_tasks()  # 1.3329052
+    # sync_tasks()  # 5.8510097
+    # threading_tasks()  # 1.1851449
+    # process_tasks()  # 1.1118587
+    pass
