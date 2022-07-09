@@ -6,12 +6,14 @@ import counterReducer from '../features/counter/counterSlice';
 import {ReduxExampleReducer} from '../pages/ReduxExamplePage';
 import {CheckUserReducer} from '../pages/login';
 import {GetUsersReducer} from '../pages/Users';
+import {GetTodosReducer} from '../pages/Todos';
 
 const globalReducer = combineReducers({
   counter: counterReducer,
   ReduxExampleStore: ReduxExampleReducer,
   CheckUserStore: CheckUserReducer,
   GetUsersStore: GetUsersReducer,
+  GetTodosStore: GetTodosReducer,
 });
 
 const initialState = {

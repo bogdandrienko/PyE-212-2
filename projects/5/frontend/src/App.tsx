@@ -13,6 +13,7 @@ import "./css/my.css";
 import "./css/bootstrap/bootstrap.css";
 import {ReduxExamplePage} from './pages/ReduxExamplePage';
 import Users from './pages/Users';
+import {Todos} from './pages/Todos';
 // import "static/css/font_awesome_6_0_0/css/all.min.css";
 // import "static/css/font_zen/style.css";
 
@@ -38,6 +39,9 @@ function App() {
         </Route>
 
         <Route path="/users" element={<Users />}>
+        </Route>
+
+        <Route path="/todos" element={<Todos />}>
         </Route>
 
       </Routes>

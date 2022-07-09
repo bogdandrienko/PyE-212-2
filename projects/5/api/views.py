@@ -246,20 +246,7 @@ def todo(request):
                                      "Chrome/51.0.2704.103 Safari/537.36"}
             response = requests.get(url=url, headers=headers)
             json_data = response.json()
-
-            # import psycopg2
-            # connection = psycopg2.connect(user="postgres",
-            #                               # пароль, который указали при установке PostgreSQL
-            #                               password="31284bogdan",
-            #                               host="127.0.0.1",  # 'localhost' \ '192.168.158.16'
-            #                               port="5432")
-            # cursor = connection.cursor()
-            #
-            # query_string = '''SELECT * FROM public.example_table ORDER BY id ASC'''
-            # cursor.execute(query_string)
-            # cursor.close()
-            # connection.close()
-
+            time.sleep(3)
             return JsonResponse({"result": json_data})
         elif request.method == "POST":
             # logic for create todo

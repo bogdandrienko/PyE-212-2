@@ -38,13 +38,12 @@ export const GetUsersAction = () => async (dispatch, getState) => {
     // const { ReduxExampleStore: ReduxExampleStore } = getState();
 
     const config = {
-      method: "GET",
+      "method": "GET",
       timeout: 5000,
       url: `/api/get_users/`,
       data: null,
     };
     const response = await axios(config);
-    // console.log(response);
 
     const { data } = response;
     if (data) {
@@ -105,6 +104,20 @@ export function Users() {
     console.log(`error: ${error}`);
     console.log(`fail: ${fail}`);
     console.log(`reset: ${reset}`);
+
+    const config1 = {
+      "method": "GET",
+    };
+    
+    console.log(config1);
+    const config2 = {
+      method: "GET",
+    };
+    console.log(config2);
+
+    console.log(config1.method);
+    console.log(config1["method"]);
+  
   }, [GetUsersStore]);
 
   return (
