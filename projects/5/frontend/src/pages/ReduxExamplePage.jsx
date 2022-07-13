@@ -74,7 +74,6 @@ export function ReduxExamplePage() {
     data: data,
     error: error,
     fail: fail,
-    reset: reset,
   } = ReduxExampleStore;
 
   const checkReducer = () => {
@@ -91,6 +90,13 @@ export function ReduxExamplePage() {
     console.log(`error: ${error}`);
     console.log(`fail: ${fail}`);
   }, [ReduxExampleStore]);
+
+  useEffect(() => {
+    console.log(`load: ${load}`);
+    console.log(`data: ${data}`);
+    console.log(`error: ${error}`);
+    console.log(`fail: ${fail}`);
+  }, [data]);
 
   return (
     <div>
@@ -116,6 +122,8 @@ export function ReduxExamplePage() {
 
           <div className="card m-1 p-1">
             {load && <div className="text-primary">Идёт загрузка...</div>}
+            {error && <div className="text-danger">{error}</div>}
+            {fail && <div className="text-warning">{fail}</div>}
             {data && data.result && (
               <ul className="list-group mb-3">
                 {data.result.map((x) => (
@@ -131,8 +139,6 @@ export function ReduxExamplePage() {
                 ))}
               </ul>
             )}
-            {error && <div className="text-danger">{error}</div>}
-            {fail && <div className="text-warning">{fail}</div>}
           </div>
         </div>
       </main>

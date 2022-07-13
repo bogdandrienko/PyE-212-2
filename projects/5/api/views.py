@@ -45,6 +45,7 @@ def get_users(request):
     if request.method == "DELETE":  # delete
         pass
 
+
     # ingredients = models.ReceiptIngredient.objects.all()
     # serialized_ingredients = serializers.IngredientSerializer(instance=ingredients, many=True)
     # return Response({"ingredients": serialized_ingredients.data})
@@ -201,7 +202,7 @@ def chat_read(request):
         return Response({"result": serialized_texts})
     except Exception as error:
         print(f"Error(chat_create): {error}")
-        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 @api_view(http_method_names=["GET", "POST", "PUT", "DELETE"])
