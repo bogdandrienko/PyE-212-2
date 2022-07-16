@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+
+
 # Create your models here.
 
 
@@ -24,6 +26,7 @@ class ReceiptIngredient(models.Model):
     def __str__(self):  # возвращает строкове представление объекта
         return f'{self.name}'
 
+
 class TextModel(models.Model):
     text = models.CharField(
         primary_key=False,
@@ -34,7 +37,19 @@ class TextModel(models.Model):
         default="",
         verbose_name="текст сообщения:",
         help_text='<small class="text-muted">это наше сообщение</small><hr><br>',
-        
+
+        max_length=500,
+    )
+    title = models.CharField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default="",
+        verbose_name="проверка сообщения:",
+        help_text='<small class="text-muted">это наше сообщение</small><hr><br>',
+
         max_length=500,
     )
     created_datetime = models.DateTimeField(
@@ -50,6 +65,7 @@ class TextModel(models.Model):
         auto_now_add=False,
         auto_now=False,
     )
+
     class Meta:
         app_label = 'api'
         ordering = ('text',)

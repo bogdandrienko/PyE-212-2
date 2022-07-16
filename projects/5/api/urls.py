@@ -4,6 +4,7 @@ from api import views
 
 urlpatterns = [
     path(route='', view=views.home, name=""),
+    path(route='test/', view=views.test, name="test"),
 
     path(route='api/get_users/', view=views.get_users),
     path(route='api/get_users_count/', view=views.get_users_count),

@@ -96,14 +96,14 @@ def receipt(request, receipt_id):
     # print(receipt)
     # print(type(receipt))
 
-    comments = models.ReceiptComment.objects.all().filter(receipt=receipt).order_by('-time', '-comment_text')
+    comments = models.ReceiptComment.objects.filter(receipt=receipt).order_by('-time', '-comment_text')
     # print(comments)
     # print(type(comments))
 
     # comments[0].time = timezone.now()
     # comments[0].time.save()
 
-    likes = models.ReceiptRating.objects.all().filter(receipt=receipt)
+    likes = models.ReceiptRating.objects.filter(receipt=receipt)
     # print(likes)
     # print(type(likes))
 

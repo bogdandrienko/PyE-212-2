@@ -8,11 +8,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
+from django.core.mail import send_mail
 
 import requests
 import aiohttp
 import asyncio
 
+import datetime
 from . import models
 from . import serializers
 from . import utils
@@ -29,6 +31,25 @@ def home(request):
 
 def test(request):
     context = {}
+
+    # имя пользователя
+    # email -> 40% email - дополнить его, и только тогда ты посылаешь токен (логика с шифрованием) на сброс пароля
+    # ->
+
+    username = "bogdandrienko"
+    password = "admin"
+    datetime1 = datetime.datetime.now()
+
+    str_token = f"{username}_{password}_{datetime1}".encode()
+
+    # секретный вопрос (имя первого питомца) -> правильный ответ
+
+    print('take sms')
+
+    for i in range(1, 10):
+        send_mail('Отправка писем в Django', f'Успешно получилось {i}!', settings.EMAIL_HOST_USER,
+                  ['bogdandrienko@gmail.com'])
+
     return render(request, 'public/index.html', context)
 
 
@@ -44,7 +65,6 @@ def get_users(request):
         pass
     if request.method == "DELETE":  # delete
         pass
-
 
     # ingredients = models.ReceiptIngredient.objects.all()
     # serialized_ingredients = serializers.IngredientSerializer(instance=ingredients, many=True)
@@ -287,4 +307,3 @@ def todo_by_id(request, todo_id):
         if settings.LOG:
             utils.Django.Logging.write_error_to_log_text_file(error=error)
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-

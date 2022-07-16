@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -89,17 +88,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+POSTGRES = True
+if POSTGRES:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'example',
+            'USER': 'postgres',
+            'PASSWORD': '31284bogdan',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
     }
-}
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -119,7 +128,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -130,7 +138,6 @@ TIME_ZONE = 'Etc/GMT-6'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -156,7 +163,6 @@ else:
         Path(BASE_DIR / 'frontend/public/static'),
     ]
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = Path(BASE_DIR, 'static/media')
 
@@ -174,3 +180,22 @@ REST_FRAMEWORK = {
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+FROM_EMAIL = 'eevee.cycle1@yandex.ru'
+EMAIL_ADMIN = 'eevee.cycle1@yandex.ru'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "eevee.cycle1@yandex.ru"
+EMAIL_HOST_PASSWORD = "31284Bogdan"
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+host: EMAIL_HOST
+port: EMAIL_PORT
+username: EMAIL_HOST_USER
+password: EMAIL_HOST_PASSWORD
+use_tls: EMAIL_USE_TLS
+use_ssl: EMAIL_USE_SSL
