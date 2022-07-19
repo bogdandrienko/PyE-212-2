@@ -4,6 +4,9 @@ import datetime
 import requests
 import json
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+
+
 # Create your views here.
 
 
@@ -11,23 +14,25 @@ def index(request):
     users = User.objects.all()  # все записи
     # users = User.objects.filter()  # все записи через массив условий
     # users = User.objects.order_by()  # все записи с сортивкой
-    
+
     print(users)
     print(type(users))
-    
+
     users_names = [x.username for x in users]
     print(users_names)
     print(type(users_names))
     print(users_names[0])
     print(type(users_names[0]))
-    
+
     context = {"users_names": users_names, "count": len(users_names)}
     return render(request, "build/index.html", context=context)
+
 
 def html(request):
     now = datetime.datetime.now()
     html = "<html><body>It is now %s.</body></html>" % now
     return HttpResponse(html)
+
 
 def about(request):
     url = "https://jsonplaceholder.typicode.com/todos"
@@ -41,14 +46,32 @@ def about(request):
         headers=headers
     )
     
-    # response.json()
-    data = json.loads(response.content)
+    page = int(request.GET.get("page", 1))
+    limit = int(request.GET.get("limit", 10))
+    filter = str(request.GET.get("filter", ""))
     
-    return JsonResponse(data, safe=False)
+    print(f"page: {page}")
+    print(f"limit: {limit}")
+    print(f"filter: {filter}")
+    
+    data = json.loads(response.content)
+    paginator_obj = Paginator(data, limit)
+    current_page = paginator_obj.get_page(page).object_list
+    
+    res = {"current_page": current_page, "x-total-count": len(data)}
+    
+    print(f"current_page: {current_page}")
+
+    # response.json()
+
+    return JsonResponse(res, safe=False)
+
 
 def home(request):
     context = {}
     return render(request, "backend_api/home.html", context=context)
+
+
 
 # HTTPresponse
 # JsonResponse
