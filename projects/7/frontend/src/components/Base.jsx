@@ -1,17 +1,26 @@
 import React from 'react';
-import {Navbar, Footer} from './ui';
+import { Footer2 } from './footers';
+import {Navbar1, Navbar2, Navbar4} from './navbars';
 
 
-function Base({children}) {
+export default function Base({children}) {
   return (
-    <div>
+    <div className='p-0'>
       <main className="custom_main_1">
-        <Navbar />
-        <div>{children}</div>
+        <Navbar1 />
+        <div className='p-0'>{children}</div>
       </main>
-      <Footer/>
+      <Navbar1/>
     </div>
   )
 }
 
-export default Base
+export function Base1({children}) {
+  return (
+    <div className='m-0 p-0'>
+      <Navbar4/>
+      <main>{children}</main>
+      <Footer2/>
+    </div>
+  )
+}

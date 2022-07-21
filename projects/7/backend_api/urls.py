@@ -4,6 +4,15 @@ from backend_api import views
 
 urlpatterns = [
     path('', views.index, name=''),
+    
+    path('login/', views.login, name='login'),
+    
+    
+    
+    
+    
+    
+    
     path('html/', views.html, name='html'),
     path('about/', views.about, name='about'),
     path('home/', views.home, name='home'),

@@ -1,32 +1,28 @@
 import React, { useState } from "react";
-import Base, {Base1} from "../components/Base";
+import {Base1} from "../components/Base";
 import { Paginator } from "../components/ui";
 import axios from "axios";
 
-function Login() {
-
-  // localstorage
+export default function Register() {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [passwords, setPasswords] = useState({
+    "password1": "",
+    "password2": "",
+    "password3": "123",
+  });
 
   function Formdata(form) {
     form.preventDefault();
 
-    axios.post("/login/", {"username": username, "password": password }).then(
-      (result)=> {
-        console.log(result);
-      }
-    );
+    axios.post(
+      
+    )
+
+    console.log(`username: ${username}`)
+    console.log(`password1: ${passwords.password1}`)
+    console.log(`password2: ${passwords.password2}`)
   }
 
-  function TogglePasswordVisibility(uuid="") {
-      let x = document.getElementById(uuid);
-      if (x.type === "password") {
-        x.type = "text";
-      } else {
-        x.type = "password";
-      }
-  }
 
   return (
     <Base1>
@@ -35,10 +31,10 @@ function Login() {
           <div class="row align-items-center g-lg-5 py-5">
             <div class="col-lg-7 text-center text-lg-start">
               <h1 class="display-4 fw-bold lh-1 mb-3">
-                Вход
+                Создание нового пользователя
               </h1>
               <p class="col-lg-10 fs-4">
-                ... тут будет умная цитата ...
+                ...
               </p>
             </div>
             <div class="col-md-10 mx-auto col-lg-5">
@@ -66,16 +62,32 @@ function Login() {
                     min="8"
                     max="16"
                     required
-                    value={password}
-                    onChange={(event)=> setPassword(event.target.value)}
+                    value={passwords.password1}
+                    onChange={(event)=> setPasswords({password1: event.target.value,  password2: passwords.password2})}
                   />
                   <label for="floatingPassword">Введите пароль от аккаунта</label>
                 </div>
-                <label>показать пароль</label>
-                <input onClick={()=> TogglePasswordVisibility("floatingPassword")} type="checkbox" id="vehicle1" name="vehicle1" value="Bike" placeholder="показать пароль"></input>
+                <div class="form-floating mb-3">
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="floatingPassword"
+                    placeholder="Password"
+                    min="8"
+                    max="16"
+                    required
+                    value={passwords.password2}
+                    onChange={(event)=> setPasswords({ ...passwords, password2: event.target.value})}
+                  />
+                  <label for="floatingPassword">Повторите пароль</label>
+                </div>
                 <button class="w-100 btn btn-lg btn-primary" type="submit">
-                  Войти
+                  Создать аккаунт
                 </button>
+                <hr class="my-4" />
+                <small class="text-muted">
+                  Нажимая "создать аккаунт" Вы соглашаетесь с правилами
+                </small>
               </form>
             </div>
           </div>
@@ -84,5 +96,3 @@ function Login() {
     </Base1>
   );
 }
-
-export default Login;

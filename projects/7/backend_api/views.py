@@ -27,6 +27,22 @@ def index(request):
     context = {"users_names": users_names, "count": len(users_names)}
     return render(request, "build/index.html", context=context)
 
+from django.views.decorators.csrf import csrf_exempt
+
+# @api_view(http_method_names=["GET", "POST"])
+# @permission_classes([AllowAny])
+@csrf_exempt
+def login(request):
+    if request.method == "POST":
+        username = request.POST.get("username", None)
+        password = request.POST.get("password", None)
+        if username and password:
+            return JsonResponse({"response": "Успешно вошли"}, safe=False)
+        else:
+            return HttpResponse(status=404)
+    else:
+        return HttpResponse(status=405)
+
 
 def html(request):
     now = datetime.datetime.now()
