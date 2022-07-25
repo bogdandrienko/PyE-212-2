@@ -15,6 +15,7 @@ import News from './pages/News';
 
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Auth from './pages/Auth';
 
 function App() {
   return (
@@ -25,6 +26,9 @@ function App() {
         </Route>
 
         <Route path="/news" element={<News />}>
+        </Route>
+
+        <Route path="/auth" element={<Auth />}>
         </Route>
 
         <Route path="/about" element={<About />}>

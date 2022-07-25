@@ -188,6 +188,7 @@ export const Navbar4 = () => {
             <Nav.Link href="#" disabled>
               Карта развития платформы
             </Nav.Link>
+            <Link to={"/auth"} className={"btn btn-sm btn-outline-primary"}>Авторизация</Link>
           </Nav>
           <Form className="d-flex">
             <div className=" input-group">

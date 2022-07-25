@@ -4,22 +4,49 @@ import { Paginator } from "../components/ui";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
-function Login() {
-  const navigate = useNavigate();
+export default function Auth() {
+  const [auth, setAuth] = useState(false);
+
+
+  function Login(form){
+    form.preventDefault();
+    const formData = new FormData();
+    formData.append("username", username)
+    formData.append("password", password)
+
+    axios
+    .post("/login/", formData)
+    .then(
+      (result)=> {
+        console.log(result)
+        if (result.status == 200){
+          setAuth(true)
+        } else {
+          setAuth(false)
+        }
+      }
+    ).catch(()=> {
+      setAuth(false)
+    });
+  }
+
+  function Logout(form){
+    setAuth(false)
+  }
 
   // localstorage
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  function Formdata(form) {
-    form.preventDefault();
+  // function Formdata(form) {
+  //   form.preventDefault();
 
-    axios.post("/login/", {"username": username, "password": password }).then(
-      (result)=> {
-        console.log(result);
-      }
-    );
-  }
+  //   axios.post("/login/", {"username": username, "password": password }).then(
+  //     (result)=> {
+  //       console.log(result);
+  //     }
+  //   );
+  // }
 
   function TogglePasswordVisibility(uuid="") {
       let x = document.getElementById(uuid);
@@ -30,19 +57,19 @@ function Login() {
       }
   }
 
-  function GetData() {
-    const accessToken = localStorage.getItem('token')
+  // function GetData() {
+  //   const accessToken = localStorage.getItem('token')
 
-    axios.get("/backend_api/get_books/", { headers: {
-      'Authorization': `Bearer ${accessToken}`
-    }}).then(
-      (response)=> {
-        console.log(response);
-      }
-    ).catch((error)=> {
-      localStorage.removeItem("token");
-    });
-  }
+  //   axios.get("/backend_api/get_books/", { headers: {
+  //     'Authorization': `Bearer ${accessToken}`
+  //   }}).then(
+  //     (response)=> {
+  //       console.log(response);
+  //     }
+  //   ).catch((error)=> {
+  //     localStorage.removeItem("token");
+  //   });
+  // }
 
   return (
     <Base1>
@@ -57,8 +84,9 @@ function Login() {
                 ... тут будет умная цитата ...
               </p>
             </div>
+            {auth ? "Вы авторизованы" : "Вы не авторизованы"}
             <div class="col-md-10 mx-auto col-lg-5">
-              <form class="p-4 p-md-5 border rounded-3 bg-light" onSubmit={Formdata}>
+              <form class="p-4 p-md-5 border rounded-3 bg-light" onSubmit={Login}>
                 <div class="form-floating mb-3">
                   <input
                     type="text"
@@ -89,8 +117,11 @@ function Login() {
                 </div>
                 <label>показать пароль</label>
                 <input onClick={()=> TogglePasswordVisibility("floatingPassword")} type="checkbox" id="vehicle1" name="vehicle1" value="Bike" placeholder="показать пароль"></input>
-                <button class="w-100 btn btn-lg btn-primary" type="submit">
+                <button class="w-50 btn btn-lg btn-primary" type="submit">
                   Войти
+                </button>
+                <button onClick={Logout} class="w-50 btn btn-lg btn-danger" type="button">
+                  Выйти
                 </button>
               </form>
             </div>
@@ -100,5 +131,3 @@ function Login() {
     </Base1>
   );
 }
-
-export default Login;
