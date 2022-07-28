@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-POSTGRES = True
+POSTGRES = False
 if POSTGRES:
     DATABASES = {
         'default': {

@@ -216,7 +216,7 @@ def chat_read(request):
         # texts = models.TextModel.objects.all()
         texts = models.TextModel.objects.order_by('created_datetime', "-id")  # получаем объекты
         lenght1 = texts.count()  # получаем количество объектов
-        texts = texts[lenght1 - 5:lenght1]  # берём последние 5
+        #texts = texts[lenght1 - 5:lenght1]  # берём последние 5
         serialized_texts = serializers.TextModelSerializer(instance=texts, many=True).data
         time.sleep(3)
         return Response({"result": serialized_texts})

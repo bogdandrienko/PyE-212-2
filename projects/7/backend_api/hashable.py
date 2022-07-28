@@ -13,27 +13,18 @@ dict1 = {
     "key2": {"key1": "value1"},
 }
 
-
 numbers_orig = [5, 2, 6, 7, 8, 12, 15, 111]
 words_orig = ["hello", 'Alice', "ball", 'eleven', '12']
 
 
-
-
-
-
-
-
-
-
-
 def myBubbleSort(myList):
-    for i in range(len(myList)-1):
-        for j in range(len(myList)-i-1):
-            if myList[j]<myList[j+1]:
-                temp=myList[j]
-                myList[j]=myList[j+1]
-                myList[j+1]=temp
+    for i in range(len(myList) - 1):
+        for j in range(len(myList) - i - 1):
+            if myList[j] < myList[j + 1]:
+                temp = myList[j]
+                myList[j] = myList[j + 1]
+                myList[j + 1] = temp
+
 
 print("Original list:")
 print(numbers_orig)
@@ -42,21 +33,32 @@ print("Sorted list:")
 print(numbers_orig)
 
 
-
-
-
-
-
 class A:
     val1 = 12
+
     def __init__(self, val1) -> None:
         self.val = val1
         self.__val2 = val1 + 5
-    
+
+
 class B:
     val2 = 12
+
     def __init__(self, val1) -> None:
         pass
-    
+
+
 A.val1
 A.val
+
+n = [1, 2, 3, 4, 5]  # 1s
+
+for i in n:
+    pass  # i
+
+n = [1, 2, 3, 4, 5, 6]  # 1s
+h = [1, 2, 3, 4, 5]  # 1s
+
+for i in n:
+    for i in h:
+        pass  # i
