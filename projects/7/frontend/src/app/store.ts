@@ -1,10 +1,21 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import { combineReducers } from "redux";
+import thunk from "redux-thunk";
+import * as reducers from '../components/Reducers'
+
+
+const globalReducer = combineReducers({
+  newsBooks: reducers.getAllNewsBooks,
+});
+
+const initialState = {
+};
 
 export const store = configureStore({
-  reducer: {
-    counter: counterReducer,
-  },
+  reducer: globalReducer,
+  devTools: true,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
+  preloadedState: initialState,
 });
 
 export type AppDispatch = typeof store.dispatch;

@@ -1,4 +1,6 @@
-from django.shortcuts import render
+import time
+
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 import datetime
 import requests
@@ -6,8 +8,14 @@ import json
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 
-
 # Create your views here.
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework import status
+
+from backend_api import models
+from backend_api import serializers
 
 
 def index(request):
@@ -27,7 +35,9 @@ def index(request):
     context = {"users_names": users_names, "count": len(users_names)}
     return render(request, "build/index.html", context=context)
 
+
 from django.views.decorators.csrf import csrf_exempt
+
 
 # @api_view(http_method_names=["GET", "POST"])
 # @permission_classes([AllowAny])
@@ -61,21 +71,21 @@ def about(request):
         url=url,
         headers=headers
     )
-    
+
     page = int(request.GET.get("page", 1))
     limit = int(request.GET.get("limit", 10))
     filter = str(request.GET.get("filter", ""))
-    
+
     print(f"page: {page}")
     print(f"limit: {limit}")
     print(f"filter: {filter}")
-    
+
     data = json.loads(response.content)
     paginator_obj = Paginator(data, limit)
     current_page = paginator_obj.get_page(page).object_list
-    
+
     res = {"current_page": current_page, "x-total-count": len(data)}
-    
+
     print(f"current_page: {current_page}")
 
     # response.json()
@@ -88,6 +98,52 @@ def home(request):
     return render(request, "backend_api/home.html", context=context)
 
 
+@api_view(http_method_names=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+@permission_classes([AllowAny])
+def news(request, book_id=0):
+
+    time.sleep(3)
+
+    if int(book_id) >= 1:
+        if request.method == "GET":  # получение книги
+            book = get_object_or_404(models.ModelBook, id=book_id)
+            serialized_book = serializers.BookSerializer(instance=book, many=False).data
+            return Response(data=serialized_book, status=status.HTTP_200_OK)
+        elif request.method == "DELETE":
+            book = models.ModelBook.objects.get(id=book_id).delete()
+            book.delete()
+            return Response(data={"response": "Успешно удалено."}, status=status.HTTP_200_OK)
+        elif request.method == "PUT" or request.method == "PATCH":
+            book = models.ModelBook.objects.get(id=book_id)
+
+            title = request.POST.get("title", "Шаблон заголовка")
+            description = request.POST.get("description", "Шаблон описания")
+            if book.title != title:
+                book.title = title
+            if book.description != description:
+                book.description = description
+            book.save()
+
+            book = models.ModelBook.objects.get(id=book_id)
+            serialized_book = serializers.BookSerializer(instance=book, many=False).data
+            return Response(data=serialized_book, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    else:
+        if request.method == "GET":  # получение книг
+            books = models.ModelBook.objects.all()  # order_by filter ...
+            serialized_book = serializers.BookSerializer(instance=books, many=True).data
+            return Response(data=serialized_book, status=status.HTTP_200_OK)
+        elif request.method == "POST":  # создание книги
+            title = request.POST.get("title", "Шаблон заголовка")
+            description = request.POST.get("description", "Шаблон описания")
+            models.ModelBook.objects.create(
+                title=title,
+                description=description
+            )
+            return Response(data={"response": "Успешно создано."}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 # HTTPresponse
 # JsonResponse

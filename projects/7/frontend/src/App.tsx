@@ -5,8 +5,8 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import { Counter } from './features/counter/Counter';
 import './App.css';
+import './css/my.css';
 
 import Home from './pages/Home';
 

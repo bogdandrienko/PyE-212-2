@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import FileExtensionValidator, MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 
+
 # Create your models here.
 class ModelBookCategory(models.Model):
     title = models.CharField(
@@ -25,7 +26,8 @@ class ModelBookCategory(models.Model):
 
     def __str__(self):
         return f'{self.title}'
-    
+
+
 class ModelBook(models.Model):
     title = models.CharField(
         primary_key=False,
@@ -44,12 +46,12 @@ class ModelBook(models.Model):
         editable=True,
         blank=True,
         null=True,
-        default="img/book/avatar/default/default_receipt.jpg",
+        default="default/modelbooks/default_book.jpg",
         verbose_name="Заставка:",
         help_text='<small class="text-muted">это наша заставка</small><hr><br>',
 
         validators=[FileExtensionValidator(['jpg', 'png', 'bmp', 'jpeg'])],
-        upload_to='img/book/avatar',
+        upload_to='modelbooks',  # /static/ media/ modelbooks/ image.jpg
         max_length=100,
     )
     time_to_cook = models.IntegerField(  # BigIntegerField SmallIntegerField PositiveIntegerField ...
@@ -69,9 +71,6 @@ class ModelBook(models.Model):
         db_index=True,
         error_messages=False,
         primary_key=False,
-        unique_for_date=False,
-        unique_for_month=False,
-        unique_for_year=False,
         unique=False,
         editable=True,
         blank=True,
@@ -85,9 +84,6 @@ class ModelBook(models.Model):
         db_index=True,
         error_messages=False,
         primary_key=False,
-        unique_for_date=False,
-        unique_for_month=False,
-        unique_for_year=False,
         unique=False,
         editable=True,
         blank=True,

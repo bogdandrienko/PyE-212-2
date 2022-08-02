@@ -1,9 +1,5 @@
 import { Link } from "react-router-dom";
 
-
-
-
-
 export function Paginator({
   page,
   setPage,
@@ -16,9 +12,9 @@ export function Paginator({
   return (
     <div className="card">
       <nav aria-label="Page navigation example">
-        <ul class="pagination">
+        <ul className="pagination">
           {page !== 1 && (
-            <li class="page-item">
+            <li className="page-item">
               <button
                 onClick={() => {
                   setPage(page - 1);
@@ -31,7 +27,7 @@ export function Paginator({
             </li>
           )}
           {createPages(pages).map((cur_page) => (
-            <li class="page-item">
+            <li className="page-item">
               <button
                 onClick={() => {
                   setPage(cur_page);
@@ -49,7 +45,7 @@ export function Paginator({
             </li>
           ))}
           {pages.length / limit !== page && (
-            <li class="page-item">
+            <li className="page-item">
               <button
                 onClick={() => {
                   setPage(page + 1);
@@ -63,6 +59,57 @@ export function Paginator({
           )}
         </ul>
       </nav>
+    </div>
+  );
+}
+
+export function Loader1({ color="text-black" }) {
+  return (
+    <div className={`lds-spinner ${color}`}>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  );
+}
+
+export function Modal1({ okFunc, cancelFunc }) {
+  return (
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button onClick={()=> okFunc(666)} type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button onClick={cancelFunc} type="button" class="btn btn-primary">Принять</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Modal2({ children, okFunc, cancelFunc }) {
+  return (
+    <div className="modal__wrap">
+        <div className="modal visible">
+          {children}
+        </div>
     </div>
   );
 }
