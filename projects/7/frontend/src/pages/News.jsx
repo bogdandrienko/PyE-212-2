@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef, createRef, useRef  } from "react";
 import Base, {Base1} from "../components/Base";
 import {Paginator} from "../components/ui";
 import {BookMainView} from "../components/books";
@@ -6,50 +6,78 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import * as constants from '../components/Constants'
 import * as ui from '../components/ui'
+import * as utils from '../components/utils'
 
 
 export default function News() {
   const dispatch = useDispatch();
   const newsBooks = useSelector((state)=>state.newsBooks);
 
-  const [array, setArray] = useState([]);
-  const [page, setPage] = useState(3);
-  const [limit, setLimit] = useState(20);
-  const [pages, setPages] = useState(10); // [1]  -> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  const [viewType, setViewType] = useState(1);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(3);
+  const [count, setCount] = useState(1);
 
   function AxiosRequest() {
-    dispatch({type: constants.CONST_NEWS_BOOKS_LOAD})
-    axios
-      .get(`/api/news`)
-      .then((response) => {
-        const result = response.data;
-        //console.log(response);
-        //console.log(response.status);
-        //console.log(response.data);
-        dispatch({type: constants.CONST_NEWS_BOOKS_DATA, payload: result })
-      });
-    // console.log('Hello react!');
+    if (newsBooks.load === false){
+      dispatch({type: constants.CONST_NEWS_BOOKS_LOAD})
+      axios
+        .get(`/api/news`, {
+          params: {
+            limit: limit,
+            page: page,
+          },
+        })
+        .then((response) => {
+          const result = response.data.object_list;
+          setCount(response.count);
+          dispatch({type: constants.CONST_NEWS_BOOKS_DATA, payload: [...newsBooks.data, ...result] })
+        });
+    }
   }
 
   useEffect(()=> {
     console.log(newsBooks)
   }, [newsBooks])
 
-  function createPages(pages1) {
-    const arr1 = [];
-    for (var i = 1; i <= pages1 / limit; i++) {
-      arr1.push(i);
+  useEffect(()=> {
+    AxiosRequest();
+  }, [])
+
+  useEffect(()=> {
+    AxiosRequest();
+  }, [page])
+
+  useEffect(()=> {
+    console.log(`CURRENT PAGE: ${page}`)
+  }, [page])
+
+
+
+
+
+  const lastItem = createRef();
+  const observerLoader = useRef();
+  const actionInSight = (entries) => {
+    if (entries[0].isIntersecting) {
+      console.log("ВАС ЗАМЕТИЛИ")
     }
-    return arr1;
-  }
+  };
+  //регистрируем на последний элемент наблюдателя, когда последний элемент меняется
+  useEffect(() => {
+    if (observerLoader.current) {
+      observerLoader.current.disconnect();
+    }
+    observerLoader.current = new IntersectionObserver(actionInSight);
+    if (lastItem.current) {
+      observerLoader.current.observe(lastItem.current);
+    }
+  }, [lastItem]);
 
-  function Ok(value) {
-    console.log(`Изменения сохранены! ${value}`)
-  }
 
-  function Cancel() {
-    console.log("Изменения сохранены!")
-  }
+
+
+
 
 
   return (
@@ -64,37 +92,62 @@ export default function News() {
             <p>
               <a href="#" className="btn btn-primary my-2">Main call to action</a>
               <a href="#" className="btn btn-secondary my-2">Secondary action</a>
-              <button onClick={AxiosRequest}>click</button>
             </p>
           </div>
         </div>
       </section>
+
+    <ui.Paginator2 page={page}
+    setPage={setPage}
+    count={count}
+    limit={limit}
+    />
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination pagination-lg">
+    {page > 1 &&
+    <li class="page-item">
+      <button onClick={()=>setPage(page-1)} class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </button>
+    </li>}
+
+    {utils.CreateArrayFromInt(count, limit).map((item) => (
+      <li class="page-item"><button type="button" onClick={()=>setPage(item)} class={page===item ?"page-link fw-bold lead active" :"page-link"}>{item}</button></li>
+    ))}
+
+{page < utils.CreateArrayFromInt(count, limit).length &&
+    <li class="page-item">
+      <button onClick={()=>setPage(page+1)} class="page-link" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </button>
+    </li>
+}
+  </ul>
+</nav>
+
+      <div className="input-group">
+        <button onClick={()=> setViewType(1)} className="btn btn-lg btn-outline-primary">первый вид</button>
+        <button onClick={()=> setViewType(2)} className="btn btn-lg btn-outline-warning">второй вид</button>
+        <button onClick={()=> setViewType(3)} className="btn btn-lg btn-outline-danger">третий вид</button>
+      </div>
 
       {newsBooks.load &&
       <div className="text-center d-flex justify-content-center">
         <ui.Loader1 color="text-danger"/>
       </div>}
 
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-        Launch static backdrop modal
-      </button>
 
-      <div className="text-center d-flex justify-content-center">
-        <ui.Modal2 okFunc={Ok} cancelFunc={Cancel} >ребёнок</ui.Modal2>
-      </div>
+      <BookMainView newsBooks={newsBooks} viewType={viewType}></BookMainView>
 
-      <div className="album py-5 bg-light">
-        <div className="container">
-    
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            {newsBooks && newsBooks.data && newsBooks.data.map((item, index) => 
-              <BookMainView key={index} title={item.title} 
-              description={item.description} lindView={"3"} lindEdit={"4"} image={item.image} time={"5 минут"}/>
-            )}
-          </div>
-        </div>
-      </div>
+      <ui.Paginator2 page={page}
+    setPage={setPage}
+    count={count}
+    limit={limit}
+    />
     </main>
+
+    <div className="bg-danger bg" ref={lastItem}  id="target">111111</div>
     </Base1>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Base, {Base1} from "../components/Base";
-import { Paginator } from "../components/ui";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 

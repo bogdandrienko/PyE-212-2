@@ -102,7 +102,7 @@ def home(request):
 @permission_classes([AllowAny])
 def news(request, book_id=0):
 
-    time.sleep(3)
+    time.sleep(2)
 
     if int(book_id) >= 1:
         if request.method == "GET":  # получение книги
@@ -131,9 +131,22 @@ def news(request, book_id=0):
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
     else:
         if request.method == "GET":  # получение книг
-            books = models.ModelBook.objects.all()  # order_by filter ...
-            serialized_book = serializers.BookSerializer(instance=books, many=True).data
-            return Response(data=serialized_book, status=status.HTTP_200_OK)
+
+            from django.core.paginator import Paginator
+            page = request.GET.get("page", 1)
+            limit = request.GET.get("limit", 5)
+
+            # search / filter / order_by
+            books = models.ModelBook.objects.all() #.filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
+
+            count = len(books)
+            for i in books:
+                print(i.return_clear_data())
+            paginator_instanse = Paginator(books, limit)  # [1, 2, 3, 4, 5]
+            books = paginator_instanse.get_page(number=page).object_list
+
+            serialized_books = serializers.BookSerializer(instance=books, many=True).data
+            return Response(data={"object_list": serialized_books, "count": count}, status=status.HTTP_200_OK)
         elif request.method == "POST":  # создание книги
             title = request.POST.get("title", "Шаблон заголовка")
             description = request.POST.get("description", "Шаблон описания")

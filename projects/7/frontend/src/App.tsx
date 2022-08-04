@@ -16,6 +16,7 @@ import News from './pages/News';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Auth from './pages/Auth';
+import PostList from './pages/Todos';
 
 function App() {
   return (
@@ -38,6 +39,9 @@ function App() {
         </Route>
 
         <Route path="/register" element={<Register />}>
+        </Route>
+
+        <Route path="/posts" element={<PostList />}>
         </Route>
 
       </Routes>

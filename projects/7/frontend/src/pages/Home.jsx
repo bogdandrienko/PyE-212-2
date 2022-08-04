@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Base, { Base1 } from "../components/Base";
-import { Paginator } from "../components/ui";
-import { BookMainView } from "../components/books";
+import { BookView } from "../components/books";
 import axios from "axios";
 import { Link } from "react-router-dom";
 

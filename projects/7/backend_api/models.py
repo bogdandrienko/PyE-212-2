@@ -50,8 +50,8 @@ class ModelBook(models.Model):
         verbose_name="Заставка:",
         help_text='<small class="text-muted">это наша заставка</small><hr><br>',
 
-        validators=[FileExtensionValidator(['jpg', 'png', 'bmp', 'jpeg'])],
-        upload_to='modelbooks',  # /static/ media/ modelbooks/ image.jpg
+        validators=[FileExtensionValidator(['jpg', 'png', 'jpeg'])],
+        upload_to='modelbooks/avatar',  # /static/ media/ modelbooks/ image.jpg
         max_length=100,
     )
     time_to_cook = models.IntegerField(  # BigIntegerField SmallIntegerField PositiveIntegerField ...
@@ -119,9 +119,9 @@ class ModelBook(models.Model):
         verbose_name="Инструкция:",
         help_text='<small class="text-muted">Инструкция</small><hr><br>',
 
-        validators=[FileExtensionValidator(['PDF', 'XLSX'])],
+        validators=[FileExtensionValidator(['PDF'])],
 
-        upload_to='file/pdf',
+        upload_to='modelbooks/file',
         max_length=100,
     )
 

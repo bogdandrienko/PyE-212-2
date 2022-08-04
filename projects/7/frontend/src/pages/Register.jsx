@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {Base1} from "../components/Base";
-import { Paginator } from "../components/ui";
 import axios from "axios";
 
 export default function Register() {
