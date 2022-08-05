@@ -18,8 +18,11 @@ export default function News() {
   const [limit, setLimit] = useState(3);
   const [count, setCount] = useState(1);
 
+  
+  const [books, setBooks] = useState([]);
+
   function AxiosRequest() {
-    if (newsBooks.load === false){
+    if (newsBooks.load !== true){
       dispatch({type: constants.CONST_NEWS_BOOKS_LOAD})
       axios
         .get(`/api/news`, {
@@ -31,7 +34,13 @@ export default function News() {
         .then((response) => {
           const result = response.data.object_list;
           setCount(response.count);
-          dispatch({type: constants.CONST_NEWS_BOOKS_DATA, payload: [...newsBooks.data, ...result] })
+          if (newsBooks.data){
+            setBooks([...books.data, ...result])
+            dispatch({type: constants.CONST_NEWS_BOOKS_DATA, payload: [...newsBooks.data, ...result] })
+          } else {
+            setBooks([...result])
+            dispatch({type: constants.CONST_NEWS_BOOKS_DATA, payload: [...result] })
+          }
         });
     }
   }
@@ -61,6 +70,7 @@ export default function News() {
   const actionInSight = (entries) => {
     if (entries[0].isIntersecting) {
       console.log("ВАС ЗАМЕТИЛИ")
+      setPage(page + 1)
     }
   };
   //регистрируем на последний элемент наблюдателя, когда последний элемент меняется
@@ -138,7 +148,7 @@ export default function News() {
       </div>}
 
 
-      <BookMainView newsBooks={newsBooks} viewType={viewType}></BookMainView>
+      <BookMainView newsBooks={books} viewType={viewType}></BookMainView>
 
       <ui.Paginator2 page={page}
     setPage={setPage}

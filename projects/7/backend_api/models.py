@@ -3,7 +3,6 @@ from django.core.validators import FileExtensionValidator, MinValueValidator, Ma
 from django.contrib.auth.models import User
 
 
-# Create your models here.
 class ModelBookCategory(models.Model):
     title = models.CharField(
         primary_key=False,
@@ -13,16 +12,26 @@ class ModelBookCategory(models.Model):
         null=False,
         default="Название категории",
         verbose_name="Название категории:",
-        help_text='<small class="text-muted">это наше название</small><hr><br>',
+        help_text='<small class="text-muted"></small><hr><br>',
 
         max_length=200,
+    )
+    description = models.TextField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=False,
+        null=False,
+        default="Описание",
+        verbose_name="Описание:",
+        help_text='<small class="text-muted"></small><hr><br>',
     )
 
     class Meta:
         app_label = 'backend_api'
         ordering = ('title',)
         verbose_name = 'Категория'
-        verbose_name_plural = 'Категории книг'
+        verbose_name_plural = 'Категории'
 
     def __str__(self):
         return f'{self.title}'
@@ -31,13 +40,13 @@ class ModelBookCategory(models.Model):
 class ModelBook(models.Model):
     title = models.CharField(
         primary_key=False,
-        unique=False,
+        unique=True,
         editable=True,
         blank=True,
         null=True,
         default="Заголовок",
         verbose_name="Заголовок:",
-        help_text='<small class="text-muted">это наш заголовок</small><hr><br>',
+        help_text='<small class="text-muted"></small><hr><br>',
 
         max_length=250,
     )
@@ -54,20 +63,19 @@ class ModelBook(models.Model):
         upload_to='modelbooks/avatar',  # /static/ media/ modelbooks/ image.jpg
         max_length=100,
     )
-    time_to_cook = models.IntegerField(  # BigIntegerField SmallIntegerField PositiveIntegerField ...
+    time_to_read = models.IntegerField(  # BigIntegerField SmallIntegerField PositiveIntegerField ...
         primary_key=False,
         unique=False,
         editable=True,
         blank=True,
         null=True,
         default="1",
-        verbose_name="Время на приготовление(минуты)",
-        help_text='<small class="text-muted">это наше время на приготовление</small><hr><br>',
+        verbose_name="Время на чтение",
+        help_text='<small class="text-muted"></small><hr><br>',
 
         validators=[MinValueValidator(1), MaxValueValidator(9999)],
     )
     category = models.ManyToManyField(
-        db_column='country_db_column',
         db_index=True,
         error_messages=False,
         primary_key=False,
@@ -75,22 +83,20 @@ class ModelBook(models.Model):
         editable=True,
         blank=True,
         default=None,
-        verbose_name='Категория блюда',
-        help_text='<small class="text-muted">категория</small><hr><br>',
+        verbose_name='Категория',
+        help_text='<small class="text-muted"></small><hr><br>',
 
         to=ModelBookCategory,
     )
     upload_author = models.ForeignKey(
-        db_index=True,
-        error_messages=False,
         primary_key=False,
         unique=False,
         editable=True,
         blank=True,
         null=True,
         default=None,
-        verbose_name='Кто загрузил',
-        help_text='<small class="text-muted">автор</small><hr><br>',
+        verbose_name='Автор загрузил',
+        help_text='<small class="text-muted"></small><hr><br>',
 
         to=User,
         on_delete=models.SET_NULL,  # CASCADE - удаляет всю запись, при удалении связанной записи
@@ -106,9 +112,13 @@ class ModelBook(models.Model):
         verbose_name="Описание:",
         help_text='<small class="text-muted">это наше Описание</small><hr><br>',
     )
-    is_completed = models.BooleanField(
+    is_view = models.BooleanField(
+        editable=True,
+        blank=True,
+        null=False,
         default=False,
-        # editable=
+        verbose_name="Видимость книги в общем доступе:",
+        help_text='<small class="text-muted"></small><hr><br>',
     )
     instructions = models.FileField(
         unique=False,
@@ -124,11 +134,6 @@ class ModelBook(models.Model):
         upload_to='modelbooks/file',
         max_length=100,
     )
-
-    # is_show = models.BooleanField(
-    #     default=False,
-    #     # editable=
-    # )
 
     class Meta:
         app_label = 'backend_api'

@@ -11,6 +11,8 @@ urlpatterns = [
     #
     re_path(r'^news/(?P<book_id>\d+)/$', views.news),
     re_path(r'^news/$', views.news),
+
+    re_path(r'^categories/$', views.categories),
     
     
     

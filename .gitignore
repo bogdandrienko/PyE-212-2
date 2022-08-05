@@ -1,11 +1,17 @@
 # Environments
+
 .env
 .venv
+
 env/
 venv/
+
 ENV/
+VENV/
+
 env.bak/
 venv.bak/
 
 /node_modules
 
+.node_env

@@ -7,6 +7,8 @@ import requests
 import json
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
+
 
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes
@@ -19,6 +21,14 @@ from backend_api import serializers
 
 
 def index(request):
+    # send_mail(
+    #     'Проверка',
+    #     'Проверка сообщения.',
+    #     'eevee.cycle1@yandex.ru',
+    #     ['bogdandrienko@gmail.com'],
+    #     fail_silently=False,
+    # )
+
     users = User.objects.all()  # все записи
     # users = User.objects.filter()  # все записи через массив условий
     # users = User.objects.order_by()  # все записи с сортивкой
@@ -101,7 +111,6 @@ def home(request):
 @api_view(http_method_names=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
 @permission_classes([AllowAny])
 def news(request, book_id=0):
-
     time.sleep(2)
 
     if int(book_id) >= 1:
@@ -137,7 +146,7 @@ def news(request, book_id=0):
             limit = request.GET.get("limit", 5)
 
             # search / filter / order_by
-            books = models.ModelBook.objects.all() #.filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
+            books = models.ModelBook.objects.all()  # .filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
 
             count = len(books)
             for i in books:
@@ -147,6 +156,80 @@ def news(request, book_id=0):
 
             serialized_books = serializers.BookSerializer(instance=books, many=True).data
             return Response(data={"object_list": serialized_books, "count": count}, status=status.HTTP_200_OK)
+        elif request.method == "POST":  # создание книги
+            title = request.POST.get("title", "Шаблон заголовка")
+            description = request.POST.get("description", "Шаблон описания")
+            models.ModelBook.objects.create(
+                title=title,
+                description=description
+            )
+            return Response(data={"response": "Успешно создано."}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(http_method_names=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+@permission_classes([AllowAny])
+@csrf_exempt
+def categories(request, book_id=0):
+    print(request)
+
+    print(str(request.auth))
+
+    token = str(request.META.get("HTTP_AUTHORIZATION", "Bearer $")).split("Bearer ")[1].strip()
+    print(f"token: {token}\n")
+    print(request.META.get("HTTP_AUTHORIZATION", "").replace("Basic ", ""))
+
+    for key, value in request.META.items():
+        # print(key[:50], value[:50])
+        pass
+
+    time.sleep(2)
+
+    # print(request.META['AUTHORIZATION'])
+    # print(request.META['HTTP_AUTHORIZATION'])
+    if int(book_id) >= 1:
+        if request.method == "GET":  # получение книги
+            book = get_object_or_404(models.ModelBook, id=book_id)
+            serialized_book = serializers.BookSerializer(instance=book, many=False).data
+            return Response(data=serialized_book, status=status.HTTP_200_OK)
+        elif request.method == "DELETE":
+            book = models.ModelBook.objects.get(id=book_id).delete()
+            book.delete()
+            return Response(data={"response": "Успешно удалено."}, status=status.HTTP_200_OK)
+        elif request.method == "PUT" or request.method == "PATCH":
+            book = models.ModelBook.objects.get(id=book_id)
+
+            title = request.POST.get("title", "Шаблон заголовка")
+            description = request.POST.get("description", "Шаблон описания")
+            if book.title != title:
+                book.title = title
+            if book.description != description:
+                book.description = description
+            book.save()
+
+            book = models.ModelBook.objects.get(id=book_id)
+            serialized_book = serializers.BookSerializer(instance=book, many=False).data
+            return Response(data=serialized_book, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    else:
+        if request.method == "GET":  # получение книг
+
+            # return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+            from django.core.paginator import Paginator
+            page = request.GET.get("page", 1)
+            limit = request.GET.get("limit", 5)
+
+            # search / filter / order_by
+            categories_list = models.ModelBookCategory.objects.all()  # .filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
+            count = len(categories_list)
+            paginator_instanse = Paginator(categories_list, limit)  # [1, 2, 3, 4, 5]
+            categories_list = paginator_instanse.get_page(number=page).object_list
+
+            serialized_categories = serializers.BookCategorySerializer(instance=categories_list, many=True).data
+            return Response(data={"object_list": serialized_categories, "count": count}, status=status.HTTP_200_OK)
         elif request.method == "POST":  # создание книги
             title = request.POST.get("title", "Шаблон заголовка")
             description = request.POST.get("description", "Шаблон описания")

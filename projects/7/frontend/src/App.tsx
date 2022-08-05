@@ -16,7 +16,8 @@ import News from './pages/News';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Auth from './pages/Auth';
-import PostList from './pages/Todos';
+import PostList from './pages/PostList';
+import {Categories} from './pages/Categories';
 
 function App() {
   return (
@@ -42,6 +43,9 @@ function App() {
         </Route>
 
         <Route path="/posts" element={<PostList />}>
+        </Route>
+
+        <Route path="/categories" element={<Categories />}>
         </Route>
 
       </Routes>

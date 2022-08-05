@@ -1,21 +1,36 @@
 import React, { useState, useEffect, forwardRef, createRef, useRef } from "react";
 import axios from "axios";
 import PostItem from "./PostItem";
+import Base, {Base1} from "../components/Base";
+import {Paginator} from "../components/ui";
+import {BookMainView} from "../components/books";
+import { useSelector, useDispatch } from "react-redux";
+import * as constants from '../components/Constants'
+import * as ui from '../components/ui'
+import * as utils from '../components/utils'
+
+
 const PostList = () => {
+  const [load, setLoad] = useState(false);
   const [posts, setPosts] = useState({ data: [], page: 1 });
-  const portion = 20;
-  const totalPages = Math.ceil(100 / portion);
+  const [limit, setLimit] = useState(3);
+  const [count, setCount] = useState(1);
+  const [viewType, setViewType] = useState(1);
+  const totalPages = Math.ceil(count / limit);
   const getNewPosts = () => {
+    setLoad(true)
     axios
-      .get("https://jsonplaceholder.typicode.com/posts", {
+      .get(`/api/news`, {
         params: {
-          _limit: portion,
-          _page: posts.page,
+          limit: limit,
+          page: posts.page,
         },
       })
       .then(({ data }) => {
+        setLoad(false)
+        setCount(data.count)
         setPosts({
-          data: [...posts.data, ...data], 
+          data: [...posts.data, ...data.object_list], 
           page: posts.page + 1 
         });
       });
@@ -24,6 +39,10 @@ const PostList = () => {
 useEffect(() => {
   getNewPosts();
 }, []);
+
+function setPage(p){
+  setPosts({ data: posts.data, page: p })
+}
 
 const lastItem = createRef();
 const observerLoader = useRef();
@@ -44,7 +63,61 @@ useEffect(() => {
   }
 }, [lastItem]);
 return (
- <div className="post-list">
+  
+  <Base1>
+  <main>
+  
+    <section className="py-5 text-center container">
+      <div className="row py-lg-5">
+        <div className="col-lg-6 col-md-8 mx-auto">
+          <h1 className="fw-light">Album example</h1>
+          <p className="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+          <p>
+            <a href="#" className="btn btn-primary my-2">Main call to action</a>
+            <a href="#" className="btn btn-secondary my-2">Secondary action</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  <ui.Paginator2 page={posts.page}
+  setPage={setPage}
+  count={count}
+  limit={limit}
+  />
+
+<nav aria-label="Page navigation example">
+<ul class="pagination pagination-lg">
+  {posts.page > 1 &&
+  <li class="page-item">
+    <button onClick={()=>setPage(posts.page-1)} class="page-link" href="#" aria-label="Previous">
+      <span aria-hidden="true">&laquo;</span>
+    </button>
+  </li>}
+
+  {utils.CreateArrayFromInt(count, limit).map((item) => (
+    <li class="page-item"><button type="button" onClick={()=>setPage(item)} class={posts.page===item ?"page-link fw-bold lead active" :"page-link"}>{item}</button></li>
+  ))}
+
+{posts.page < utils.CreateArrayFromInt(count, limit).length &&
+  <li class="page-item">
+    <button onClick={()=>setPage(posts.page+1)} class="page-link" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </button>
+  </li>
+}
+</ul>
+</nav>
+
+    <div className="input-group">
+      <button onClick={()=> setViewType(1)} className="btn btn-lg btn-outline-primary">первый вид</button>
+      <button onClick={()=> setViewType(2)} className="btn btn-lg btn-outline-warning">второй вид</button>
+      <button onClick={()=> setViewType(3)} className="btn btn-lg btn-outline-danger">третий вид</button>
+    </div>
+1
+
+  
+    <div className="post-list">
    {posts.data.map((item, index) => {
      if (index + 1 === posts.data.length) {
        return <PostItem key={item.id} info={item} ref={lastItem} />;
@@ -52,6 +125,23 @@ return (
      return <PostItem key={item.id} info={item} />;
    })}
  </div>
+
+{load &&
+<div className="text-center d-flex justify-content-center">
+  <ui.Loader1 color="text-danger"/>
+</div>}
+
+    {/* <BookMainView newsBooks={books} viewType={viewType}></BookMainView> */}
+
+    <ui.Paginator2 page={posts.page}
+  setPage={setPage}
+  count={count}
+  limit={limit}
+  />
+  </main>
+
+  <div className="bg-danger bg" ref={lastItem}  id="target">111111</div>
+  </Base1>
 );
 };
 export default PostList;

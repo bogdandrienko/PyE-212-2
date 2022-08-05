@@ -16,29 +16,29 @@ class ModelBookAdmin(admin.ModelAdmin):
     list_display = (  # поля для отображения
         'title',
         'image',
-        'description',
-        'is_completed',
+        # 'description',
+        'is_view',
         'upload_author',
-        'time_to_cook',
+        'time_to_read',
         'instructions',
     )
     # filter_horizontal = ('ingredients', 'category',)  # только для полей формата many_to_many_field
     list_display_links = (  # поля-ссылка
         'title',
-        'description',
+        # 'description',
     )
     list_editable = (  # поля для редактирования объекта на лету
-        'is_completed',
+        'is_view',
         'upload_author',
-        'time_to_cook',
+        'time_to_read',
     )
     list_filter = (  # поля для фильтрации
         'title',
         'image',
-        'description',
-        'is_completed',
+        # 'description',
+        'is_view',
         'upload_author',
-        'time_to_cook',
+        'time_to_read',
         'instructions',
     )
     fieldsets = (  # подзаголовки для визуального отделения блоков друг от друга
@@ -50,11 +50,11 @@ class ModelBookAdmin(admin.ModelAdmin):
         ('Дополнительно', {'fields': (
             'image',
             'category',
-            'time_to_cook',
+            'time_to_read',
             'instructions',
         )}),
         ('Вспомогательное', {'fields': (
-            'is_completed',
+            'is_view',
             'upload_author',
         )}),
     )
@@ -62,11 +62,12 @@ class ModelBookAdmin(admin.ModelAdmin):
         'title',
         'image',
         'description',
-        'is_completed',
+        'is_view',
         'upload_author',
-        'time_to_cook',
+        'time_to_read',
         'instructions',
     ]
+
 
 class ModelBookCategoryAdmin(admin.ModelAdmin):
     """
@@ -75,23 +76,29 @@ class ModelBookCategoryAdmin(admin.ModelAdmin):
 
     list_display = (  # поля для отображения
         'title',
+        'description',
     )
     list_display_links = (  # поля-ссылка
         'title',
     )
     list_editable = (  # поля для редактирования объекта на лету
+        'description',
     )
     list_filter = (  # поля для редактирования объекта на лету
         'title',
+        'description',
     )
     fieldsets = (  # подзаголовки для визуального отделения блоков друг от друга
         ('Основное', {'fields': (
             'title',
+            'description',
         )}),
     )
     search_fields = [  # поле для поиска
         'title',
+        'description',
     ]
+
 
 admin.site.register(ModelBookCategory, ModelBookCategoryAdmin)
 admin.site.register(ModelBook, ModelBookAdmin)
