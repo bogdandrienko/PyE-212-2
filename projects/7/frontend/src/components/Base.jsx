@@ -17,9 +17,11 @@ export default function Base({children}) {
 
 export function Base1({children}) {
   return (
-    <div className='m-0 p-0'>
-      <Navbar4/>
-      <main>{children}</main>
+    <div className='custom_body'>
+      <main className="custom_main">
+        <Navbar4/>
+        {children}
+        </main>
       <Footer2/>
     </div>
   )

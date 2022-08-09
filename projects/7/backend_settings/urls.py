@@ -21,6 +21,8 @@ from django.conf.urls.static import static
 from backend_api.views import index
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')), # grappelli URLS
+
     path('', index, name=''),
 
     path('admin/', admin.site.urls),

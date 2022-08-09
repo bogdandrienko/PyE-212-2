@@ -1,18 +1,20 @@
 import time
 
+from django.core.paginator import Paginator
+from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 import datetime
 import requests
 import json
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, update_last_login
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
-
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -49,15 +51,23 @@ def index(request):
 from django.views.decorators.csrf import csrf_exempt
 
 
-# @api_view(http_method_names=["GET", "POST"])
-# @permission_classes([AllowAny])
-@csrf_exempt
+@api_view(http_method_names=["GET", "POST"])
+@permission_classes([AllowAny])
+# @csrf_exempt
 def login(request):
     if request.method == "POST":
         username = request.POST.get("username", None)
         password = request.POST.get("password", None)
         if username and password:
-            return JsonResponse({"response": "Успешно вошли"}, safe=False)
+            user = User.objects.get(username=username)
+            update_last_login(sender=None, user=user)
+            refresh = RefreshToken.for_user(user=user)
+            response = {"response": {
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "token": str(refresh.access_token),
+            }}
+            return Response(response)
         else:
             return HttpResponse(status=404)
     else:
@@ -169,20 +179,22 @@ def news(request, book_id=0):
 
 
 @api_view(http_method_names=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
-@permission_classes([AllowAny])
-@csrf_exempt
+# @permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
+# @csrf_exempt
 def categories(request, book_id=0):
     print(request)
 
     print(str(request.auth))
+    print(str(request.META.get("HTTP_AUTHORIZATION", "")))
 
-    token = str(request.META.get("HTTP_AUTHORIZATION", "Bearer $")).split("Bearer ")[1].strip()
-    print(f"token: {token}\n")
-    print(request.META.get("HTTP_AUTHORIZATION", "").replace("Basic ", ""))
+    # token = str(request.META.get("HTTP_AUTHORIZATION", "Bearer $")).split("Bearer ")[1].strip()
+    # print(f"token: {token}\n")
+    # print(request.META.get("HTTP_AUTHORIZATION", "").replace("Basic ", ""))
 
-    for key, value in request.META.items():
-        # print(key[:50], value[:50])
-        pass
+    # for key, value in request.META.items():
+    #     # print(key[:50], value[:50])
+    #     pass
 
     time.sleep(2)
 
@@ -229,7 +241,18 @@ def categories(request, book_id=0):
             categories_list = paginator_instanse.get_page(number=page).object_list
 
             serialized_categories = serializers.BookCategorySerializer(instance=categories_list, many=True).data
-            return Response(data={"object_list": serialized_categories, "count": count}, status=status.HTTP_200_OK)
+
+            # user = User.objects.get(username="admin")
+            # update_last_login(sender=None, user=user)
+            # refresh = RefreshToken.for_user(user=user)
+            # response = {"response": {
+            #     "refresh": str(refresh),
+            #     "access": str(refresh.access_token),
+            #     "token": str(refresh.access_token),
+            # }}
+
+            return Response(data={"object_list": serialized_categories, "count": count, "response": "response"},
+                            status=status.HTTP_200_OK)
         elif request.method == "POST":  # создание книги
             title = request.POST.get("title", "Шаблон заголовка")
             description = request.POST.get("description", "Шаблон описания")
@@ -240,6 +263,114 @@ def categories(request, book_id=0):
             return Response(data={"response": "Успешно создано."}, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(http_method_names=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+# @permission_classes([AllowAny])  # Все пользователи
+@permission_classes([IsAuthenticated])  # Только авторизованные пользователи
+def get_data(request):
+    # username = request.POST.get("username", None)
+    # password = request.POST.get("password", None)
+    # user = authenticate(username=username, password=password)
+    # refresh = RefreshToken.for_user(user=user)
+    # tokens = dict(refresh_token=str(refresh), access_token=str(refresh.access_token))
+    # return Response(data=tokens, status=status.HTTP_200_OK)
+
+    tokens = {}
+
+    # print(str(request.META.get("HTTP_AUTHORIZATION", "")))
+    # token = str(request.META.get("HTTP_AUTHORIZATION", "Basic $")).split("Basic")[1].strip()
+    # # # print(f"username: {}; password: {token.split(' ')[1]}")  # admin admin
+    # #
+    # username = token.split(' ')[0]
+    # password = token.split(' ')[1]
+    # #
+    # user = authenticate(username=username, password=password)
+    # print(f"user: {user} | {type(user)}")
+
+    # if (user):
+    #     update_last_login(sender=None, user=user)
+    #
+    #     refresh = RefreshToken.for_user(user=user)
+    #     print(f"RefreshToken: {refresh}")
+    #
+    #     tokens = dict(refresh_token=str(refresh), access_token=str(refresh.access_token))
+    # else:
+    #     tokens = {}
+    # response = {"response": {
+    #     "refresh": str(refresh),
+    #     "access": str(refresh.access_token),
+    #     "token": str(refresh.access_token),
+    # }}
+
+    # class TokenNew:
+    #     # ...
+    #     def __init__(self, user):
+    #         token = user
+    #
+    #     def __str__(self):
+    #         return f"{token}"
+
+    return Response(data={"response": "Успешно. get_data", "tokens": tokens}, status=status.HTTP_200_OK)
+
+
+def send_email_to_new():
+    pass
+
+
+@api_view(http_method_names=["GET", "POST"])
+# @permission_classes([AllowAny])  # Все пользователи
+@permission_classes([IsAuthenticated])  # Только авторизованные пользователи
+def get_public_books(request):
+    # print(f"request.user: {request.user}")
+    # profile = models.Profile.objects.get(user=request.user)
+    # print(f"profile: {profile}")
+    #
+    # # print(f"profile 1: {request.user.profile}")  # так сделать нельзя
+    # print(f"profile 2: {request.user.profile2}")
+
+    page = request.GET.get("page", 1)
+    limit = request.GET.get("limit", 5)
+
+    obj_list = models.ModelBook.objects.filter(is_view=True)
+    count = len(obj_list)
+    paginator_instanse = Paginator(obj_list, limit)
+    obj_list = paginator_instanse.get_page(number=page).object_list
+
+    # list1 = []
+    # for obj in obj_list:
+    #     serialized_obj_list = serializers.BookSerializer(instance=obj, many=False).data
+    #     list1.append(serialized_obj_list)
+    # return list1
+
+    serialized_obj_list = serializers.BookSerializer(instance=obj_list, many=True).data
+
+    return Response(
+        data={"object_list": serialized_obj_list, "count": count},
+        status=status.HTTP_200_OK
+    )
+
+
+@api_view(http_method_names=["GET"])
+# @permission_classes([AllowAny])  # Все пользователи
+@permission_classes([IsAdminUser])  # Только авторизованные пользователи
+def get_private_books(request):
+    print(f"request.user: {request.user}")
+
+    page = request.GET.get("page", 1)
+    limit = request.GET.get("limit", 5)
+
+    obj_list = models.ModelBook.objects.filter(is_view=False)
+    count = len(obj_list)
+    paginator_instanse = Paginator(obj_list, limit)
+    obj_list = paginator_instanse.get_page(number=page).object_list
+
+    serialized_obj_list = serializers.BookSerializer(instance=obj_list, many=True).data
+
+    return Response(
+        data={"object_list": serialized_obj_list, "count": count},
+        status=status.HTTP_200_OK
+    )
 
 # HTTPresponse
 # JsonResponse

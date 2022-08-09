@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator, MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
 
 
 class ModelBookCategory(models.Model):
@@ -134,6 +137,30 @@ class ModelBook(models.Model):
         upload_to='modelbooks/file',
         max_length=100,
     )
+    created_datetime_field = models.DateTimeField(
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=timezone.now,
+        verbose_name='Дата и время создания',
+        help_text='<small class="text-muted">datetime_field</small><hr><br>',
+
+        auto_now=False,
+        auto_now_add=False,
+    )
+    update_datetime_field = models.DateTimeField(
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=timezone.now,
+        verbose_name='Дата и время обновления',
+        help_text='<small class="text-muted">datetime_field</small><hr><br>',
+
+        auto_now=False,
+        auto_now_add=False,
+    )
 
     class Meta:
         app_label = 'backend_api'
@@ -152,7 +179,6 @@ class ModelBook(models.Model):
     #     ratings = ReceiptRating.objects.filter(
     #         receipt=Receipt.objects.get(id=self.id),
     #     )
-
     #     like_count = 0
     #     dislike_count = 0
     #     for rating in ratings:
@@ -160,5 +186,96 @@ class ModelBook(models.Model):
     #             like_count += 1
     #         else:
     #             dislike_count += 1
-
     #     return dict(total=ratings.count, like_count=like_count, dislike_count=dislike_count)
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(
+        primary_key=True,
+        unique=True,
+        editable=True,
+        blank=True,
+        null=False,
+        default=None,
+        verbose_name='Аккаунт',
+        help_text='<small class="text-muted">Аккаунт</small><hr><br>',
+
+        to=User,
+        on_delete=models.CASCADE,
+    )
+    bio = models.TextField(
+        unique=False,
+        editable=True,
+        blank=False,
+        null=True,
+        default="",
+        verbose_name="Биография:",
+        help_text='<small class="text-muted">это наша Биография</small><hr><br>',
+    )
+
+    # mobile = None
+    # avatar = None
+    # isBanned = None
+    # email = None
+    # rassilka = None
+
+    class Meta:
+        app_label = 'auth'
+        ordering = ('user',)
+        verbose_name = 'Профиль пользователя'
+        verbose_name_plural = 'Профили пользователей'
+
+    def __str__(self):
+        return f'профиль: {self.user.username} {self.bio[:20]}...'
+
+
+class Profile2(models.Model):
+    user = models.OneToOneField(
+        primary_key=True,
+        unique=True,
+        editable=True,
+        blank=True,
+        null=False,
+        default=None,
+        verbose_name='Аккаунт',
+        help_text='<small class="text-muted">Аккаунт</small><hr><br>',
+
+        to=User,
+        on_delete=models.CASCADE,
+    )
+    bio = models.TextField(
+        unique=False,
+        editable=True,
+        blank=False,
+        null=True,
+        default="",
+        verbose_name="Биография:",
+        help_text='<small class="text-muted">это наша Биография</small><hr><br>',
+    )
+
+    # mobile = None
+    # avatar = None
+    # isBanned = None
+    # email = None
+    # rassilka = None
+
+    class Meta:
+        app_label = 'auth'
+        ordering = ('user',)
+        verbose_name = 'Профиль пользователя 2'
+        verbose_name_plural = 'Профили пользователей 2'
+
+    def __str__(self):
+        return f'профиль: {self.user.username} {self.bio[:20]}...'
+
+
+@receiver(post_save, sender=User)
+def create_user_model(sender, instance, created, **kwargs):
+    if created:
+        # тут происходит первое создание модели
+        Profile.objects.get_or_create(user=instance)
+        Profile2.objects.get_or_create(user=instance)
+    else:
+        # тут происходит каждое сохранение модели
+        Profile.objects.get_or_create(user=instance)
+        Profile2.objects.get_or_create(user=instance)

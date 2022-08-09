@@ -25,13 +25,13 @@ export function Categories() {
         data: {}
       };
       const headers = {
-            Authorization: `Basic admin admin`,
+            Authorization: `Bearer `,
           }
       // const response = await axios(config, headers);
       // const response = await axios.get(`/api/categories?limit=${5}&page=${1}`, headers);
       const response = await axios.get(`/api/categories?limit=${5}&page=${1}`, {
         headers : {
-          Authorization: `Basic admin admin`,
+          Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwMTM1MDgwLCJpYXQiOjE2NjAwNDg2ODAsImp0aSI6IjFiZjczMzM0YzRmNjQ0ZmY4MDE1MGZkZjZjMDc1ZWNlIiwidXNlcl9pZCI6MX0.g4nUUGPrRgBpiTp0doJ4JHavLTIjSRg1mpzWgSV6gMs`,
         }
       })
 
@@ -59,14 +59,43 @@ export function Categories() {
     }
   }
 
+  
+  async function get_token() {
+    let username = "admin"
+    let password = "admin"
+    const response = await axios.post(`/api/token/`, {username, password})
+
+    localStorage.setItem("token", response.data.access)
+
+    console.log(response.data);
+  }
+
+  async function get_data() {
+    let username = "admin"
+    let password = "admin1"
+    let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwMTQ3MDQzLCJpYXQiOjE2NjAwNjA2NDMsImp0aSI6Ijg0MTUwZWE5NWJlZTQ4NmFhZTNkMWE0NTA5MWExZjIwIiwidXNlcl9pZCI6MX0.vOJWIIlpZtlJ7mUBFqs5Lxa6oyNM9rZ2oWy39H3enr8";
+    const response = await axios.post(`/api/get_data/`, {}, {
+      headers : {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
+      // headers : {
+      //   Authorization: `Basic ${username} ${password}`,
+      // }
+    })
+    console.log(response.data);
+  }
+
   return (
     <base.Base1>
-      <main>
-        <div>
-          Categories
-          <button onClick={getAllCategories}></button>
+      <div>
+        Categories
+        <button onClick={getAllCategories}></button>
+
+        <div className="m-5 p-5">
+          <button onClick={get_data} className="btn btn-lg btn-outline-danger">get_data</button>
+          <button onClick={get_token} className="btn btn-lg btn-outline-success">get_token</button>
         </div>
-      </main>
+      </div>
     </base.Base1>
   );
 }
