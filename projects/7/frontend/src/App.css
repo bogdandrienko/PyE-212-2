@@ -53,6 +53,8 @@ div {
   /* font-family: Zen Kaku Gothic Antique, sans-serif !important; */
 }
 
+
+
 .custom_main{
   min-height: 70vh;
   text-align: center;
@@ -84,4 +86,8 @@ div {
 .custom_main_1 {
   max-width: 1320px;
 }
+}
+
+.custom_card{
+  background-image: url('../public//static/card_back.jpg');
 }

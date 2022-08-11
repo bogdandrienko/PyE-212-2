@@ -27,7 +27,7 @@ class BookSerializer(serializers.ModelSerializer):
     category = serializers.SerializerMethodField(read_only=True)
     category2 = serializers.SerializerMethodField(read_only=True)
 
-    profile2 = serializers.SerializerMethodField(read_only=True)
+    # profile2 = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = models.ModelBook
@@ -59,13 +59,13 @@ class BookSerializer(serializers.ModelSerializer):
     def get_category2(self, obj):
         return BookCategorySerializer(instance=obj.category.all(), many=True).data
 
-    def get_profile2(self, obj):
-
-        # author_username = obj.upload_author.username  # admin
-        # user = User.objects.get(username=author_username)
-        # profile = models.Profile.objects.get(user=obj.upload_author)
-
-        return ProfileSerializer(instance=models.Profile.objects.get(user=obj.upload_author), many=False).data
+    # def get_profile2(self, obj):
+    #
+    #     # author_username = obj.upload_author.username  # admin
+    #     # user = User.objects.get(username=author_username)
+    #     # profile = models.Profile.objects.get(user=obj.upload_author)
+    #
+    #     return ProfileSerializer(instance=models.Profile.objects.get(user=obj.upload_author), many=False).data
 
 
 class BookCategorySerializer(serializers.ModelSerializer):

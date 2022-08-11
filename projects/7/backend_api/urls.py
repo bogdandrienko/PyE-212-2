@@ -23,9 +23,11 @@ urlpatterns = [
 
     re_path(r'^get_data/$', views.get_public_books, name='get_data'),
 
-    
-    
-    
+
+
+    re_path(r'^top/$', views.top),
+
+
     path('html/', views.html, name='html'),
     path('about/', views.about, name='about'),
     path('home/', views.home, name='home'),

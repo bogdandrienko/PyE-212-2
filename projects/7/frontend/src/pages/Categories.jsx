@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import * as constants from "../components/Constants";
 import * as ui from "../components/ui";
@@ -7,6 +7,8 @@ import * as base from "../components/Base";
 import { useNavigate } from "react-router-dom";
 
 export function Categories() {
+  const [avatar, setAvatar] = useState(null);
+
   const navigate = useNavigate();
 
   async function getAllCategories() {
@@ -71,16 +73,10 @@ export function Categories() {
   }
 
   async function get_data() {
-    let username = "admin"
-    let password = "admin1"
-    let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwMTQ3MDQzLCJpYXQiOjE2NjAwNjA2NDMsImp0aSI6Ijg0MTUwZWE5NWJlZTQ4NmFhZTNkMWE0NTA5MWExZjIwIiwidXNlcl9pZCI6MX0.vOJWIIlpZtlJ7mUBFqs5Lxa6oyNM9rZ2oWy39H3enr8";
     const response = await axios.post(`/api/get_data/`, {}, {
       headers : {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       }
-      // headers : {
-      //   Authorization: `Basic ${username} ${password}`,
-      // }
     })
     console.log(response.data);
   }

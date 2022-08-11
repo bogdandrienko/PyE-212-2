@@ -372,6 +372,50 @@ def get_private_books(request):
         status=status.HTTP_200_OK
     )
 
+
+@api_view(http_method_names=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+# @permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
+def top(request):
+    time.sleep(2)
+
+    if request.method == "GET":  # получение книг
+
+        from django.core.paginator import Paginator
+        page = request.GET.get("page", 1)
+        limit = request.GET.get("limit", 5)
+        search = request.GET.get("search", "")
+
+        # search / filter / order_by
+        if search:
+            books = models.ModelBook.objects.filter(title__contains=str(search))
+        else:
+            books = models.ModelBook.objects.all()  # .filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
+
+        count = len(books)
+        for i in books:
+            print(i.return_clear_data())
+        paginator_instanse = Paginator(books, limit)  # [1, 2, 3, 4, 5]
+        books = paginator_instanse.get_page(number=page).object_list
+
+        serialized_books = serializers.BookSerializer(instance=books, many=True).data
+        return Response(data={"object_list": serialized_books, "count": count}, status=status.HTTP_200_OK)
+    elif request.method == "POST":  # создание книги
+
+        print(request.POST)
+        print(request.FILES)
+
+        # title = request.POST.get("title", "Шаблон заголовка")
+        # description = request.POST.get("description", "Шаблон описания")
+        # models.ModelBook.objects.create(
+        #     title=title,
+        #     description=description
+        # )
+
+        return Response(data={"response": "Успешно создано."}, status=status.HTTP_201_CREATED)
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 # HTTPresponse
 # JsonResponse
 # Model View Template - Model View Controller

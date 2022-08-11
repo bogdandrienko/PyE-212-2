@@ -174,6 +174,14 @@ export const Navbar4 = () => {
           >
             <NavDropdown title="Что почитать" id="navbarScrollingDropdown">
               <Link to="/news" className="text-decoration-none text-dark m-1 p-1">Новинки</Link>
+              
+              
+              <NavDropdown.Item href="#" className="text-decoration-none">
+                <Link to="/top" className="text-decoration-none text-dark m-1 p-1 w-100">
+                  Лучшие
+                </Link>
+              </NavDropdown.Item>
+              
               <NavDropdown.Item href="#action4">Рекомендации</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action5">Жанры</NavDropdown.Item>

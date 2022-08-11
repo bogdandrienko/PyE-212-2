@@ -2,10 +2,12 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { combineReducers } from "redux";
 import thunk from "redux-thunk";
 import * as reducers from '../components/Reducers'
+import {getAllTopBooks} from '../pages/TopList'
 
 
 const globalReducer = combineReducers({
-  newsBooks: reducers.getAllNewsBooks,
+  // newsBooks: reducers.getAllNewsBooks,
+  topBooks: getAllTopBooks
 });
 
 const initialState = {

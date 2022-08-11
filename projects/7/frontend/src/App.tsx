@@ -18,6 +18,7 @@ import Register from './pages/Register';
 import Auth from './pages/Auth';
 import PostList from './pages/PostList';
 import {Categories} from './pages/Categories';
+import { TopList } from './pages/TopList';
 
 function App() {
   return (
@@ -46,6 +47,9 @@ function App() {
         </Route>
 
         <Route path="/categories" element={<Categories />}>
+        </Route>
+
+        <Route path="/top" element={<TopList />}>
         </Route>
 
       </Routes>
