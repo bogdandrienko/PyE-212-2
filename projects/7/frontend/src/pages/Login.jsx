@@ -1,23 +1,28 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Base, {Base1} from "../components/Base";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
+import * as bases from '../components/Base'
 
 function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // localstorage
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  function Formdata(form) {
+  async function Formdata(form) {
     form.preventDefault();
 
-    axios.post("/login/", {"username": username, "password": password }).then(
-      (result)=> {
-        console.log(result);
-      }
-    );
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("password", password);
+
+    const response = await axios.post(`/api/login/`, formData);
+    localStorage.setItem("token", response.data.response.access);
+    dispatch({ type: bases.CONST_USER_LOGIN.data, payload: response.data.response.access }); // ЗАГРУЗКА
   }
 
   function TogglePasswordVisibility(uuid="") {

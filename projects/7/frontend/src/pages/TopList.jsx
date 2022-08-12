@@ -5,177 +5,89 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import * as base from "../components/Base";
 import * as utils from "../components/utils";
-// import { useNavigate } from "react-router-dom";
+import * as ui from "../components/ui";
 
-export const CONST_TOP_BOOKS_LOAD = "CONST_TOP_BOOKS_LOAD"; // данные грузятся, нужно показывать крутилку, а данные спрятать
-export const CONST_TOP_BOOKS_DATA = "CONST_TOP_BOOKS_DATA"; // крутилку не показываем, а данные показываем, ошибки прячем
-export const CONST_TOP_BOOKS_ERROR = "CONST_TOP_BOOKS_ERROR"; // всё прячем, кроме ошибок
-export const CONST_TOP_BOOKS_FAIL = "CONST_TOP_BOOKS_FAIL"; // всё прячем, кроме ошибок
-export const CONST_TOP_BOOKS_RESET = "CONST_TOP_BOOKS_RESET"; // всё прячем
+export const Constant_CreateBook = utils.ConstructorConstantRedux(
+  "Constant_CreateBook"
+);
 
-export function getAllTopBooks(state = {}, action = null) {
-  switch (action.type) {
-    case CONST_TOP_BOOKS_LOAD:
-      return { load: true, data: undefined, error: undefined, fail: undefined };
-    case CONST_TOP_BOOKS_DATA:
-      return {
-        load: false,
-        data: action.payload,
-        error: undefined,
-        fail: undefined,
-      };
-    case CONST_TOP_BOOKS_ERROR:
-      return {
-        load: false,
-        data: undefined,
-        error: "Ошибка на сервере",
-        fail: undefined,
-      };
-    case CONST_TOP_BOOKS_FAIL:
-      return {
-        load: false,
-        data: undefined,
-        error: undefined,
-        fail: "Ошибка на клиенте",
-      };
-    case CONST_TOP_BOOKS_RESET:
-      return {
-        load: false,
-        data: undefined,
-        error: undefined,
-        fail: undefined,
-      };
-    default:
-      return state;
-  }
-}
+export const Constant_ChangeBook = utils.ConstructorConstantRedux(
+  "Constant_ChangeBook"
+);
+
+// КОНСТАНТА ПОЛУЧЕНИЯ
+export const Constant_TopBooks =
+  utils.ConstructorConstantRedux("Constant_TopBooks");
+
+// РЕДЮСЕР ПОЛУЧЕНИЯ (ПЕРЕКЛЮЧАТЕЛЬ СОСТОЯНИЙ ОДНОГО ОБЪЕКТА ПО КОНСТАНТАМ)
+export const Reducer_TopBooks =
+  utils.ConstructorReducerRedux(Constant_TopBooks);
+
+// КОНСТАНТА УДАЛЕНИЯ
+export const Constant_DeleteBook = utils.ConstructorConstantRedux(
+  "Constant_DeleteBook"
+);
+
+// РЕДЮСЕР ПОЛУЧЕНИЯ (ПЕРЕКЛЮЧАТЕЛЬ СОСТОЯНИЙ ОДНОГО ОБЪЕКТА ПО КОНСТАНТАМ)
+export const Reducer_DeleteBook =
+  utils.ConstructorReducerRedux(Constant_DeleteBook);
 
 export function TopList() {
   const dispatch = useDispatch();
-
   const topBooks = useSelector((state) => state.topBooks);
-  const { load, data, error, fail } = topBooks;
-
+  const deleteBook = useSelector((state) => state.deleteBook);
   const [avatar, setAvatar] = useState(null);
   const [searchText, setSearchText] = useState("");
 
-  // const navigate = useNavigate();
+  async function removeBook(id) {
+    dispatch(
+      utils.ConstructorActionRedux(
+        `/api/book/${id}/`,
+        "DELETE",
+        {},
+        3000,
+        Constant_DeleteBook
+      )
+    );
+  }
 
-  // async function getAllCategories() {
-  //   try {
-  //     const token = `${"Bogdan"}:${"bogdan"}`;
-  //     const encodedToken = btoa(token);
-  //     console.log(token);
-  //     console.log(encodedToken);
-
-  //     const config = {
-  //       method: "GET",
-  //       timeout: 5000,
-  //       timeoutErrorMessage: "timeout error",
-  //       url: `/api/categories?limit=${5}&page=${1}`,
-  //       data: {},
-  //     };
-  //     const headers = {
-  //       Authorization: `Bearer `,
-  //     };
-  //     // const response = await axios(config, headers);
-  //     // const response = await axios.get(`/api/categories?limit=${5}&page=${1}`, headers);
-  //     const response = await axios.get(`/api/categories?limit=${5}&page=${1}`, {
-  //       headers: {
-  //         Authorization: `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjYwMTM1MDgwLCJpYXQiOjE2NjAwNDg2ODAsImp0aSI6IjFiZjczMzM0YzRmNjQ0ZmY4MDE1MGZkZjZjMDc1ZWNlIiwidXNlcl9pZCI6MX0.g4nUUGPrRgBpiTp0doJ4JHavLTIjSRg1mpzWgSV6gMs`,
-  //       },
-  //     });
-
-  //     // const config = {
-  //     //   url: `/api/categories?limit=${5}&page=${1}`,
-  //     //   method: "GET",
-  //     //   timeout: 5000,
-  //     //   timeoutErrorMessage: "timeout error",
-  //     //   // headers: {
-  //     //   //   Authorization: `Basic ${"Bogdan bogdan"}`,
-  //     //   // },
-  //     //   data: {},
-  //     // };
-  //     // const response = await axios(config);
-  //     if (response.data) {
-  //       console.log(response.data);
-  //     } else {
-  //       console.log(response);
-  //       console.log("ошибка");
-  //     }
-  //   } catch (error) {
-  //     //navigate("/login");
-  //     console.log(typeof error);
-  //     console.log(`ошибка: ${error}`);
-  //   }
-  // }
-
-  // async function get_token() {
-  //   let username = "admin";
-  //   let password = "admin";
-  //   const response = await axios.post(`/api/token/`, { username, password });
-
-  //   localStorage.setItem("token", response.data.access);
-
-  //   console.log(response.data);
-  // }
-
-  // async function get_data() {
-  //   const response = await axios.post(
-  //     `/api/get_data/`,
-  //     {},
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     }
-  //   );
-  //   console.log(response.data);
-  // }
-
-  useEffect(() => {
-    // const data = {
-    //   username: "admin",
-    //   password: "admin",
-    //   email: "ademail min",
-    //   Отчество: "Николай",
-    //   аватарка: avatar,
-    // };
-    // utils.ActionClearReact(`/api/top/`, "123", 500, data);
-  }, []);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  async function GetTopBooks() {
-    try {
-      dispatch({ type: CONST_TOP_BOOKS_LOAD }); // ЗАГРУЗКА
-      const config = {
-        url: `/api/top/?search=${searchText}`,
-        method: "GET",
-        data: {},
-        timeout: 5000,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      };
-      const response = await axios(config);
-      if (response.status === 200) {
-        dispatch({ type: CONST_TOP_BOOKS_DATA, payload: response.data }); // ДАННЫЕ ПРИШЛИ
-      } else {
-        dispatch({ type: CONST_TOP_BOOKS_ERROR }); // Ошибка на сервере
-      }
-    } catch (error) {
-      dispatch({ type: CONST_TOP_BOOKS_FAIL }); // Ошибка на клиенте
+  async function GetTopBooks(event) {
+    if (event) {
+      event.preventDefault(); // отключаем перезагрузку страницы
     }
+
+    dispatch(
+      utils.ConstructorActionRedux(
+        `/api/top/?search=${searchText}`,
+        "GET",
+        {},
+        5000,
+        Constant_TopBooks
+      )
+    );
   }
 
-  function GetData(event){
-    event.preventDefault();
+  useEffect(
+    () => {
+    if (!topBooks.data) {
+      GetTopBooks();
+    }
+  },[]);
 
-    GetTopBooks()
-  }
+  useEffect(() => {
+    console.log("topBooks", topBooks);
+  }, [topBooks]);
+
+  useEffect(() => {
+    console.log("deleteBook", deleteBook);
+  }, [deleteBook]);
+
+  useEffect(() => {
+    if (deleteBook.data) {
+      dispatch({ type: Constant_DeleteBook.reset });
+      GetTopBooks();
+    }
+  }, [deleteBook.data]);
 
   return (
     <base.Base1>
@@ -187,7 +99,7 @@ export function TopList() {
           </div>
           <div className="card-body">
             <div className="d-flex my-1">
-              <Form className="d-flex m-2 p-2" onSubmit={GetData}>
+              <Form className="d-flex m-2 p-2" onSubmit={GetTopBooks}>
                 <div className=" input-group">
                   <Form.Control
                     type="search"
@@ -196,9 +108,11 @@ export function TopList() {
                     aria-label="Search"
                     required
                     value={searchText}
-                    onChange={(event)=> setSearchText(event.target.value)}
+                    onChange={(event) => setSearchText(event.target.value)}
                   />
-                  <Button variant="outline-success" type="submit">искать</Button>
+                  <Button variant="outline-success" type="submit">
+                    искать
+                  </Button>
                 </div>
               </Form>
 
@@ -218,57 +132,70 @@ export function TopList() {
                 >
                   фильтровать
                 </button>
-                <button
+                {/* <button
                   className="btn btn-md btn-outline-success"
                   onClick={() => {
                     dispatch({ type: CONST_TOP_BOOKS_RESET });
                   }}
                 >
                   сброс
-                </button>
+                </button> */}
               </div>
 
-              
               <select class="form-control">
-                  <option value="0">Сортировка по имени: А-Я</option>
-                  <option value="0">Сортировка по имени: Я-А</option>
-                  <option value="0">Сортировка по рейтингу: вверх</option>
-                  <option value="0">Сортировка по рейтингу: вниз</option>
-                  <option value="0">Ваша оценка</option>
-                </select>
+                <option value="0">Сортировка по имени: А-Я</option>
+                <option value="0">Сортировка по имени: Я-А</option>
+                <option value="0">Сортировка по рейтингу: вверх</option>
+                <option value="0">Сортировка по рейтингу: вниз</option>
+                <option value="0">Ваша оценка</option>
+              </select>
             </div>
           </div>
           <div className="card-footer">footer</div>
         </div>
 
-        <div>
-          {topBooks.load ? (
-            <div className="text-success">Идёт загрузка...</div>
-          ) : (
-            <div className="text-danger"></div>
-          )}
-          {topBooks.data ? (
-            <div className="text-success">{topBooks.data["response"]}</div>
-          ) : (
-            <div className="text-danger"></div>
-          )}
-          {/* {topBooks.fail ? <div className="text-success">ошибка клиента есть</div> : <div className="text-danger">ошибки клиента нет</div>} */}
-          {/* <div>topBooks</div>
-          <div>topBooks</div>
-          <div>topBooks</div>
-          <div>topBooks</div> */}
-        </div>
 
         <div>
           <div class="container px-4 py-5" id="custom-cards">
             <h2 class="pb-2 border-bottom">Custom cards</h2>
 
+
+            <div>
+
+          {topBooks.load ? (
+            <div className="text-success"><ui.Loader1 color="text-success"/></div>
+          ) : (
+            <ui.Alert.Success size={0}>загрузка завершена</ui.Alert.Success>
+          )}
+
+          {topBooks.data ? (
+            <div className="text-success">{topBooks.data["response"]}</div>
+          ) : (
+            <div className="text-danger"></div>
+          )}
+
+          {topBooks.error && <div className="text-danger">{topBooks.error}</div>}
+          {topBooks.fail && <div className="text-warning">{topBooks.fail}</div>}
+        </div>
+
             <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-              {data && data["object_list"] ? (
-                data["object_list"].map((item) => (
+              {topBooks.data && topBooks.data["object_list"] ? (
+                topBooks.data["object_list"].map((item) => (
                   <div class="col">
                     <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg custom_card">
                       <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+                        
+                        {deleteBook.load === true ? (
+                          <ui.Loader1 color="text-danger"/>
+                        ) : (
+                          <button
+                            onClick={() => removeBook(item.id)}
+                            className="btn btn-sm btn-outline-danger text-end w-25"
+                          >
+                            удалить
+                          </button>
+                        )}
+
                         <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">
                           {item.title}
                         </h2>
@@ -296,7 +223,7 @@ export function TopList() {
                   </div>
                 ))
               ) : (
-                <div>данных нет</div>
+                <ui.Alert.Empty>данных нет!</ui.Alert.Empty>
               )}
             </div>
           </div>

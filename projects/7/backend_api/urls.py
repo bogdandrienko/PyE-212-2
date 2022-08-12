@@ -27,6 +27,8 @@ urlpatterns = [
 
     re_path(r'^top/$', views.top),
 
+    re_path(r'^book/(?P<book_id>\d+)/$', views.book),
+
 
     path('html/', views.html, name='html'),
     path('about/', views.about, name='about'),

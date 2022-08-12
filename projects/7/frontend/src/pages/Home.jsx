@@ -3,6 +3,8 @@ import Base, { Base1 } from "../components/Base";
 import { BookView } from "../components/books";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import * as actions from "../components/Actions";
+
 
 function Home() {
   return (
@@ -13,7 +15,7 @@ function Home() {
           src="/static/home_hero.png"
           alt="image"
         />
-        <h1 className="display-5 fw-bold">Книжный сайт</h1>
+        <h1 className="display-5 fw-bold" onClick={()=> actions.Logout()} >Книжный сайт</h1>
         <div className="col-lg-6 mx-auto">
           <p className="lead mb-4">
             Совсем перестали читать! Ну ка!

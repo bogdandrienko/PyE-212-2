@@ -38,7 +38,7 @@ export async function ActionClearReact(
   return response;
 }
 
-export function ActionWithRedux(
+export function ActionRedux(
   url,
   method = "GET",
   data = {},
@@ -55,6 +55,8 @@ export function ActionWithRedux(
     Object.keys(data).forEach(function (key) {
       formData.append(key.toString(), data[key]);
     });
+
+
     const config = {
       url: url,
       method: method,
@@ -75,3 +77,107 @@ export function ActionWithRedux(
 }
 
 // export function ActionConstructor
+
+export function ConstructorConstantRedux(name="string") {
+  /* Конструктор для уникальных переменных в react-redux */
+  return {
+    load: `load ${name}`, // "load Constant_TopBooks"
+    data: `data ${name}`, // "data Constant_TopBooks"
+    error: `error ${name}`,
+    fail: `fail ${name}`,
+    reset: `reset ${name}`,
+  }
+}
+
+export function ConstructorReducerRedux(
+  constant = {
+    load: undefined,
+    data: undefined,
+    error: undefined,
+    fail: undefined,
+    reset: undefined,
+  }
+) {
+  return function (state = {}, action = null) {
+    switch (action.type) {
+      case constant.load:
+        return {
+          load: true
+        };
+      case constant.data:
+        return {
+          load: false,
+          data: action.payload,
+        };
+      case constant.error:
+        return {
+          load: false,
+          error: "Ошибка на сервере",
+        };
+      case constant.fail:
+        return {
+          load: false,
+          fail: "Ошибка на клиенте",
+        };
+      case constant.reset:
+        return {
+          load: false,
+        };
+      default:
+        return state;
+    }
+  };
+}
+
+export function ConstructorActionRedux(
+  url=`/`,
+  method="GET",
+  data={},
+  timeout=3000,
+  constant = {
+    load: undefined,
+    data: undefined,
+    error: undefined,
+    fail: undefined,
+    reset: undefined,
+  }
+){
+return async function (dispatch, getState) {
+  try {
+    dispatch({ type: constant.load });  // ВКЛЮЧАЕМ СОСТЯНИЕ ЗАГРУЗКИ ДЛЯ ЭТОГО topBooks
+
+    // const {
+    //   token: {data: token}
+    // } = getState();
+
+    const token = localStorage.getItem("token")
+
+    const formData = new FormData();
+    Object.keys(data).forEach(function (key) {
+      formData.append(key.toString(), data[key]);
+    });
+    const config = {
+      url: url,
+      method: method,
+      data: formData,
+      timeout: timeout,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios(config);
+    if (response.status === 200) {
+      dispatch({ type: constant.data, payload: response.data });
+    } else {
+
+      // в случае неудачной аутентификации 
+      // (авторизации) нужно перекидывать пользователя на страницу входа
+
+      dispatch({ type: constant.error });
+    }
+  } catch (error) {
+    dispatch({ type: constant.fail });
+  }
+}
+
+}
