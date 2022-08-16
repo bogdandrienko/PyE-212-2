@@ -384,20 +384,26 @@ def top(request):
         limit = request.GET.get("limit", 5)
         search = request.GET.get("search", "")
 
+        # return Response(status=status.HTTP_404_NOT_FOUND)
+        # return Response(status=status.HTTP_401_UNAUTHORIZED)
+
         # search / filter / order_by
-        if search:
-            books = models.ModelBook.objects.filter(title__contains=str(search))
-        else:
-            books = models.ModelBook.objects.all()  # .filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
+        # if search:
+        #     books = models.ModelBook.objects.filter(title__contains=str(search))
+        # else:
+        #     books = models.ModelBook.objects.all()  # .filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
+
+        response = requests.get("https://jsonplaceholder.typicode.com/todos/")
+        books = response.json()
 
         count = len(books)
-        for i in books:
-            print(i.return_clear_data())
         paginator_instanse = Paginator(books, limit)  # [1, 2, 3, 4, 5]
         books = paginator_instanse.get_page(number=page).object_list
 
-        serialized_books = serializers.BookSerializer(instance=books, many=True).data
-        return Response(data={"object_list": serialized_books, "count": count}, status=status.HTTP_200_OK)
+        # serialized_books = serializers.BookSerializer(instance=books, many=True).data
+
+
+        return Response(data={"object_list": books, "count": count}, status=status.HTTP_200_OK)
     elif request.method == "POST":  # создание книги
 
         print(request.POST)
@@ -461,6 +467,7 @@ def book(request, book_id=0):
             # search / filter / order_by
             books = models.ModelBook.objects.all()  # .filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
 
+
             count = len(books)
             for i in books:
                 print(i.return_clear_data())
@@ -468,6 +475,7 @@ def book(request, book_id=0):
             books = paginator_instanse.get_page(number=page).object_list
 
             serialized_books = serializers.BookSerializer(instance=books, many=True).data
+
             return Response(data={"object_list": serialized_books, "count": count}, status=status.HTTP_200_OK)
         elif request.method == "POST":  # создание книги
             title = request.POST.get("title", "Шаблон заголовка")

@@ -1,18 +1,19 @@
 import axios from "axios";
+import * as actions from "../components/Actions";
+
 
 export function GetStaticFile(file) {
   return `/static${file}`;
 }
 
-export function CreateArrayFromInt(count = 1, limit = 10) {
-  const pages_count = limit / count;
-  console.log("pages_count", pages_count);
-
+export function CreateArrayFromInt(count = 1, limit = 10, view=10) {
+  const pages_count = count/ limit;
   let pages = [];
   for (let i = 1; i <= pages_count; i += 1) {
     pages.push(i);
   }
-  return pages;
+
+  return pages.slice(0, view);
 }
 
 export async function ActionClearReact(
@@ -166,17 +167,35 @@ return async function (dispatch, getState) {
       },
     };
     const response = await axios(config);
+
+    console.log("response", response)
+    console.log("status", response.status)
+
     if (response.status === 200) {
       dispatch({ type: constant.data, payload: response.data });
     } else {
-
-      // в случае неудачной аутентификации 
-      // (авторизации) нужно перекидывать пользователя на страницу входа
-
       dispatch({ type: constant.error });
     }
   } catch (error) {
-    dispatch({ type: constant.fail });
+    switch (error.response.status) {
+      case 401:
+        // UNAUTHORIZED
+        actions.Logout();
+        break;
+      case 402:
+        //
+        break;
+      case 403:
+        //
+        break;
+      case 404:
+        // NOT FOUND
+        dispatch({ type: constant.reset });
+        break;
+      default:
+        dispatch({ type: constant.fail });
+        break;
+    }
   }
 }
 

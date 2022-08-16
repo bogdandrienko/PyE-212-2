@@ -34,10 +34,18 @@ export const Reducer_DeleteBook =
 
 export function TopList() {
   const dispatch = useDispatch();
+
   const topBooks = useSelector((state) => state.topBooks);
   const deleteBook = useSelector((state) => state.deleteBook);
+
   const [avatar, setAvatar] = useState(null);
   const [searchText, setSearchText] = useState("");
+
+  const [paginateObj, setPaginateObj] = useState({
+    page: 1,
+    limit: 30,
+    count: 1,
+  });
 
   async function removeBook(id) {
     dispatch(
@@ -55,10 +63,9 @@ export function TopList() {
     if (event) {
       event.preventDefault(); // отключаем перезагрузку страницы
     }
-
     dispatch(
       utils.ConstructorActionRedux(
-        `/api/top/?search=${searchText}`,
+        `/api/top/?page=${paginateObj.page}&limit=${paginateObj.limit}&search=${searchText}`,
         "GET",
         {},
         5000,
@@ -67,20 +74,20 @@ export function TopList() {
     );
   }
 
-  useEffect(
-    () => {
-    if (!topBooks.data) {
-      GetTopBooks();
+  useEffect(() => {
+    if (!topBooks.data && topBooks.load !== false) {
+      // GetTopBooks();
     }
-  },[]);
+  }, []);
+
+  useEffect(() => {
+    console.log(paginateObj);
+    GetTopBooks();
+  }, [paginateObj.page]);
 
   useEffect(() => {
     console.log("topBooks", topBooks);
   }, [topBooks]);
-
-  useEffect(() => {
-    console.log("deleteBook", deleteBook);
-  }, [deleteBook]);
 
   useEffect(() => {
     if (deleteBook.data) {
@@ -88,6 +95,11 @@ export function TopList() {
       GetTopBooks();
     }
   }, [deleteBook.data]);
+
+  function filter(value) {
+    // GetTopBooks();
+    // console.log("ФИЛЬТРАЦИЯ ДАННЫХ!", value);
+  }
 
   return (
     <base.Base1>
@@ -99,94 +111,83 @@ export function TopList() {
           </div>
           <div className="card-body">
             <div className="d-flex my-1">
-              <Form className="d-flex m-2 p-2" onSubmit={GetTopBooks}>
-                <div className=" input-group">
-                  <Form.Control
-                    type="search"
-                    placeholder="введите часть названия книги"
-                    className="w-50"
-                    aria-label="Search"
-                    required
-                    value={searchText}
-                    onChange={(event) => setSearchText(event.target.value)}
-                  />
-                  <Button variant="outline-success" type="submit">
-                    искать
-                  </Button>
-                </div>
-              </Form>
+              <ui.Search1 onSubmitFunc={filter}>
+                введите текст для поиска тут...
+              </ui.Search1>
+            </div>
 
-              <input
-                type="file"
-                className="form-control w-25"
-                onChange={(event) => setAvatar(event.target.files[0])}
-              />
+            <div className="d-flex">
+              <ui.Select1
+                defaultValue={"нажмите сюда чтобы увидеть список лет..."}
+                selects={{
+                  2010: "После 2010 года",
+                  2020: "После 2020 года",
+                  2022: "После 2022 года",
+                }}
+                onSubmitFunc={filter}
+              >
+                Выберите год
+              </ui.Select1>
 
-              <div className="d-flex my-3 input-group">
-                <select class="form-control">
-                  <option value="0">Ваша оценка</option>
-                </select>
-                <button
-                  className="btn btn-md btn-outline-success"
-                  onClick={GetTopBooks}
-                >
-                  фильтровать
-                </button>
-                {/* <button
-                  className="btn btn-md btn-outline-success"
-                  onClick={() => {
-                    dispatch({ type: CONST_TOP_BOOKS_RESET });
-                  }}
-                >
-                  сброс
-                </button> */}
-              </div>
-
-              <select class="form-control">
-                <option value="0">Сортировка по имени: А-Я</option>
-                <option value="0">Сортировка по имени: Я-А</option>
-                <option value="0">Сортировка по рейтингу: вверх</option>
-                <option value="0">Сортировка по рейтингу: вниз</option>
-                <option value="0">Ваша оценка</option>
-              </select>
+              <ui.Select1
+                defaultValue={"нажмите сюда чтобы увидеть список категорий..."}
+                selects={{
+                  new: "Свежак",
+                  classic: "Классика для ценителей",
+                  programming: "Программирование для гиков!",
+                }}
+                onSubmitFunc={filter}
+              >
+                Выберите категорию
+              </ui.Select1>
             </div>
           </div>
           <div className="card-footer">footer</div>
         </div>
 
-
         <div>
-          <div class="container px-4 py-5" id="custom-cards">
-            <h2 class="pb-2 border-bottom">Custom cards</h2>
-
-
+          <div className="container px-4 py-5" id="custom-cards">
             <div>
 
-          {topBooks.load ? (
-            <div className="text-success"><ui.Loader1 color="text-success"/></div>
-          ) : (
-            <ui.Alert.Success size={0}>загрузка завершена</ui.Alert.Success>
-          )}
+              <div className="d-flex justify-content-center text-center">
+                <ui.Paginator3
+                  topBooks={topBooks}
+                  paginateObj={paginateObj}
+                  setPaginateObj={setPaginateObj}
+                />
+              </div>
 
-          {topBooks.data ? (
-            <div className="text-success">{topBooks.data["response"]}</div>
-          ) : (
-            <div className="text-danger"></div>
-          )}
+              {topBooks.data ? (
+                <div className="text-success">{topBooks.data["response"]}</div>
+              ) : (
+                <div className="text-danger"></div>
+              )}
 
-          {topBooks.error && <div className="text-danger">{topBooks.error}</div>}
-          {topBooks.fail && <div className="text-warning">{topBooks.fail}</div>}
-        </div>
+              {topBooks.error && (
+                <div className="text-danger">{topBooks.error}</div>
+              )}
+              {topBooks.fail && (
+                <div className="text-warning">{topBooks.fail}</div>
+              )}
+            </div>
 
-            <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+            {topBooks.load ? (
+              <div className="text-success">
+                <ui.Loader1 color="text-success" />
+              </div>
+            ) : (
+              <div></div>
+              // <ui.Alert.Success size={0}>загрузка завершена</ui.Alert.Success>
+            )}
+
+            <div className="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
               {topBooks.data && topBooks.data["object_list"] ? (
-                topBooks.data["object_list"].map((item) => (
-                  <div class="col">
-                    <div class="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg custom_card">
-                      <div class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
-                        
+                topBooks.data["object_list"].map((item, index) => (
+                  <div key={index} className="col">
+                    <div className="card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg custom_card">
+                      <div className="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
                         {deleteBook.load === true ? (
-                          <ui.Loader1 color="text-danger"/>
+                          <ui.Loader1 color="text-danger" />
                         ) : (
                           <button
                             onClick={() => removeBook(item.id)}
@@ -196,25 +197,33 @@ export function TopList() {
                           </button>
                         )}
 
-                        <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">
+                        <h2 className="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">
                           {item.title}
                         </h2>
-                        <ul class="d-flex list-unstyled mt-auto">
-                          <li class="me-auto">
+                        <ul className="d-flex list-unstyled mt-auto">
+                          <li className="me-auto">
                             <img
                               src="https://github.com/twbs.png"
                               alt="Bootstrap"
                               width="32"
                               height="32"
-                              class="rounded-circle border border-white"
+                              className="rounded-circle border border-white"
                             ></img>
                           </li>
-                          <li class="d-flex align-items-center me-3">
-                            <svg class="bi me-2" width="1em" height="1em"></svg>
+                          <li className="d-flex align-items-center me-3">
+                            <svg
+                              className="bi me-2"
+                              width="1em"
+                              height="1em"
+                            ></svg>
                             <small>California</small>
                           </li>
-                          <li class="d-flex align-items-center">
-                            <svg class="bi me-2" width="1em" height="1em"></svg>
+                          <li className="d-flex align-items-center">
+                            <svg
+                              className="bi me-2"
+                              width="1em"
+                              height="1em"
+                            ></svg>
                             <small>5d</small>
                           </li>
                         </ul>
@@ -225,6 +234,13 @@ export function TopList() {
               ) : (
                 <ui.Alert.Empty>данных нет!</ui.Alert.Empty>
               )}
+            </div>
+            <div className="d-flex justify-content-center text-center">
+              <ui.Paginator3
+                topBooks={topBooks}
+                paginateObj={paginateObj}
+                setPaginateObj={setPaginateObj}
+              />
             </div>
           </div>
         </div>

@@ -25,7 +25,7 @@ import {Reducer_TopBooks, Reducer_DeleteBook} from '../pages/TopList'
 const globalReducer = combineReducers({
   // newsBooks: reducers.getAllNewsBooks,
   // topBooks: getAllTopBooks,
-  "topBooks": Reducer_TopBooks,
+  topBooks: Reducer_TopBooks,
   "deleteBook": Reducer_DeleteBook,
   "token": bases.getUserToken,
 });

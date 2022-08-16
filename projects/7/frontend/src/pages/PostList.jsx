@@ -87,21 +87,21 @@ return (
   />
 
 <nav aria-label="Page navigation example">
-<ul class="pagination pagination-lg">
+<ul className="pagination pagination-lg">
   {posts.page > 1 &&
-  <li class="page-item">
-    <button onClick={()=>setPage(posts.page-1)} class="page-link" href="#" aria-label="Previous">
+  <li className="page-item">
+    <button onClick={()=>setPage(posts.page-1)} className="page-link" href="#" aria-label="Previous">
       <span aria-hidden="true">&laquo;</span>
     </button>
   </li>}
 
   {utils.CreateArrayFromInt(count, limit).map((item) => (
-    <li class="page-item"><button type="button" onClick={()=>setPage(item)} class={posts.page===item ?"page-link fw-bold lead active" :"page-link"}>{item}</button></li>
+    <li className="page-item"><button type="button" onClick={()=>setPage(item)} class={posts.page===item ?"page-link fw-bold lead active" :"page-link"}>{item}</button></li>
   ))}
 
 {posts.page < utils.CreateArrayFromInt(count, limit).length &&
-  <li class="page-item">
-    <button onClick={()=>setPage(posts.page+1)} class="page-link" aria-label="Next">
+  <li className="page-item">
+    <button onClick={()=>setPage(posts.page+1)} className="page-link" aria-label="Next">
       <span aria-hidden="true">&raquo;</span>
     </button>
   </li>

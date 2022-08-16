@@ -36,9 +36,9 @@ export function LoginComponent() {
     if (!localStorage.getItem('token')){
       navigate("/login");
     } else {
-      if(navigate.path === "/login"){
-        navigate("/");
-      }
+        if(navigate.path === "/login"){
+          navigate("/");
+        }
     }
   }, []);
 

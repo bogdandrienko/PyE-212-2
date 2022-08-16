@@ -7,7 +7,7 @@ export function BookMainView({ newsBooks, viewType }) {
     <div className="album py-5 bg-light">
       <div className="container">
         {viewType === 1 ? (
-          <div class="row mb-2">
+          <div className="row mb-2">
             {newsBooks &&
               newsBooks.data &&
               newsBooks.data.map((item, index) => (
@@ -80,7 +80,7 @@ export function BookView({
         <div className="card-body">
           <p className="card-text">{description}</p>
         </div>
-        <a href={`/static/${instructions}`} class="stretched-link">
+        <a href={`/static/${instructions}`} className="stretched-link">
           download
         </a>
         <div className="card-footer">
@@ -118,22 +118,22 @@ export function BookView2({
   time = "0 минут",
 }) {
   return (
-    <div class="col-md-6">
-    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-      <div class="col p-4 d-flex flex-column position-static">
-        <strong class="d-inline-block mb-2 text-success">
+    <div className="col-md-6">
+    <div className="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+      <div className="col p-4 d-flex flex-column position-static">
+        <strong className="d-inline-block mb-2 text-success">
         {title}
         </strong>
-        <h3 class="mb-0">{lindView}</h3>
-        <div class="mb-1 text-muted">{lindEdit} {time}</div>
-        <p class="mb-auto">
+        <h3 className="mb-0">{lindView}</h3>
+        <div className="mb-1 text-muted">{lindEdit} {time}</div>
+        <p className="mb-auto">
           {description}
         </p>
-        <a href={`/static${instructions}`} class="stretched-link">
+        <a href={`/static${instructions}`} className="stretched-link">
           download
         </a>
       </div>
-      <div class="col-auto d-none d-lg-block">
+      <div className="col-auto d-none d-lg-block">
         <img
             src={utils.GetStaticFile(image)}
             alt={"ошибка загрузки"}
