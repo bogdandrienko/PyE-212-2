@@ -79,7 +79,7 @@ export function ActionRedux(
 
 // export function ActionConstructor
 
-export function ConstructorConstantRedux(name="string") {
+export function ConstructorCR(name="string") {
   /* Конструктор для уникальных переменных в react-redux */
   return {
     load: `load ${name}`, // "load Constant_TopBooks"
@@ -90,7 +90,7 @@ export function ConstructorConstantRedux(name="string") {
   }
 }
 
-export function ConstructorReducerRedux(
+export function ConstructorRR(
   constant = {
     load: undefined,
     data: undefined,
@@ -168,8 +168,8 @@ return async function (dispatch, getState) {
     };
     const response = await axios(config);
 
-    console.log("response", response)
-    console.log("status", response.status)
+    // console.log("response", response)
+    // console.log("status", response.status)
 
     if (response.status === 200) {
       dispatch({ type: constant.data, payload: response.data });
@@ -199,4 +199,12 @@ return async function (dispatch, getState) {
   }
 }
 
+}
+
+export function Sleep(func, timeDelay=3000){
+  setTimeout(()=> {
+    func()
+  }, timeDelay)
+
+  // setInterval
 }

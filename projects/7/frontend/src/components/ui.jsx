@@ -292,7 +292,13 @@ export function Search1({ children, onSubmitFunc }) {
   return (
     <Form
       className="d-flex m-2 p-2"
-      onSubmit={() => onSubmitFunc(searchedText)}
+      onSubmit={
+        (event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          onSubmitFunc(searchedText)
+        }
+      }
     >
       <div className=" input-group">
         <Form.Control

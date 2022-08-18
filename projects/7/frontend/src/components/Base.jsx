@@ -21,15 +21,15 @@ export default function Base({ children }) {
 
 
 
-export const CONST_USER_LOGIN = utils.ConstructorConstantRedux("CONST_USER_LOGIN");
-export const getUserToken = utils.ConstructorReducerRedux(CONST_USER_LOGIN);
+export const CONST_USER_LOGIN = utils.ConstructorCR("CONST_USER_LOGIN");
+export const getUserToken = utils.ConstructorRR(CONST_USER_LOGIN);
 
 export function LoginComponent() {
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
 
   useEffect(() => {
-    console.log("token", token)
+    // console.log("token", token)
   }, [token]);
 
   useEffect(() => {

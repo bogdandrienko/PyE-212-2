@@ -6,31 +6,7 @@ import Button from "react-bootstrap/Button";
 import * as base from "../components/Base";
 import * as utils from "../components/utils";
 import * as ui from "../components/ui";
-
-export const Constant_CreateBook = utils.ConstructorConstantRedux(
-  "Constant_CreateBook"
-);
-
-export const Constant_ChangeBook = utils.ConstructorConstantRedux(
-  "Constant_ChangeBook"
-);
-
-// КОНСТАНТА ПОЛУЧЕНИЯ
-export const Constant_TopBooks =
-  utils.ConstructorConstantRedux("Constant_TopBooks");
-
-// РЕДЮСЕР ПОЛУЧЕНИЯ (ПЕРЕКЛЮЧАТЕЛЬ СОСТОЯНИЙ ОДНОГО ОБЪЕКТА ПО КОНСТАНТАМ)
-export const Reducer_TopBooks =
-  utils.ConstructorReducerRedux(Constant_TopBooks);
-
-// КОНСТАНТА УДАЛЕНИЯ
-export const Constant_DeleteBook = utils.ConstructorConstantRedux(
-  "Constant_DeleteBook"
-);
-
-// РЕДЮСЕР ПОЛУЧЕНИЯ (ПЕРЕКЛЮЧАТЕЛЬ СОСТОЯНИЙ ОДНОГО ОБЪЕКТА ПО КОНСТАНТАМ)
-export const Reducer_DeleteBook =
-  utils.ConstructorReducerRedux(Constant_DeleteBook);
+import * as constants from "../components/Constants";
 
 export function TopList() {
   const dispatch = useDispatch();
@@ -38,14 +14,17 @@ export function TopList() {
   const topBooks = useSelector((state) => state.topBooks);
   const deleteBook = useSelector((state) => state.deleteBook);
 
-  const [avatar, setAvatar] = useState(null);
-  const [searchText, setSearchText] = useState("");
+  const categories = useSelector((state) => state.categories);
 
   const [paginateObj, setPaginateObj] = useState({
     page: 1,
     limit: 30,
     count: 1,
   });
+
+  const [searchText, setSearchText] = useState("");
+  const [categoryText, setCategoryText] = useState("");
+  const [filterText, setFilterText] = useState("");
 
   async function removeBook(id) {
     dispatch(
@@ -54,52 +33,79 @@ export function TopList() {
         "DELETE",
         {},
         3000,
-        Constant_DeleteBook
+        constants.C_DeleteBook
       )
     );
   }
 
-  async function GetTopBooks(event) {
-    if (event) {
-      event.preventDefault(); // отключаем перезагрузку страницы
-    }
+  async function GetTopBooks(options) {
+    //search=searchText, category=categoryText, filter=filterText
     dispatch(
       utils.ConstructorActionRedux(
-        `/api/top/?page=${paginateObj.page}&limit=${paginateObj.limit}&search=${searchText}`,
+        `/api/top/?page=${paginateObj.page}&limit=${paginateObj.limit}&search=${options.search}&category=${options.category}&filter=${options.filter}`,
         "GET",
         {},
         5000,
-        Constant_TopBooks
+        constants.C_TopBooks
       )
     );
   }
 
   useEffect(() => {
     if (!topBooks.data && topBooks.load !== false) {
-      // GetTopBooks();
+      // GetTopBooks({search: searchText, category: categoryText, filter: filterText});
     }
   }, []);
 
   useEffect(() => {
-    console.log(paginateObj);
-    GetTopBooks();
+    GetTopBooks({search: searchText, category: categoryText, filter: filterText});
   }, [paginateObj.page]);
 
   useEffect(() => {
-    console.log("topBooks", topBooks);
+    // console.log("topBooks", topBooks);
   }, [topBooks]);
 
   useEffect(() => {
     if (deleteBook.data) {
-      dispatch({ type: Constant_DeleteBook.reset });
-      GetTopBooks();
+      dispatch({ type: constants.C_DeleteBook.reset });
+      GetTopBooks({search: searchText, category: categoryText, filter: filterText});
     }
   }, [deleteBook.data]);
 
-  function filter(value) {
-    // GetTopBooks();
-    // console.log("ФИЛЬТРАЦИЯ ДАННЫХ!", value);
+  function searchFunc(value) {
+    setSearchText(value)
+    GetTopBooks({search: value, category: categoryText, filter: filterText});
   }
+
+  function categoryFunc(value) {
+    setCategoryText(value)
+    GetTopBooks({search: searchText, category: value, filter: filterText});
+  }
+
+  function filterFunc(value) {
+    setFilterText(value)
+    GetTopBooks({search: searchText, category: categoryText, filter: value});
+  }
+
+  useEffect(() => {
+    console.log("categories", categories);
+  }, [categories]);
+
+  useEffect(() => {
+
+    dispatch(
+      utils.ConstructorActionRedux(
+        `/api/categories`,
+        "GET",
+        {},
+        5000,
+        constants.C_Categories
+      )
+    );
+
+  }, []);
+
+
 
   return (
     <base.Base1>
@@ -111,7 +117,7 @@ export function TopList() {
           </div>
           <div className="card-body">
             <div className="d-flex my-1">
-              <ui.Search1 onSubmitFunc={filter}>
+              <ui.Search1 onSubmitFunc={searchFunc}>
                 введите текст для поиска тут...
               </ui.Search1>
             </div>
@@ -120,26 +126,32 @@ export function TopList() {
               <ui.Select1
                 defaultValue={"нажмите сюда чтобы увидеть список лет..."}
                 selects={{
-                  2010: "После 2010 года",
-                  2020: "После 2020 года",
-                  2022: "После 2022 года",
+                  "меньше минуты назад": "меньше минуты назад",
+                  "более минуты назад": "более минуты назад",
                 }}
-                onSubmitFunc={filter}
+                onSubmitFunc={filterFunc}
               >
                 Выберите год
               </ui.Select1>
 
-              <ui.Select1
-                defaultValue={"нажмите сюда чтобы увидеть список категорий..."}
-                selects={{
-                  new: "Свежак",
-                  classic: "Классика для ценителей",
-                  programming: "Программирование для гиков!",
-                }}
-                onSubmitFunc={filter}
-              >
-                Выберите категорию
-              </ui.Select1>
+                {categories && categories.data && categories.data["object_list"] &&
+                (
+                  <ui.Select1
+                  defaultValue={"нажмите сюда чтобы увидеть список категорий..."}
+
+                  selects={Object.assign({}, ...categories.data["object_list"].map((x) => ({[x.title]: x.title})))}
+
+                  // selects={{
+                  //   new: "Свежак",
+                  //   classic: "Классика для ценителей",
+                  //   programming: "Программирование для гиков!",
+                  // }}
+                  onSubmitFunc={categoryFunc}
+                >
+                  Выберите категорию
+                </ui.Select1>
+                )
+                }
             </div>
           </div>
           <div className="card-footer">footer</div>

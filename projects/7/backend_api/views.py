@@ -1,16 +1,13 @@
 import time
 
-from django.core.paginator import Paginator
-from django.contrib.auth import authenticate
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 import datetime
 import requests
 import json
 from django.contrib.auth.models import User, update_last_login
-from django.core.paginator import Paginator
-from django.core.mail import send_mail
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.paginator import Paginator
 
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes
@@ -177,38 +174,21 @@ def news(request, book_id=0):
 
 
 @api_view(http_method_names=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
-# @permission_classes([AllowAny])
 @permission_classes([IsAuthenticated])
-# @csrf_exempt
-def categories(request, book_id=0):
-    print(request)
-
-    print(str(request.auth))
-    print(str(request.META.get("HTTP_AUTHORIZATION", "")))
-
-    # token = str(request.META.get("HTTP_AUTHORIZATION", "Bearer $")).split("Bearer ")[1].strip()
-    # print(f"token: {token}\n")
-    # print(request.META.get("HTTP_AUTHORIZATION", "").replace("Basic ", ""))
-
-    # for key, value in request.META.items():
-    #     # print(key[:50], value[:50])
-    #     pass
-
+def categories(request, category_id=0):
     time.sleep(2)
 
-    # print(request.META['AUTHORIZATION'])
-    # print(request.META['HTTP_AUTHORIZATION'])
-    if int(book_id) >= 1:
+    if int(category_id) >= 1:
         if request.method == "GET":  # получение книги
-            book = get_object_or_404(models.ModelBook, id=book_id)
+            book = get_object_or_404(models.ModelBook, id=category_id)
             serialized_book = serializers.BookSerializer(instance=book, many=False).data
             return Response(data=serialized_book, status=status.HTTP_200_OK)
         elif request.method == "DELETE":
-            book = models.ModelBook.objects.get(id=book_id).delete()
+            book = models.ModelBook.objects.get(id=category_id).delete()
             book.delete()
             return Response(data={"response": "Успешно удалено."}, status=status.HTTP_200_OK)
         elif request.method == "PUT" or request.method == "PATCH":
-            book = models.ModelBook.objects.get(id=book_id)
+            book = models.ModelBook.objects.get(id=category_id)
 
             title = request.POST.get("title", "Шаблон заголовка")
             description = request.POST.get("description", "Шаблон описания")
@@ -218,39 +198,16 @@ def categories(request, book_id=0):
                 book.description = description
             book.save()
 
-            book = models.ModelBook.objects.get(id=book_id)
+            book = models.ModelBook.objects.get(id=category_id)
             serialized_book = serializers.BookSerializer(instance=book, many=False).data
             return Response(data=serialized_book, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
     else:
-        if request.method == "GET":  # получение книг
-
-            # return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-            from django.core.paginator import Paginator
-            page = request.GET.get("page", 1)
-            limit = request.GET.get("limit", 5)
-
-            # search / filter / order_by
-            categories_list = models.ModelBookCategory.objects.all()  # .filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
-            count = len(categories_list)
-            paginator_instanse = Paginator(categories_list, limit)  # [1, 2, 3, 4, 5]
-            categories_list = paginator_instanse.get_page(number=page).object_list
-
+        if request.method == "GET":
+            categories_list = models.ModelBookCategory.objects.all()
             serialized_categories = serializers.BookCategorySerializer(instance=categories_list, many=True).data
-
-            # user = User.objects.get(username="admin")
-            # update_last_login(sender=None, user=user)
-            # refresh = RefreshToken.for_user(user=user)
-            # response = {"response": {
-            #     "refresh": str(refresh),
-            #     "access": str(refresh.access_token),
-            #     "token": str(refresh.access_token),
-            # }}
-
-            return Response(data={"object_list": serialized_categories, "count": count, "response": "response"},
-                            status=status.HTTP_200_OK)
+            return Response(data={"object_list": serialized_categories}, status=status.HTTP_200_OK)
         elif request.method == "POST":  # создание книги
             title = request.POST.get("title", "Шаблон заголовка")
             description = request.POST.get("description", "Шаблон описания")
@@ -372,38 +329,82 @@ def get_private_books(request):
 
 
 @api_view(http_method_names=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
-# @permission_classes([AllowAny])
 @permission_classes([IsAuthenticated])
 def top(request):
     time.sleep(2)
 
     if request.method == "GET":  # получение книг
 
-        from django.core.paginator import Paginator
         page = request.GET.get("page", 1)
         limit = request.GET.get("limit", 5)
+
+        books = models.ModelBook.objects.filter(is_view=True).order_by('-update_datetime_field', 'title')
+
         search = request.GET.get("search", "")
+        if search:
+            books = books.filter(title__contains=str(search))
+
+        filter = request.GET.get("filter", "")
+        if filter:
+
+            def get_fresh(is_new: bool, books_arg):
+                new_books = []
+                target_time = datetime.datetime.now() + datetime.timedelta(hours=-6, minutes=-1)
+                for book in books_arg:
+                    # print(f"""{i.update_datetime_field.strftime("%m/%d/%Y, %H:%M:%S")}  {target_time.strftime("%m/%d/%Y, %H:%M:%S")} {i.update_datetime_field.strftime("%m/%d/%Y, %H:%M:%S") > target_time.strftime("%m/%d/%Y, %H:%M:%S")}""")
+                    if is_new:
+                        if book.update_datetime_field.strftime("%m/%d/%Y, %H:%M:%S") > \
+                                target_time.strftime("%m/%d/%Y, %H:%M:%S"):
+                            new_books.append(book)
+                    else:
+                        if book.update_datetime_field.strftime("%m/%d/%Y, %H:%M:%S") < \
+                                target_time.strftime("%m/%d/%Y, %H:%M:%S"):
+                            new_books.append(book)
+                return new_books
+
+            if filter == "меньше минуты назад":
+                books = get_fresh(True, books)
+            elif filter == "больше минуты назад":
+                books = get_fresh(False, books)
+            else:
+                pass
+
+        category = request.GET.get("category", "")
+        if category:
+            try:
+                category_obj = models.ModelBookCategory.objects.get(title=category)
+                books = [book for book in books if category_obj in book.category.all()]
+            except Exception as error:
+                pass
+
+        utils.print_data_from_frontend(request=request)
 
         # return Response(status=status.HTTP_404_NOT_FOUND)
         # return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        # search / filter / order_by
-        # if search:
-        #     books = models.ModelBook.objects.filter(title__contains=str(search))
-        # else:
-        #     books = models.ModelBook.objects.all()  # .filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
+        # books = models.ModelBook.objects.all()
+        # получить все -- TODO select * from ...
 
-        response = requests.get("https://jsonplaceholder.typicode.com/todos/")
-        books = response.json()
+        # books = models.ModelBook.objects.order_by('-update_datetime_field', 'title')
+        # сортировка -- TODO ORDER BY update_datetime_field DESC, title ASC
+
+        # books = models.ModelBook.objects.filter(is_view=True)
+        # условие -- TODO WHERE is_view = 'True'
+
+        # books = models.ModelBook.objects.all()[:2]
+        # ограничение по количеству строк -- TODO SELECT * FROM  (SELECT * as R FROM employees) WHERE R <= 2;
+        # TODO SELECT * FROM Universities LIMIT 2
+
+        # response = requests.get("https://jsonplaceholder.typicode.com/todos/")
+        # books = response.json()
 
         count = len(books)
         paginator_instanse = Paginator(books, limit)  # [1, 2, 3, 4, 5]
         books = paginator_instanse.get_page(number=page).object_list
 
-        # serialized_books = serializers.BookSerializer(instance=books, many=True).data
+        serialized_books = serializers.BookSerializer(instance=books, many=True).data
 
-
-        return Response(data={"object_list": books, "count": count}, status=status.HTTP_200_OK)
+        return Response(data={"object_list": serialized_books, "count": count}, status=status.HTTP_200_OK)
     elif request.method == "POST":  # создание книги
 
         print(request.POST)
@@ -432,8 +433,6 @@ def book(request, book_id=0):
             serialized_book = serializers.BookSerializer(instance=book, many=False).data
             return Response(data=serialized_book, status=status.HTTP_200_OK)
         elif request.method == "DELETE":
-
-
 
             book = models.ModelBook.objects.get(id=book_id)
 
@@ -467,7 +466,6 @@ def book(request, book_id=0):
             # search / filter / order_by
             books = models.ModelBook.objects.all()  # .filter().order_by()  # order_by filter ... # [1, 2, 3, 4, 5 ... 500]
 
-
             count = len(books)
             for i in books:
                 print(i.return_clear_data())
@@ -487,7 +485,6 @@ def book(request, book_id=0):
             return Response(data={"response": "Успешно создано."}, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
 
 # HTTPresponse
 # JsonResponse

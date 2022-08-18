@@ -100,6 +100,8 @@ class ModelBookCategoryAdmin(admin.ModelAdmin):
     fieldsets = (  # подзаголовки для визуального отделения блоков друг от друга
         ('Основное', {'fields': (
             'title',
+        )}),
+        ('Дополнительно', {'fields': (
             'description',
         )}),
     )

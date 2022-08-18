@@ -4,7 +4,6 @@ import thunk from "redux-thunk";
 import * as reducers from '../components/Reducers'
 import * as utils from '../components/utils'
 import * as bases from '../components/Base'
-import {Reducer_TopBooks, Reducer_DeleteBook} from '../pages/TopList'
 
 
 // const reducers = {
@@ -25,8 +24,9 @@ import {Reducer_TopBooks, Reducer_DeleteBook} from '../pages/TopList'
 const globalReducer = combineReducers({
   // newsBooks: reducers.getAllNewsBooks,
   // topBooks: getAllTopBooks,
-  topBooks: Reducer_TopBooks,
-  "deleteBook": Reducer_DeleteBook,
+  categories: reducers.R_Categories,
+  topBooks: reducers.R_TopBooks,
+  "deleteBook": reducers.R_DeleteBook,
   "token": bases.getUserToken,
 });
 
