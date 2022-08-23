@@ -29,21 +29,9 @@ def index(request):
     #     fail_silently=False,
     # )
 
-    users = User.objects.all()  # все записи
-    # users = User.objects.filter()  # все записи через массив условий
-    # users = User.objects.order_by()  # все записи с сортивкой
-
-    print(users)
-    print(type(users))
-
-    users_names = [x.username for x in users]
-    print(users_names)
-    print(type(users_names))
-    print(users_names[0])
-    print(type(users_names[0]))
-
-    context = {"users_names": users_names, "count": len(users_names)}
-    return render(request, "build/index.html", context=context)
+    #
+    # context = {"users_names": users_names, "count": len(users_names)}
+    return render(request, "build/index.html", context={})
 
 
 @api_view(http_method_names=["GET", "POST"])
