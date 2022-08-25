@@ -202,6 +202,13 @@ export class Alert {
       </div>
     );
   }
+  static Warning({ children }) {
+    return (
+      <div className="alert alert-warning" role="alert">
+        {children}
+      </div>
+    );
+  }
   static Empty({ children }) {
     return (
       <div className="alert alert-secondary" role="alert">
@@ -322,7 +329,9 @@ export function Paginator3({ topBooks, paginateObj, setPaginateObj }) {
   return (
     <nav aria-label="Page navigation example">
       <ul className="pagination pagination-lg">
-        {paginateObj.page > 1 && (
+        {topBooks.data &&
+          topBooks.data["count"] &&
+          paginateObj.page > 1 && (
           <li className="page-item">
             <button
               onClick={() =>
@@ -338,7 +347,7 @@ export function Paginator3({ topBooks, paginateObj, setPaginateObj }) {
             </button>
           </li>
         )}
-
+ 
         {topBooks.data &&
           topBooks.data["count"] &&
           utils

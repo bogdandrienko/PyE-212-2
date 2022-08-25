@@ -21,3 +21,8 @@ export const R_Categories = utils.ConstructorRR(constants.C_Categories);
 
 export const R_TopBooks = utils.ConstructorRR(constants.C_TopBooks);
 export const R_DeleteBook = utils.ConstructorRR(constants.C_DeleteBook);
+
+
+export const R_Books = utils.ConstructorRR(constants.C_Books);
+export const R_Book = utils.ConstructorRR(constants.C_Book);
+

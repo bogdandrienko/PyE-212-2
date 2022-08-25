@@ -1,5 +1,5 @@
 from django.contrib import admin
-from backend_api.models import ModelBook, ModelBookCategory, Profile, Profile2
+from backend_api.models import ModelBook, ModelBookCategory, Profile, Profile2, ModelBookRating
 
 # Register your models here.
 
@@ -173,7 +173,44 @@ class ProfileAdmin2(admin.ModelAdmin):
     ]
 
 
+class ModelBookRatingAdmin(admin.ModelAdmin):
+    """
+    Настройки отображения, фильтрации и поиска модели:'ModelBookRating' на панели администратора
+    """
+
+    list_display = (  # поля для отображения
+        'user',
+        'book',
+        'rating',
+    )
+    list_display_links = (  # поля-ссылка
+        'user',
+        'book'
+    )
+    list_editable = (  # поля для редактирования объекта на лету
+        'rating',
+    )
+    list_filter = (  # поля для редактирования объекта на лету
+        'user',
+        'book',
+        'rating'
+    )
+    fieldsets = (  # подзаголовки для визуального отделения блоков друг от друга
+        ('Основное', {'fields': (
+            'user',
+            'book',
+            'rating'
+        )}),
+    )
+    search_fields = [  # поле для поиска
+        'user',
+        'book',
+        'rating'
+    ]
+
+
 admin.site.register(ModelBookCategory, ModelBookCategoryAdmin)
 admin.site.register(ModelBook, ModelBookAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Profile2, ProfileAdmin2)
+admin.site.register(ModelBookRating, ModelBookRatingAdmin)

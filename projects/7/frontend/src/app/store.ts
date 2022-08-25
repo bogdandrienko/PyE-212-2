@@ -28,6 +28,8 @@ const globalReducer = combineReducers({
   topBooks: reducers.R_TopBooks,
   "deleteBook": reducers.R_DeleteBook,
   "token": bases.getUserToken,
+  "books": reducers.R_Books,
+  book: reducers.R_Book,
 });
 
 const initialState = {

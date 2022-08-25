@@ -19,6 +19,8 @@ import Auth from './pages/Auth';
 import PostList from './pages/PostList';
 import {Categories} from './pages/Categories';
 import { TopList } from './pages/TopList';
+import { Books } from './pages/Books';
+import { Book } from './pages/Book';
 
 function App() {
   return (
@@ -50,6 +52,11 @@ function App() {
         </Route>
 
         <Route path="/top" element={<TopList />}>
+        </Route>
+
+        <Route path="/books" element={<Books />}>
+        </Route>
+        <Route path="/books/:id" element={<Book />}>
         </Route>
 
       </Routes>

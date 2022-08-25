@@ -12,48 +12,14 @@ export function Footer1() {
 
 export function Footer2() {
   return (
-    <footer className="text-muted pt-3">
-      <div className="container" id="hanging-icons">
-    <h2 className="pb-2 border-bottom">Hanging icons</h2>
-    <div className="row g-4 py-2 row-cols-1 row-cols-lg-3">
-      <div className="col d-flex align-items-start">
-        <div className="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-          <svg className="bi" width="1em" height="1em"></svg>
-        </div>
-        <div>
-          <h2>Featured title</h2>
-          <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-          <a href="#" className="btn btn-primary">
-            Primary button
-          </a>
-        </div>
-      </div>
-      <div className="col d-flex align-items-start">
-        <div className="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-          <svg className="bi" width="1em" height="1em"></svg>
-        </div>
-        <div>
-          <h2>Featured title</h2>
-          <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-          <a href="#" className="btn btn-primary">
-            Primary button
-          </a>
-        </div>
-      </div>
-      <div className="col d-flex align-items-start">
-        <div className="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-          <svg className="bi" width="1em" height="1em"></svg>
-        </div>
-        <div>
-          <h2>Featured title</h2>
-          <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-          <a href="#" className="btn btn-primary">
-            Primary button
-          </a>
-        </div>
+    <footer className="text-muted">
+      <div class="px-4 text-center">
+      <img class="d-block mx-auto mb-4" src="/static/bootstrap-themes.png" alt="" className="img img-fuild w-25"/>
+      <h1 class="display-5 fw-bold">Centered hero</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
       </div>
     </div>
-  </div>
     </footer>
   );
 }

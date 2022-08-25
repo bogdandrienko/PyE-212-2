@@ -10,3 +10,8 @@ export const C_Categories = utils.ConstructorCR("C_CategorieslList");
 
 export const C_TopBooks = utils.ConstructorCR("C_TopBooks");
 export const C_DeleteBook = utils.ConstructorCR("C_DeleteBook");
+
+
+
+export const C_Books = utils.ConstructorCR("C_Books");
+export const C_Book = utils.ConstructorCR("C_Book");

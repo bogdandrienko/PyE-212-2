@@ -189,6 +189,58 @@ class ModelBook(models.Model):
     #     return dict(total=ratings.count, like_count=like_count, dislike_count=dislike_count)
 
 
+class ModelBookRating(models.Model):
+    user = models.ForeignKey(
+        primary_key=True,
+        unique=True,
+        editable=True,
+        blank=True,
+        null=False,
+        default=None,
+        verbose_name='Аккаунт',
+        help_text='<small class="text-muted">Аккаунт</small><hr><br>',
+
+        to=User,
+        on_delete=models.CASCADE,
+    )
+    book = models.ForeignKey(
+        db_index=True,
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=None,
+        verbose_name='Книга',
+        help_text='<small class="text-muted">Книга</small><hr><br>',
+
+        to=ModelBook,
+        on_delete=models.CASCADE,
+    )
+    rating = models.IntegerField(
+        primary_key=False,
+        unique=False,
+        editable=True,
+        blank=True,
+        null=True,
+        default=1,
+        verbose_name="Время на чтение",
+        help_text='<small class="text-muted"></small><hr><br>',
+
+        validators=[MinValueValidator(1), MaxValueValidator(10)],
+    )
+
+    class Meta:
+        app_label = 'backend_api'
+        ordering = ('book',)
+        verbose_name = 'Рейтинг книги'
+        verbose_name_plural = 'Рейтинг книг'
+
+    def __str__(self):
+        return f'({self.rating})'
+        return f'{self.book.title} {self.user.username} ({self.rating})'
+
+
 class Profile(models.Model):
     user = models.ForeignKey(
         primary_key=True,

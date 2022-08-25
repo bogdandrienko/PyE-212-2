@@ -6,6 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import './css/bootstrap/bootstrap.min.css';
+import './css/fontawesome/css/all.css';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

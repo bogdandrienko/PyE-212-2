@@ -181,6 +181,11 @@ export const Navbar4 = () => {
                   Лучшие
                 </Link>
               </NavDropdown.Item>
+              <NavDropdown.Item href="#" className="text-decoration-none">
+                <Link to="/books" className="text-decoration-none text-dark m-1 p-1 w-100">
+                  Все книги
+                </Link>
+              </NavDropdown.Item>
               
               <NavDropdown.Item href="#action4">Рекомендации</NavDropdown.Item>
               <NavDropdown.Divider />

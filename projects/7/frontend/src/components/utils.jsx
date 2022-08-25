@@ -6,6 +6,26 @@ export function GetStaticFile(file) {
   return `/static${file}`;
 }
 
+export function SliceDescription(str){
+  const value = 15;
+
+  if(`${str}`.length > value){
+    return `${str.slice(0, value)}...`
+  } else {
+    return `${str}`
+  }
+}
+
+export function FormatDatetimeString(str, withDate=true){
+  // 2022-08-25T19:33:23+06:00
+  const dateTime = `${str}`.split('+')[0].split("T")
+  if(withDate){
+    return `${dateTime[0]} ${dateTime[1]}`
+  } else {
+    return `${dateTime[1]}`
+  }
+}
+
 export function CreateArrayFromInt(count = 1, limit = 10, view=10) {
   const pages_count = count/ limit;
   let pages = [];
