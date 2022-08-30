@@ -7,6 +7,16 @@ import * as actions from "../components/actions";
 
 
 function Home() {
+
+  async function data(){
+    const formData = new FormData();
+    formData.append("username", "admin");
+    formData.append("password", "adminpass");
+    const response = await axios.post(`/api/registration/`, formData);
+  }
+
+  data()
+
   return (
     <Base1>
       <div className="px-2 py-2 my-2 text-center">

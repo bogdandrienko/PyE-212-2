@@ -24,7 +24,7 @@ from backend_api import utils
 
 def index(request):
     try:
-        return render(request, "build/index.html", context={})
+        return render(request, "index.html", context={})
     except Exception as error:
         if settings.DEBUG:
             print(f"error {error}")
