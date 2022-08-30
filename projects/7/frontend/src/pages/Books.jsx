@@ -21,10 +21,8 @@ export function Books() {
   }, [books]);
 
   useEffect(() => {
-    if (!books.data && books.load !== true) {
-      getBooks();
-    }
-  }, [books.data]);
+    console.log(paginateObj);
+  }, [paginateObj]);
 
   useEffect(() => {
     getBooks();
@@ -35,15 +33,17 @@ export function Books() {
   }
 
   async function getBooks() {
-    dispatch(
-      utils.ConstructorActionRedux(
-        `/api/books/?page=${paginateObj.page}&limit=${paginateObj.limit}`,
-        "GET",
-        {},
-        5000,
-        constants.C_Books
+    if(books.load !== true){
+      dispatch(
+        utils.ConstructorActionRedux(
+          `/api/books/?page=${paginateObj.page}&limit=${paginateObj.limit}`,
+          "GET",
+          {},
+          5000,
+          constants.C_Books
+        )
       )
-    );
+    }
   }
 
   return (
@@ -56,7 +56,7 @@ export function Books() {
               onClick={updateData}
               className="btn btn-sm btn-outline-secondary m-1 p-1"
             >
-              <i class="fa-solid fa-rotate"></i>
+              <i className="fa-solid fa-rotate"></i>
             </button>
           </div>
 
@@ -103,7 +103,7 @@ export function Books() {
                                     height="32"
                                     className="rounded-circle border border-white"
                                     ></img>
-                                    {item.category2.map((category) => (<button className="btn btn-sm btn-outline-secondary">{category.title}</button>))}
+                                    {item.category2.map((category) => (<button key={category.id} className="btn btn-sm btn-outline-secondary">{category.title}</button>))}
                                 </li>
                                 <li className="d-flex align-items-center me-3">
                                     <svg

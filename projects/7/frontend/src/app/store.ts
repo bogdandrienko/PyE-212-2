@@ -27,13 +27,26 @@ const globalReducer = combineReducers({
   categories: reducers.R_Categories,
   topBooks: reducers.R_TopBooks,
   "deleteBook": reducers.R_DeleteBook,
-  "token": bases.getUserToken,
-  "books": reducers.R_Books,
+
+  /////////////////////////////////////////////////
+  token: reducers.R_Token,
+
+  books: reducers.R_Books,
   book: reducers.R_Book,
 });
 
+
+const tokenObj = localStorage.getItem("token") ? localStorage.getItem("token") : null;
+
+
+// TODO initial state //////////////////////////////////////////////////////////////////////////////////////////////////
+
 const initialState = {
+  token: {data: tokenObj }
 };
+
+
+
 
 export const store = configureStore({
   reducer: globalReducer,

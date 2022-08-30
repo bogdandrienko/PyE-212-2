@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Footer2 } from "./footers";
 import { Navbar1, Navbar2, Navbar4 } from "./navbars";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as utils from "../components/utils";
+import * as actions from "../components/actions";
 
 export default function Base({ children }) {
   return (
@@ -26,22 +27,19 @@ export const getUserToken = utils.ConstructorRR(CONST_USER_LOGIN);
 
 export function LoginComponent() {
   const navigate = useNavigate();
+  const location = useLocation();
   const token = useSelector((state) => state.token);
 
   useEffect(() => {
-    // console.log("token", token)
-  }, [token]);
-
-  useEffect(() => {
-    if (!localStorage.getItem('token')){
-      navigate("/login");
+    if (!token.data){
+      actions.Logout();
+      utils.Sleep(()=> navigate("/login"), 10);
     } else {
-        if(navigate.path === "/login"){
-          navigate("/");
-        }
+      if(location.pathname === "/login"){
+        utils.Sleep(()=> navigate("/"), 10);
+      }
     }
-  }, []);
-
+  }, [token.data]);
 
   return (
     <div></div>

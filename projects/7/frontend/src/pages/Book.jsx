@@ -17,7 +17,7 @@ export function Book() {
   }, [book]);
 
   useEffect(() => {
-    if (!book.data) {
+    if (!book.data && book.load !== true) {
       getBook();
     }
   }, [book.data]);
@@ -33,13 +33,6 @@ export function Book() {
       )
     );
   }
-
-  function reload() {
-    window.location.reload()
-  }
-  const timerId = setTimeout(function tick() {
-    timerId = setTimeout(reload, 1000);
-  }, 1000);
 
   return (
     <base.Base1>
@@ -99,7 +92,7 @@ export function Book() {
                             className="rounded-circle border border-white"
                           ></img>
                           {book.data["object"].category2.map((category) => (
-                            <button className="btn btn-sm btn-outline-secondary">
+                            <button key={category.id} className="btn btn-sm btn-outline-secondary">
                               {category.title}
                             </button>
                           ))}
@@ -141,7 +134,7 @@ export function Book() {
                           )}
                         </small>
                         <small className="w-50">
-                          <i class="fa-solid fa-book m-1 p-1"></i>
+                          <i className="fa-solid fa-book m-1 p-1"></i>
                           {book.data["object"].time_to_read} мин
                         </small>
                       </div>

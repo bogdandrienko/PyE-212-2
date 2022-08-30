@@ -4,6 +4,9 @@ import Base, {Base1} from "../components/Base";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import * as bases from '../components/Base'
+import * as constants from "../components/Constants";
+
+
 
 function Login() {
   const navigate = useNavigate();
@@ -21,8 +24,11 @@ function Login() {
     formData.append("password", password);
 
     const response = await axios.post(`/api/login/`, formData);
+    console.log(`ВХОД ${response.data.response.access}`)
     localStorage.setItem("token", response.data.response.access);
     dispatch({ type: bases.CONST_USER_LOGIN.data, payload: response.data.response.access }); // ЗАГРУЗКА
+    dispatch({ type: constants.C_Token.data, payload: response.data.response.access });
+    
   }
 
   function TogglePasswordVisibility(uuid="") {

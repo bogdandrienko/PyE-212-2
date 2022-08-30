@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import * as utils from "../components/utils";
+import * as actions from "../components/actions";
+import { useSelector, useDispatch } from "react-redux";
 
 export function Navbar1() {
   return (
@@ -160,11 +163,17 @@ export const Navbar3 = () => {
 };
 
 export const Navbar4 = () => {
+  const token = useSelector((state) => state.token);
   return (
     <Navbar bg="light" expand="md">
       <Container fluid>
         <Navbar.Brand href="/">Главная</Navbar.Brand>
-        <Navbar.Brand href="https://www.livelib.ru/genre/%D0%9F%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5/best/" className="lead fw-bold">Эталон</Navbar.Brand>
+        <Navbar.Brand
+          href="https://www.livelib.ru/genre/%D0%9F%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5/best/"
+          className="lead fw-bold"
+        >
+          Эталон
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -173,20 +182,31 @@ export const Navbar4 = () => {
             navbarScroll
           >
             <NavDropdown title="Что почитать" id="navbarScrollingDropdown">
-              <Link to="/news" className="text-decoration-none text-dark m-1 p-1">Новинки</Link>
-              
-              
-              <NavDropdown.Item href="#" className="text-decoration-none">
-                <Link to="/top" className="text-decoration-none text-dark m-1 p-1 w-100">
+              <Link
+                to="/news"
+                className="text-decoration-none text-dark m-1 p-1"
+              >
+                Новинки
+              </Link>
+
+              <NavDropdown.Item className="text-decoration-none">
+                <Link
+                  to="/top"
+                  className="text-decoration-none text-dark m-1 p-1 w-100"
+                >
                   Лучшие
                 </Link>
               </NavDropdown.Item>
-              <NavDropdown.Item href="#" className="text-decoration-none">
-                <Link to="/books" className="text-decoration-none text-dark m-1 p-1 w-100">
+
+              <NavDropdown.Item className="text-decoration-none">
+                <Link
+                  to="/books"
+                  className="text-decoration-none text-dark m-1 p-1 w-100"
+                >
                   Все книги
                 </Link>
               </NavDropdown.Item>
-              
+
               <NavDropdown.Item href="#action4">Рекомендации</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action5">Жанры</NavDropdown.Item>
@@ -196,27 +216,44 @@ export const Navbar4 = () => {
               <NavDropdown.Item href="#action4">Цитаты</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Авторы" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">Список авторов</NavDropdown.Item>
+              <NavDropdown.Item href="#action3">
+                Список авторов
+              </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="#" disabled>
               Карта развития платформы
             </Nav.Link>
-            <Link to={"/auth"} className={"btn btn-sm btn-outline-primary"}>Авторизация</Link>
+            <Link to={"/auth"} className={"btn btn-sm btn-outline-primary"}>
+              Авторизация
+            </Link>
           </Nav>
           <Form className="d-flex">
             <div className=" input-group">
-            <Form.Control
-              type="search"
-              placeholder="что ищем"
-              className="w-25"
-              aria-label="Search"
-            />
-            <Button variant="outline-success">Поиск</Button>
+              <Form.Control
+                type="search"
+                placeholder="что ищем"
+                className="w-25"
+                aria-label="Search"
+              />
+              <Button variant="outline-success">Поиск</Button>
             </div>
           </Form>
           <div className="input-group w-25 p-2">
-            <Link to={"/register"} className={"btn btn-sm btn-outline-warning"}>Регистрация</Link>
-            <Link to={"/login"} className={"btn btn-sm btn-outline-primary"}>Войти</Link>
+            <Link to={"/register"} className={"btn btn-sm btn-outline-warning"}>
+              Регистрация
+            </Link>
+            {!token.data ? (
+              <Link to={"/login"} className={"btn btn-sm btn-outline-primary"}>
+                Войти
+              </Link>
+            ) : (
+              <Link
+                to={"/logout"}
+                className={"btn btn-sm btn-outline-danger"}
+              >
+                Выйти
+              </Link>
+            )}
           </div>
         </Navbar.Collapse>
       </Container>

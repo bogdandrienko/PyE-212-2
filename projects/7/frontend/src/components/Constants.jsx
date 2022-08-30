@@ -13,5 +13,9 @@ export const C_DeleteBook = utils.ConstructorCR("C_DeleteBook");
 
 
 
+/////////////////////////////////////////////////////////////////////
+export const C_Token = utils.ConstructorCR("C_Token");
+
+
 export const C_Books = utils.ConstructorCR("C_Books");
 export const C_Book = utils.ConstructorCR("C_Book");

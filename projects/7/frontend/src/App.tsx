@@ -14,6 +14,7 @@ import About from './pages/About';
 import News from './pages/News';
 
 import Login from './pages/Login';
+import {Logout} from './pages/Logout';
 import Register from './pages/Register';
 import Auth from './pages/Auth';
 import PostList from './pages/PostList';
@@ -27,8 +28,6 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        <Route path="/" element={<Home />}>
-        </Route>
 
         <Route path="/news" element={<News />}>
         </Route>
@@ -37,9 +36,6 @@ function App() {
         </Route>
 
         <Route path="/about" element={<About />}>
-        </Route>
-
-        <Route path="/login" element={<Login />}>
         </Route>
 
         <Route path="/register" element={<Register />}>
@@ -52,6 +48,16 @@ function App() {
         </Route>
 
         <Route path="/top" element={<TopList />}>
+        </Route>
+
+        {/* ////////////////////////////////////// */}
+        <Route path="/" element={<Home />}>
+        </Route>
+
+        <Route path="/login" element={<Login />}>
+        </Route>
+
+        <Route path="/logout" element={<Logout />}>
         </Route>
 
         <Route path="/books" element={<Books />}>

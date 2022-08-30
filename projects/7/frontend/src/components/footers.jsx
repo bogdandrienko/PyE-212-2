@@ -13,11 +13,11 @@ export function Footer1() {
 export function Footer2() {
   return (
     <footer className="text-muted">
-      <div class="px-4 text-center">
-      <img class="d-block mx-auto mb-4" src="/static/bootstrap-themes.png" alt="" className="img img-fuild w-25"/>
-      <h1 class="display-5 fw-bold">Centered hero</h1>
-      <div class="col-lg-6 mx-auto">
-        <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+      <div className="px-4 text-center">
+      <img className="d-block mx-auto mb-4 img img-fuild w-25" src="/static/bootstrap-themes.png" alt=""/>
+      <h1 className="display-5 fw-bold">Centered hero</h1>
+      <div className="col-lg-6 mx-auto">
+        <p className="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
       </div>
     </div>
     </footer>

@@ -1,3 +1,4 @@
+import random
 import time
 
 from django.shortcuts import render, get_object_or_404
@@ -40,13 +41,16 @@ def login(request):
         password = request.POST.get("password", None)
         if username and password:
             user = User.objects.get(username=username)
-            update_last_login(sender=None, user=user)
-            refresh = RefreshToken.for_user(user=user)
-            response = {"response": {
-                "refresh": str(refresh),
-                "access": str(refresh.access_token)
-            }}
-            return Response(response)
+            if user.is_active:
+                update_last_login(sender=None, user=user)
+                refresh = RefreshToken.for_user(user=user)
+                response = {"response": {
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token)
+                }}
+                return Response(response)
+            else:
+                return HttpResponse(status=status.HTTP_404_NOT_FOUND)
         else:
             return HttpResponse(status=404)
     else:
@@ -406,10 +410,12 @@ def top(request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
+#################################################################################
+
 @api_view(http_method_names=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def books(request, book_id=0):
-    time.sleep(2)
+    time.sleep(1)
 
     try:
         if int(book_id) > 0:
@@ -465,17 +471,32 @@ def books(request, book_id=0):
             print(f"error {error}")
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# HTTPresponse
-# JsonResponse
-# Model View Template - Model View Controller
 
-# "react": "^18.2.0",
-# "react-dom": "^18.2.0",
-# "typescript": "^4.7.4",
-# "react-scripts": "5.0.1",
-# "redux-devtools-extension": "^2.13.9",
-# "react-redux": "^8.0.2",
+@api_view(http_method_names=["GET"])
+# @permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
+def test(request, test_id=0):
+    time.sleep(random.randint(1, 4))
 
-# "react-router-dom": "^6.3.0",
-
-# "axios": "^0.27.2",
+    try:
+        if int(test_id) > 0:
+            if request.method == "GET":
+                response = requests.get(f'https://jsonplaceholder.typicode.com/posts/{test_id}')
+                return Response(data={"object": response.json()}, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        else:
+            if request.method == "GET":
+                page = request.GET.get("page", 1)
+                limit = request.GET.get("limit", 5)
+                books_queryset = requests.get('https://jsonplaceholder.typicode.com/posts').json()
+                count = len(books_queryset)
+                paginator_instanse = Paginator(books_queryset, limit)
+                books_queryset = paginator_instanse.get_page(number=page).object_list
+                return Response(data={"object_list": books_queryset, "count": count}, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    except Exception as error:
+        if settings.DEBUG:
+            print(f"error {error}")
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)

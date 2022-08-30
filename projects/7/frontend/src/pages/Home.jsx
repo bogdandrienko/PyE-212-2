@@ -3,7 +3,7 @@ import Base, { Base1 } from "../components/Base";
 import { BookView } from "../components/books";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import * as actions from "../components/Actions";
+import * as actions from "../components/actions";
 
 
 function Home() {

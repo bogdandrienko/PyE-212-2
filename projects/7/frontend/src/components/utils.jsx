@@ -1,33 +1,32 @@
 import axios from "axios";
-import * as actions from "../components/Actions";
-
+import * as actions from "./actions";
 
 export function GetStaticFile(file) {
   return `/static${file}`;
 }
 
-export function SliceDescription(str){
+export function SliceDescription(str) {
   const value = 15;
 
-  if(`${str}`.length > value){
-    return `${str.slice(0, value)}...`
+  if (`${str}`.length > value) {
+    return `${str.slice(0, value)}...`;
   } else {
-    return `${str}`
+    return `${str}`;
   }
 }
 
-export function FormatDatetimeString(str, withDate=true){
+export function FormatDatetimeString(str, withDate = true) {
   // 2022-08-25T19:33:23+06:00
-  const dateTime = `${str}`.split('+')[0].split("T")
-  if(withDate){
-    return `${dateTime[0]} ${dateTime[1]}`
+  const dateTime = `${str}`.split("+")[0].split("T");
+  if (withDate) {
+    return `${dateTime[0]} ${dateTime[1]}`;
   } else {
-    return `${dateTime[1]}`
+    return `${dateTime[1]}`;
   }
 }
 
-export function CreateArrayFromInt(count = 1, limit = 10, view=10) {
-  const pages_count = count/ limit;
+export function CreateArrayFromInt(count = 1, limit = 10, view = 10) {
+  const pages_count = count / limit;
   let pages = [];
   for (let i = 1; i <= pages_count; i += 1) {
     pages.push(i);
@@ -59,47 +58,37 @@ export async function ActionClearReact(
   return response;
 }
 
-export function ActionRedux(
-  url,
-  method = "GET",
-  data = {},
-  timeout = 3000
-) {
+export function ActionRedux(url, method = "GET", data = {}, timeout = 3000) {
   return async function (dispatch) {
+    try {
+      // dispatch({ type: CONST_TOP_BOOKS_LOAD }); // ЗАГРУЗКА
 
-    try{
+      const formData = new FormData();
+      Object.keys(data).forEach(function (key) {
+        formData.append(key.toString(), data[key]);
+      });
 
+      const config = {
+        url: url,
+        method: method,
+        data: formData,
+        timeout: timeout,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      };
+      const response = await axios(config);
 
-    // dispatch({ type: CONST_TOP_BOOKS_LOAD }); // ЗАГРУЗКА
-
-    const formData = new FormData();
-    Object.keys(data).forEach(function (key) {
-      formData.append(key.toString(), data[key]);
-    });
-
-
-    const config = {
-      url: url,
-      method: method,
-      data: formData,
-      timeout: timeout,
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    };
-    const response = await axios(config);
-
-    // dispatch({type: CONST_TOP_BOOKS_DATA, payload: response.data}) // ДАННЫЕ ПРИШЛИ
-    
-  } catch(error){
-    // dispatch({type: CONST_TOP_BOOKS_FAIL}) // Ошибка на клиенте
-  }
+      // dispatch({type: CONST_TOP_BOOKS_DATA, payload: response.data}) // ДАННЫЕ ПРИШЛИ
+    } catch (error) {
+      // dispatch({type: CONST_TOP_BOOKS_FAIL}) // Ошибка на клиенте
+    }
   };
 }
 
 // export function ActionConstructor
 
-export function ConstructorCR(name="string") {
+export function ConstructorCR(name = "string") {
   /* Конструктор для уникальных переменных в react-redux */
   return {
     load: `load ${name}`, // "load Constant_TopBooks"
@@ -107,7 +96,7 @@ export function ConstructorCR(name="string") {
     error: `error ${name}`,
     fail: `fail ${name}`,
     reset: `reset ${name}`,
-  }
+  };
 }
 
 export function ConstructorRR(
@@ -123,7 +112,7 @@ export function ConstructorRR(
     switch (action.type) {
       case constant.load:
         return {
-          load: true
+          load: true,
         };
       case constant.data:
         return {
@@ -151,10 +140,10 @@ export function ConstructorRR(
 }
 
 export function ConstructorActionRedux(
-  url=`/`,
-  method="GET",
-  data={},
-  timeout=3000,
+  url = `/`,
+  method = "GET",
+  data = {},
+  timeout = 3000,
   constant = {
     load: undefined,
     data: undefined,
@@ -162,69 +151,74 @@ export function ConstructorActionRedux(
     fail: undefined,
     reset: undefined,
   }
-){
-return async function (dispatch, getState) {
-  try {
-    dispatch({ type: constant.load });  // ВКЛЮЧАЕМ СОСТЯНИЕ ЗАГРУЗКИ ДЛЯ ЭТОГО topBooks
+) {
+  return async function (dispatch, getState) {
+    try {
+      dispatch({ type: constant.load }); // ВКЛЮЧАЕМ СОСТЯНИЕ ЗАГРУЗКИ ДЛЯ ЭТОГО topBooks
 
-    // const {
-    //   token: {data: token}
-    // } = getState();
+      // const token = localStorage.getItem("token");
 
-    const token = localStorage.getItem("token")
+      const {
+        token: { data: token },
+      } = getState(); // способ "развернуть" (Destructuring) - деструктуризация
 
-    const formData = new FormData();
-    Object.keys(data).forEach(function (key) {
-      formData.append(key.toString(), data[key]);
-    });
-    const config = {
-      url: url,
-      method: method,
-      data: formData,
-      timeout: timeout,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-    const response = await axios(config);
+      const formData = new FormData();
+      Object.keys(data).forEach(function (key) {
+        formData.append(key.toString(), data[key]);
+      });
+      const config = {
+        url: url,
+        method: method,
+        data: formData,
+        timeout: timeout,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios(config);
 
-    // console.log("response", response)
-    // console.log("status", response.status)
+      // console.log("response", response)
+      // console.log("status", response.status)
 
-    if (response.status === 200) {
-      dispatch({ type: constant.data, payload: response.data });
-    } else {
-      dispatch({ type: constant.error });
-    }
-  } catch (error) {
-    switch (error.response.status) {
-      case 401:
-        // UNAUTHORIZED
-        actions.Logout();
-        break;
-      case 402:
-        //
-        break;
-      case 403:
-        //
-        break;
-      case 404:
-        // NOT FOUND
-        dispatch({ type: constant.reset });
-        break;
-      default:
+      if (response.status === 200) {
+        dispatch({ type: constant.data, payload: response.data });
+      } else {
+        dispatch({ type: constant.error });
+      }
+    } catch (error) {
+      console.log(error);
+      try {
+        switch (error.response.status) {
+          case 401:
+            // UNAUTHORIZED
+            // actions.Logout();
+            break;
+          case 402:
+            //
+            break;
+          case 403:
+            //
+            break;
+          case 404:
+            // NOT FOUND
+            dispatch({ type: constant.reset });
+            break;
+          default:
+            dispatch({ type: constant.fail });
+            break;
+        }
+      } catch (error) {
+        console.log(error);
         dispatch({ type: constant.fail });
-        break;
+      }
     }
-  }
+  };
 }
 
-}
-
-export function Sleep(func, timeDelay=3000){
-  setTimeout(()=> {
-    func()
-  }, timeDelay)
+export function Sleep(func, timeDelay = 3000) {
+  setTimeout(() => {
+    func();
+  }, timeDelay);
 
   // setInterval
 }
