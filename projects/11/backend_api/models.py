@@ -117,7 +117,14 @@ class Profile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.get_or_create(user=instance, email=instance.username)
+    # try:
+    #     profile = Profile.objects.get(user=instance, email=instance.username)  # если профиль уже есть
+    # except:
+    #     profile = Profile.objects.create(user=instance, email=instance.username)  # если профиля нет
+    profile = Profile.objects.get_or_create(user=instance, email=instance.username)[0]  # кортеж: (profile, True)
+    if profile.email != instance.username:
+        profile.email = instance.username
+        profile.save()
     else:
-        Profile.objects.get_or_create(user=instance, email=instance.username)
+        pass
+    pass

@@ -130,7 +130,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 if DEBUG:
-    # STATIC_ROOT = Path(BASE_DIR / 'static')
     STATICFILES_DIRS = [
         Path(BASE_DIR / 'static_external'),
         Path(BASE_DIR / 'static'),
@@ -139,12 +138,7 @@ if DEBUG:
     ]
 else:
     STATIC_ROOT = Path(BASE_DIR / 'static')
-    STATICFILES_DIRS = [
-        # Path(BASE_DIR / 'static_external'),
-        # Path(BASE_DIR / 'static'),
-        # Path(BASE_DIR / 'frontend/build/static'),
-        # Path(BASE_DIR / 'frontend/public/static'),
-    ]
+    STATICFILES_DIRS = []
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = Path(BASE_DIR, 'static/media')

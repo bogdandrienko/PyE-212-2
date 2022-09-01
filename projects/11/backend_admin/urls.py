@@ -8,4 +8,6 @@ from backend_admin import views
 
 urlpatterns = [
     path('', views.index),
+
+    re_path(r'^get_active_user_list/$', views.get_active_user_list, name='get_active_user_list'),
 ]

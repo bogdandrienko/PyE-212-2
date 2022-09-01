@@ -1,0 +1,50 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'rest_framework/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/my_django.css' %}">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>404 error</title>
+</head>
+<body>
+<div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4 img img-fluid w-25" src="{% static '/img/error.jpg' %}" alt="" height="500">
+    <h1 class="display-5 fw-bold">404 error</h1>
+    <div class="col-lg-12 mx-auto">
+      <p class="lead mb-4">Произошла ошибка, сообщите администратору!</p>
+
+<div class="lds-spinner text-black">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button onclick="reload()" type="button" class="btn btn-primary btn-lg px-4 gap-3">Ручная перезагрузка</button>
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Сообщить администратору</button>
+      </div>
+    </div>
+  </div>
+    <script>
+        function reload() {
+            window.location.reload()
+        }
+        const timerId = setTimeout(function tick() {
+          timerId = setTimeout(reload, 10000);
+        }, 10000);
+    </script>
+</body>
+</html>

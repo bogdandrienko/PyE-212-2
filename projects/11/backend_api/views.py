@@ -2,6 +2,7 @@ import random
 import time
 import re
 
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 import datetime
@@ -22,42 +23,49 @@ from backend_api import models
 # Create your views here.
 
 def index(request):
-    return render(request, 'index.html', context={})
+    try:
+        return render(request, "index.html", context={})
+    except Exception as error:
+        if settings.DEBUG:
+            print(f"error {error}")
+        return render(request, "components/404.html", context={})
 
 
 @api_view(http_method_names=["GET", "POST"])
 @permission_classes([AllowAny])
 def registration(request):
-    if request.method == "POST":
-        email = request.data.get("email", None)
-        password = request.data.get("password", None)
+    if request.method == "GET":
+        return Response(data={"ответ:": r'(POST){"email": "admin@gmail.com", "password": "12345qwe!Brty"} '
+                                        '=> <Response 201>'},
+                        status=status.HTTP_200_OK)
+    elif request.method == "POST":
+        try:
+            email = request.data.get("email", None)
+            password = request.data.get("password", None)
 
-        print(f"\nGET {request.GET}")
-        print(f"POST {request.POST}")
-        print(f"data {request.data}")
-        print(f"FILES {request.FILES}\n")
+            print(f"\nGET {request.GET}")
+            print(f"POST {request.POST}")
+            print(f"data {request.data}")
+            print(f"FILES {request.FILES}\n")
 
-        print(email)
-        print(password)
+            print(email)
+            print(password)
 
-        if email and password:
-            if re.match(r"^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", password) and \
-                    re.match(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}", email):
-                User.objects.create_user(
-                    username=email,
-                    email=email,
-                    password=password
-                )
-
-                # {
-                #     "email": "admin@gmail.com",
-                #     "password": "adminA1#"
-                # }
-                pass
-                return Response(status=status.HTTP_201_CREATED)
+            if email and password:
+                if re.match(r"^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", password) and \
+                        re.match(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}", email):
+                    User.objects.create(
+                        username=email,
+                        email=email,
+                        password=make_password(password)  # для create НУЖНО шифровать пароль, для create_user НЕТ!
+                    )
+                    return Response(status=status.HTTP_201_CREATED)
+                else:
+                    return Response(data={"ответ:": "Вы не прошли проверку регулярного выражения"},
+                                    status=status.HTTP_201_CREATED)
             else:
-                return Response(data={"ответ:": "Вы не прошли проверку регулярного выражения"}, status=status.HTTP_201_CREATED)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            return Response(data=str(error), status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)

@@ -1,0 +1,47 @@
+{% load static %}
+{% load extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GetUserList</title>
+    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'font_zen/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/my_django.css' %}">
+</head>
+<body class="custom_body_1">
+    <h1>GetUserList</h1>
+    <a href="{% static excel_file %}" class="btn btn-outline-success">скачать</a>
+<i class="fa-solid fa-house"></i>
+    <table class="table table-dark table-striped">
+      <thead>
+
+      </thead>
+      <tbody>
+
+        {% for user_obj in user_list %}
+            <tr>
+              <td colspan="2" class="">{{user_obj.id}}</td>
+              <td colspan="2" class="">{{user_obj.username}}</td>
+              <td colspan="2" class="text-primary">фильтр: {{ user_obj.password|safe_password }}</td>
+              <td colspan="2" class="text-danger">тэг: {% cut_string user_obj.password 15 %}</td>
+              <td colspan="2" class="text-success">тэг+фильтр: {% cut_string user_obj.password|safe_password 15 %}</td>
+              <td colspan="2" class="">
+                  <div class="form-check form-switch">
+                      {% if user_obj.is_superuser %}
+                        <input class="form-check-input" checked="" type="checkbox">
+                      {% else %}
+                        <input class="form-check-input" type="checkbox">
+                      {% endif %}
+                  </div>
+              </td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <script src="{% static 'js/bootstrap/bootstrap.js' %}"></script>
+</body>
+</html>

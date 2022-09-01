@@ -8,17 +8,17 @@ from backend_api import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('', views.index),
+    path('', views.index, name='index'),
 
     path('hide/', include('backend_admin.urls')),
 
     path('api/', include('backend_api.urls')),
 
-    # path('api/', include('rest_framework.urls')),
+    path('api/', include('rest_framework.urls')),
 ]
 
 
-urlpatterns += [re_path(r'^.*$', lambda request: redirect('', permanent=False), name='redirect')]
+urlpatterns += [re_path(r'^.*$', lambda request: redirect('/', permanent=False), name='redirect')]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

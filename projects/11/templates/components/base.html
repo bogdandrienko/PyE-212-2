@@ -1,10 +1,25 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>
+        {% block title %}Магазинчик суши{% endblock title %}
+    </title>
+    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png">
+    <link rel="stylesheet" href="{% static 'css/bootstrap/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawesome/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'font_zen/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/my_django.css' %}">
+    {% block head %}{% endblock head %}
 </head>
-<body>
-
+<body class="d-flex flex-column h-100" style="min-height: 100vh;">
+    {% block navbar %}{% endblock navbar %}
+    <div class="flex-shrink-0" style="min-height: 80vh;">
+        {% block main %}тело страницы{% endblock main %}
+    </div>
+    {% block footer %}{% endblock footer %}
+    <script src="{% static 'js/bootstrap/bootstrap.js' %}"></script>
 </body>
 </html>
