@@ -42,15 +42,6 @@ def registration(request):
         try:
             email = request.data.get("email", None)
             password = request.data.get("password", None)
-
-            print(f"\nGET {request.GET}")
-            print(f"POST {request.POST}")
-            print(f"data {request.data}")
-            print(f"FILES {request.FILES}\n")
-
-            print(email)
-            print(password)
-
             if email and password:
                 if re.match(r"^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", password) and \
                         re.match(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}", email):

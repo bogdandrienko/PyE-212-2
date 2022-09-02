@@ -1,0 +1,36 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% load extras %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block main %}
+    <div class="container-fluid">
+        <h1>Вход</h1>
+        <div>
+            <form
+              action="{% url 'login' %}"
+                method="POST"
+                enctype="multipart/form-data"
+                target="_self"
+                class="post-form form-control form-control-lg m-1 p-1"
+                style="width: 350px"
+                >
+                {% csrf_token %}
+                {{ login_form.as_p }}
+                <label class="">введите пароль</label>
+                <input type="password" name="password" value="" placeholder="введите свой пароль тут"
+                       class="form-control">
+                <button type="submit" class="save btn btn-primary btn-default">войти</button>
+            </form>
+
+<!--            <form action="/your-name/" method="post">-->
+<!--                {% csrf_token %}-->
+<!--                <label for="your_name">Your name: </label>-->
+<!--                <input id="your_name" type="text" name="your_name" value="{{ current_name }}">-->
+<!--                <input type="submit" value="OK">-->
+<!--            </form>-->
+
+        </div>
+    </div>
+{% endblock main %}

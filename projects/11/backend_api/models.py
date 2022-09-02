@@ -93,7 +93,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
     )
     email = models.EmailField(
-        unique=True,
+        unique=False,
         editable=True,
         blank=False,
         null=False,
@@ -117,10 +117,10 @@ class Profile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
-    # try:
-    #     profile = Profile.objects.get(user=instance, email=instance.username)  # если профиль уже есть
-    # except:
-    #     profile = Profile.objects.create(user=instance, email=instance.username)  # если профиля нет
+    try:
+        profile = Profile.objects.get(user=instance, email=instance.username)  # если профиль уже есть
+    except:
+        profile = Profile.objects.create(user=instance, email=instance.username)  # если профиля нет
     profile = Profile.objects.get_or_create(user=instance, email=instance.username)[0]  # кортеж: (profile, True)
     if profile.email != instance.username:
         profile.email = instance.username

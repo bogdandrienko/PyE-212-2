@@ -10,7 +10,7 @@ urlpatterns = [
 
     path('', views.index, name='index'),
 
-    path('hide/', include('backend_admin.urls')),
+    path('moderator/', include('backend_admin.urls')),
 
     path('api/', include('backend_api.urls')),
 
