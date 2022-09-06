@@ -24,6 +24,9 @@ SECRET_KEY = 'django-insecure-mgq!e(0m1!q2h6g4dx753vosnk86bt&$tw^rj5a186&48=-ui1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ACTION_LOGGING = True
+ERROR_LOGGING = True
+
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_URLS_REGEX = r"^/api/.*$"
@@ -31,6 +34,8 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # Application definition
 
 INSTALLED_APPS = [
+    'grappelli',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +46,7 @@ INSTALLED_APPS = [
     'backend_admin',
     'backend_api',
 
-    "corsheaders",
+    'corsheaders',
 
     'rest_framework',
     'rest_framework_simplejwt',

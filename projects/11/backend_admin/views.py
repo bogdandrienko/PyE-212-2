@@ -4,7 +4,8 @@ import time
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.core.handlers.wsgi import WSGIRequest
+from django.shortcuts import render, redirect, HttpResponse
 import openpyxl
 import os
 
@@ -12,14 +13,74 @@ from django.urls import reverse
 from django.views import View
 
 from backend_admin import forms
+from backend_admin import models
+from backend_api import models as models_api
 
 
-def login_required(func):
+class Logger:
+    def __init__(self, request, error='-'):
+        self.request = request
+        self.error = error
+
+    def log(self):
+        try:
+            if settings.DEBUG:
+                print(f"error: {self.error}")
+            if settings.ERROR_LOGGING:
+                models.Log.objects.create(
+                    path=self.request.path,
+                    method=self.request.method,
+                    user=self.request.user,
+                    error=f"{self.error[:250]}",
+                )
+            return render(self.request, "components/404.html", context={})
+        except Exception as error:
+            Logger.log_static_error_txt(error=f"{error}")
+            return render(self.request, "components/404.html", context={})
+
+    @staticmethod
+    def log_static(path: str, method: str) -> None:
+        try:
+            models.Log.objects.create(
+                path=path,
+                method=method
+            )
+        except Exception as error:
+            Logger.log_static_error_txt(error=f"{error}")
+
+    @staticmethod
+    def log_static_error(error: str) -> None:
+        try:
+            models.Log.objects.create(
+                error=error,
+            )
+        except Exception as error:
+            Logger.log_static_error_txt(error=f"{error}")
+
+    @staticmethod
+    def log_static_error_txt(error: str) -> None:
+        with open('static/admin/logs/log_error.txt', 'w') as file:
+            file.write(f"{error} \t {datetime.datetime.now()}\n")
+
+
+def staff_access_required(func):
     def wrap(*args, **kwargs):  # (admin, 12345qwerty,) {"username": 'admin', "password": '12345qwerty'}
 
-        if not args[1].user.is_authenticated:
+        # if isinstance(kwargs.get("request", None), WSGIRequest):
+        #     request = kwargs.get("request", None)
+        # else:
+        #     request = None
+
+        if isinstance(args[0], WSGIRequest):
+            request = args[0]
+        elif isinstance(args[1], WSGIRequest):
+            request = args[1]
+        else:
+            request = None
+
+        if not request.user.is_authenticated:
             return redirect(reverse('login', args=()))
-        elif not args[1].user.is_superuser and not args[1].user.is_staff:
+        elif not request.user.is_superuser and not request.user.is_staff:
             return redirect(reverse('login', args=()))
 
         result = func(*args, **kwargs)
@@ -28,15 +89,23 @@ def login_required(func):
     return wrap
 
 
-ACTION_LOGGING = True
-ERROR_LOGGING = True
-
-
-def loger(func):
-    if ACTION_LOGGING:
-        pass
-
+def loger_action(func):
     def wrap(*args, **kwargs):
+        if settings.ACTION_LOGGING:
+
+            if isinstance(args[0], WSGIRequest):
+                request = args[0]
+            elif isinstance(args[1], WSGIRequest):
+                request = args[1]
+            else:
+                request = None
+
+            models.Log.objects.create(
+                path=request.path,
+                method=request.method,
+                user=request.user,
+                error="-",
+            )
         result = func(*args, **kwargs)
         return result
 
@@ -44,9 +113,15 @@ def loger(func):
 
 
 class HomeView(View):
+    try:
+        pass
+    except Exception as error:
+        Logger.log_static_error(
+            error=f"{error[:250]}"
+        )
 
-    @loger
-    @login_required
+    @loger_action
+    @staff_access_required
     def get(self, request):
         #
         # if not request.user.is_authenticated:
@@ -64,7 +139,7 @@ class GetActiveUserListView(View):
     initial = {'key': 'value'}
     template_name = 'backend_admin/GetUserList.html'
 
-    @login_required
+    @staff_access_required
     def get(self, request, *args, **kwargs):
         users = User.objects.filter(is_active=True)  # только активные пользователи
 
@@ -99,7 +174,7 @@ class GetActiveUserListView(View):
         return render(request, self.template_name, context)
 
 
-@login_required
+@staff_access_required
 def get_active_user_list(request):  # функция-контроллер
     try:
 
@@ -137,9 +212,7 @@ def get_active_user_list(request):  # функция-контроллер
         }
         return render(request, 'backend_admin/GetUserList.html', context=context)
     except Exception as error:
-        if settings.DEBUG:
-            print(f"error {error}")
-        return render(request, "components/404.html", context={})
+        return Logger(request=request, error=str(error)).log()
 
 
 def django_login(request):
@@ -162,9 +235,7 @@ def django_login(request):
                     return redirect(reverse('home', args=()))
             return redirect(reverse('login', args=()))
     except Exception as error:
-        if settings.DEBUG:
-            print(f"error {error}")
-        return render(request, "components/404.html", context={})
+        return Logger(request=request, error=str(error)).log()
 
 
 def django_logout(request):
@@ -172,6 +243,38 @@ def django_logout(request):
         logout(request)
         return redirect(reverse('login', args=()))
     except Exception as error:
-        if settings.DEBUG:
-            print(f"error {error}")
-        return render(request, "components/404.html", context={})
+        return Logger(request=request, error=str(error)).log()
+
+
+@loger_action
+@staff_access_required
+def receipt(request):
+    try:
+        if request.method == "GET":
+            categories = models_api.ReceiptCategory.objects.all()
+            ingredients = models_api.ReceiptIngredient.objects.all()
+            context = {"categories": categories, "ingredients": ingredients}
+            return render(request, "backend_admin/CreateReceipt.html", context=context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+        elif request.method == "POST":
+            pass
+        elif request.method == "PUT" or request.method == "PATCH":
+            pass
+        elif request.method == "DELETE":
+            pass
+        else:
+            return HttpResponse(status=405)
+    except Exception as error:
+        return Logger(request=request, error=str(error)).log()
