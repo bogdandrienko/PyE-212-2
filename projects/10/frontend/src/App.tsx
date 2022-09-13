@@ -2,12 +2,27 @@ import React from 'react';
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
+import axios from 'axios';
 
 function App() {
+
+  function get_users(){
+    axios.get('/api/get_users')
+    //@ts-ignore
+    .then(function (response) {
+      console.log(response);
+    })
+    //@ts-ignore
+    .catch(function (error) {
+      console.log(error);
+    })
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <button onClick={get_users}>ПОЛУЧИТЬ ПОЛЬЗОВАТЕЛЕЙ</button>
         <Counter />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.

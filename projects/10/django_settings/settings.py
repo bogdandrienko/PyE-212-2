@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=u+6z5yxpo25tnwi)6g_&$s7+udf0lopkc5%9zdhp1j2fx$ys8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # 'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'django_settings.urls'
@@ -145,9 +145,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = Path(BASE_DIR / 'static')
 STATICFILES_DIRS = [
-    # Path(BASE_DIR / 'static'),
+    #Path(BASE_DIR / 'static'),
 
-    # Path(BASE_DIR / 'frontend/build/static'),
+    Path(BASE_DIR / 'frontend/build/static'),
     # Path(BASE_DIR / 'frontend/public/static'),
 ]
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
