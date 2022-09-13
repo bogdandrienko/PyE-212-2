@@ -27,7 +27,11 @@ class ReceiptCategory(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории рецептов'
 
-    def __str__(self):  # возвращает строкове представление объекта
+    def __str__(self):  # возвращает строковое представление объекта
+        return f'{self.title}'
+
+    def test_get_title(self):
+        # return f'{self.pk} {self.title}'
         return f'{self.title}'
 
 

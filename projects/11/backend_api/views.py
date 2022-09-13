@@ -53,7 +53,7 @@ def registration(request):
                     return Response(status=status.HTTP_201_CREATED)
                 else:
                     return Response(data={"ответ:": "Вы не прошли проверку регулярного выражения"},
-                                    status=status.HTTP_201_CREATED)
+                                    status=status.HTTP_400_BAD_REQUEST)
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         except Exception as error:
