@@ -1,31 +1,11 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
-from django.test import TestCase
-from backend_api import models
+from django.test import TestCase, Client
+from django.urls import reverse
+from rest_framework import status
 
+from backend_api import models, serializers
 
-# class ReceiptCategory(models.Model):
-#     title = models.CharField(
-#         primary_key=False,
-#         unique=False,
-#         editable=True,
-#         blank=True,
-#         null=True,
-#         default="Заголовок",
-#         verbose_name="Заголовок:",
-#         help_text='<small class="text-muted">это наш заголовок</small><hr><br>',
-#
-#         max_length=250,
-#     )
-#
-#     class Meta:
-#         app_label = 'backend_api'
-#         ordering = ('title',)
-#         verbose_name = 'Категория'
-#         verbose_name_plural = 'Категории рецептов'
-#
-#     def __str__(self):  # возвращает строкове представление объекта
-#         return f'{self.title}'
 
 class MyTestException(Exception):
     def __init__(self, error_message: str):
@@ -33,6 +13,7 @@ class MyTestException(Exception):
 
     def error(self):
         return f"| {self.error_message} |"
+
 
 class CustomTest:
     @staticmethod
@@ -63,81 +44,100 @@ class CustomTest:
 
 
 class ReceiptCategoryModelTestCase(TestCase):
-    def setUp(self):
-        # models.ReceiptCategory.objects.create(title="title 1")
-        # models.ReceiptCategory.objects.create(title="title 2")
-        CustomTest.run_test()
+    def setUp(self):  # настройки перед тестированием
+        print('Преднастройка для test_model_create')
+        # CustomTest.run_test()  # наш собственный класс для тестов
 
-    def test_animals_can_speak(self):
+        models.ReceiptCategory.objects.create(title="title 1")
+        models.ReceiptCategory.objects.create(title="title 2")
+
+    def test_model_create(self):
         """Тестируем модель на корректное создание"""
-        # title_1 = models.ReceiptCategory.objects.get(title="title 1")
-        # title_2 = models.ReceiptCategory.objects.get(title="title 2")
-        # self.assertEqual(title_1.test_get_title(), f'title 1')
+        print('test_model_create')
+        title_1 = models.ReceiptCategory.objects.get(title="title 1")
+        title_2 = models.ReceiptCategory.objects.get(title="title 2")
+
+        self.assertEqual(title_1.test_get_title(), f'title 1')
         # self.assertEqual(title_2.test_get_title(), f'1 title 2')
 
-# @api_view(http_method_names=["GET", "POST"])
-# @permission_classes([AllowAny])
-# def registration(request):
-#     if request.method == "GET":
-#         return Response(data={"ответ:": r'(POST){"email": "admin@gmail.com", "password": "12345qwe!Brty"} '
-#                                         '=> <Response 201>'},
-#                         status=status.HTTP_200_OK)
-#     elif request.method == "POST":
-#         try:
-#             email = request.data.get("email", None)
-#             password = request.data.get("password", None)
-#             if email and password:
-#                 if re.match(r"^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", password) and \
-#                         re.match(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}", email):
-#                     User.objects.create(
-#                         username=email,
-#                         email=email,
-#                         password=make_password(password)  # для create НУЖНО шифровать пароль, для create_user НЕТ!
-#                     )
-#                     return Response(status=status.HTTP_201_CREATED)
-#                 else:
-#                     return Response(data={"ответ:": "Вы не прошли проверку регулярного выражения"},
-#                                     status=status.HTTP_201_CREATED)
-#             else:
-#                 return Response(status=status.HTTP_400_BAD_REQUEST)
-#         except Exception as error:
-#             return Response(data=str(error), status=status.HTTP_400_BAD_REQUEST)
-#     else:
-#         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class GetActiveUserListViewTestCase(TestCase):
     def setUp(self):
-        User.objects.create(
-                username="admin@admin.ru",
-                email="admin@admin.ru",
-                password=make_password("12345qwerty!@")
-            )
+        print('Преднастройка для GetActiveUserListViewTestCase')
 
-    def test_animals_can_speak(self):
+        User.objects.create(
+            username="admin@admin.ru",
+            email="admin@admin.ru",
+            password=make_password("12345qwerty!#@")
+        )
+
+    def test_api_registration_get(self):
         """Тестируем класс на корректный возврат значений"""
 
-        import requests
+        print('test_api_registration_get')
 
-        headers = {"user-agent": "user"}
-        response = requests.post(
-            url="http://127.0.0.1:8000/api/registration/",
-            headers=headers,
+        client = Client()
+        response = client.get(reverse('registration'))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_check_users(self):
+        """Тестируем класс на корректный возврат значений"""
+
+        print('test_check_users')
+
+        # обращаемся к  маршруту и контроллеру
+        client = Client()
+        response = client.get(reverse('get_active_user_list'))
+
+        # обращаемся к базе за данными для сравнения
+        users = User.objects.filter(is_active=True)
+        ser_users = serializers.UserSerializer(instance=users, many=True).data
+        obj = {"user_list": ser_users}
+
+        # сравнение данных
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, obj)
+
+    def test_api_registration_post(self):
+        """Тестируем класс на корректный возврат значений"""
+
+        print('test_api_registration_post')
+
+        # обращаемся к  маршруту и контроллеру
+        client = Client()
+        response1 = client.post(
+            reverse('registration'),
             data={
-                "email": "admin@admin.ru",
-                "password": "12345qwerty!@",
+                "email": "admin1@gmail.com",
+                "password": "qwe!Brty"
             }
         )
 
-        print(response)
-        print(response.status_code)
-        print(response.content)
-        self.assertEqual(response.status_code, 201)
+        # сравнение данных
+        response2 = client.post(
+            reverse('registration'),
+            data={
+                "email": "admin1@gmail.com",
+                "password": "1214124123qwe!Brty"
+            }
+        )
+        print(response2.data)
 
+        response3 = client.put(
+            reverse('registration'),
+            data={
+                "email": "admin1@gmail.com",
+                "password": "12424qwe!Brty"
+            }
+        )
+        print(response3.data)
+        print(response3.status_code)
 
-        # title_1 = models.ReceiptCategory.objects.get(title="title 1")
-        # title_2 = models.ReceiptCategory.objects.get(title="title 2")
-        # self.assertEqual(title_1.test_get_title(), f'title 1')
-        # self.assertEqual(title_2.test_get_title(), f'1 title 2')
+        # сравнение данных
+        self.assertEqual(response1.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response2.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response3.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 if __name__ == "__main__":

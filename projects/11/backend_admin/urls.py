@@ -10,7 +10,8 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('home/', views.HomeView.as_view(), name='HomeView'),
 
-    re_path(r'^get_active_user_list/$', views.GetActiveUserListView.as_view(), name='get_active_user_list'),
+    re_path(r'^get_active_user_list1/$', views.GetActiveUserListView.as_view(), name='get_active_user_list1'),
+    re_path(r'^get_active_user_list/$', views.get_active_user_list, name='get_active_user_list'),
     re_path(r'^login/$', views.django_login, name='login'),
     re_path(r'^logout/$', views.django_logout, name='logout'),
 

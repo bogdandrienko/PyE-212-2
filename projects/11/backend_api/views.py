@@ -31,7 +31,7 @@ def index(request):
         return render(request, "components/404.html", context={})
 
 
-@api_view(http_method_names=["GET", "POST"])
+@api_view(http_method_names=["GET", "POST", "PUT"])
 @permission_classes([AllowAny])
 def registration(request):
     if request.method == "GET":
@@ -59,4 +59,7 @@ def registration(request):
         except Exception as error:
             return Response(data=str(error), status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(
+            data={"response": "метод не реализован"},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )

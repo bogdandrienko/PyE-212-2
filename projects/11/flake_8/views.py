@@ -126,6 +126,11 @@ class HomeView(View):
     @loger_action
     @staff_access_required
     def get(self, request):
+        #
+        # if not request.user.is_authenticated:
+        #     return redirect(reverse('login', args=()))
+        #
+
         return render(request, 'backend_admin/Home.html', context={})
 
 
