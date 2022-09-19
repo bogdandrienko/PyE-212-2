@@ -19,13 +19,36 @@ function Login() {
   async function Formdata(form) {
     form.preventDefault();
 
+
+
+
     const formData = new FormData();
     formData.append("username", username);
     formData.append("password", password);
 
     const response = await axios.post(`/api/login/`, formData);
+    //const response = await axios.post(`/api/token/`, formData);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     console.log(`ВХОД ${response.data.response.access}`)
+
+    
     localStorage.setItem("token", response.data.response.access);
+
+
     dispatch({ type: bases.CONST_USER_LOGIN.data, payload: response.data.response.access }); // ЗАГРУЗКА
     dispatch({ type: constants.C_Token.data, payload: response.data.response.access });
     

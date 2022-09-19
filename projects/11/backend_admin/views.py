@@ -170,8 +170,10 @@ class GetActiveUserListView(View):
         }
         return render(request, self.template_name, context)
 
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+
 
 # @staff_access_required
 @api_view(http_method_names=["GET", "POST"])
@@ -179,10 +181,9 @@ from rest_framework.permissions import AllowAny
 def get_active_user_list(request):  # функция-контроллер
     try:
 
-
         users = User.objects.filter(is_active=True)  # только активные пользователи
 
-        # EXCEL GENERATOR
+        # TODO EXCEL GENERATOR
         workbook = openpyxl.Workbook()
         worksheet = workbook.active
         kwargs_list = ["username", "password", "id", "is_superuser"]
@@ -201,7 +202,7 @@ def get_active_user_list(request):  # функция-контроллер
         if os.path.exists(settings.STATIC_URL[1:] + path):
             os.remove(settings.STATIC_URL[1:] + path)
         workbook.save(settings.STATIC_URL[1:] + path)
-        # EXCEL GENERATOR
+        # TODO EXCEL GENERATOR
 
         context = {
             "title": "Абракадабра",
@@ -210,11 +211,10 @@ def get_active_user_list(request):  # функция-контроллер
             "excel_file": path
         }
 
-
         ser_users = serializers.UserSerializer(instance=users, many=True).data
         return Response(data={"user_list": ser_users}, status=status.HTTP_200_OK)
 
-        #return render(request, 'backend_admin/GetUserList.html', context=context)
+        # return render(request, 'backend_admin/GetUserList.html', context=context)
     except Exception as error:
         return Logger(request=request, error=str(error)).log()
 
@@ -235,7 +235,7 @@ def django_login(request):
             if email and password:
                 user = authenticate(username=email, password=password)
                 if user:
-                    login(request, user)
+                    login(request, user)  # сессия сохраняется
                     return redirect(reverse('home', args=()))
             return redirect(reverse('login', args=()))
     except Exception as error:
@@ -259,19 +259,6 @@ def receipt(request):
             ingredients = models_api.ReceiptIngredient.objects.all()
             context = {"categories": categories, "ingredients": ingredients}
             return render(request, "backend_admin/CreateReceipt.html", context=context)
-
-
-
-
-
-
-
-
-
-
-
-
-
         elif request.method == "POST":
             pass
         elif request.method == "PUT" or request.method == "PATCH":
