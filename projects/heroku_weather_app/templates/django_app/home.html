@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Погода</title>
+</head>
+<body>
+    <div>
+        {{city}}
+    </div>
+    <div>
+        <form action="{% url 'home' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            <!-- Начально будет выбрано второе значение -->
+            <select name="city"> <!--Supplement an id here instead of using 'name'-->
+              <option value="Astana">Астана</option>
+              <option value="Almaty" selected>Алматы</option>
+              <option value="Kostanay">Костанай</option>
+            </select>
+            <button type="submit">узнать погоду</button>
+        </form>
+    </div>
+</body>
+</html>
