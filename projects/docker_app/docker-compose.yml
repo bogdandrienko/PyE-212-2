@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  web:
+    build: ./web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes: 
+    - .:/docker_app_dir
+    ports: 
+    - '8000:8000'

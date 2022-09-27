@@ -191,10 +191,14 @@ export function ConstructorActionRedux(
         switch (error.response.status) {
           case 401:
             // UNAUTHORIZED
-            // actions.Logout();
+            actions.Logout();
             break;
-          case 402:
-            //
+          case 402: // Токен истёк!!!
+            // 
+            // Обновление токена, подкидываем в запрос refresh token
+            // axios.post('token_refresh', data:{"token_refresh" "121234124!1qefdqe!"}).then().catch()
+            // response.data.access_token
+            // 
             break;
           case 403:
             //
@@ -213,6 +217,40 @@ export function ConstructorActionRedux(
       }
     }
   };
+}
+
+export function RequestHandler(response){
+  try {
+    switch (response.status) {
+      case 401:
+        // UNAUTHORIZED
+        actions.Logout();
+        break;
+      case 402: // Токен истёк!!!
+
+        // const {
+        //   token: { data: token },
+        // } = getState(); // способ "развернуть" (Destructuring) - деструктуризация
+
+        // 
+        // Обновление токена, подкидываем в запрос refresh token
+        // 
+        // axios.post('token_refresh', data:{"token_refresh" token.refresh "121234124!1qefdqe!"}).then().catch()
+        // response.data.access_token
+        // 
+        break;
+      case 403:
+        //
+        break;
+      case 404:
+        // NOT FOUND
+        break;
+      default:
+        break;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export function Sleep(func, timeDelay = 3000) {
