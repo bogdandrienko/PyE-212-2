@@ -373,9 +373,14 @@ class ReceiptRating(models.Model):
 
     class Meta:
         app_label = 'backend_api'
-        ordering = ('receipt',)
+        ordering = ('-id', '-rating_value', '-is_liked', 'receipt')
         verbose_name = 'Рейтинг рецепта'
         verbose_name_plural = 'Рейтинги рецептов'
 
     def __str__(self):  # возвращает строкове представление объекта
-        return f'{self.receipt}'
+        if self.is_liked:
+            like = "Лайк"
+        else:
+            like = "Дизлайк"
+
+        return f'({self.id})  {self.receipt} ({like}) [{self.user.username} {self.user.id}]' + '{ ' + str(self.rating_value) +  ' }'
