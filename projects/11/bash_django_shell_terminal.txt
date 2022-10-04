@@ -1,0 +1,21 @@
+from django.contrib.auth.models import User
+
+users = User.objects.all()
+
+print(users)
+
+print(users[0].username)
+
+
+
+from django.contrib.auth.models import User
+
+User.objects.create(username="NewUser", password="12345q!")
+
+
+
+from django.contrib.auth.models import User
+
+users = User.objects.all()
+
+print(users)

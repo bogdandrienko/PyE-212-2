@@ -1,0 +1,70 @@
+sudo apt update -y
+
+sudo apt install -y postgresql postgresql-contrib
+
+systemctl status postgresql
+
+sudo passwd postgres
+
+sudo -i -u postgres
+
+
+
+createuser django_user
+
+psql
+
+ALTER USER django_user WITH ENCRYPTED password '12345qwerty!';
+
+CREATE DATABASE django_database OWNER django_user;
+
+\q
+
+exit
+
+
+
+sudo systemctl stop postgresql
+
+sudo systemctl status postgresql
+
+sudo systemctl restart postgresql
+
+
+
+sudo -i -u postgres
+
+psql
+
+\connect django_database
+
+
+
+
+
+CREATE TABLE zarplata (
+
+	id serial PRIMARY KEY,
+
+	username VARCHAR ( 50 ) UNIQUE NOT NULL,
+
+	salary INT
+
+);
+
+
+
+
+
+select * from zarplata;
+
+insert into zarplata (username, salary) VALUES ('Bogdan', '60000'), ('Alice', '80000');
+
+
+
+
+
+\q
+
+exit
+

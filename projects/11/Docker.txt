@@ -1,0 +1,244 @@
+sudo apt-get update -y
+sudo apt upgrade -y
+
+ # для входа через ssh 
+sudo apt -y install openssh-server
+sudo systemctl start ssh
+sudo systemctl enable ssh
+
+ip a 
+
+sudo reboot
+
+sudo apt install -y docker-compose python3-pip python3-venv python3-dev
+
+mkdir web && cd web
+
+python3 -m venv env
+source env/bin/activate
+pip install --upgrade pip
+pip install wheel
+
+pip install Django gunicorn psycopg2 Pillow
+
+pip freeze > requirements.txt
+ls
+
+django-admin startproject django_settings .
+
+django-admin startapp core
+
+cd core
+
+mkdir management && cd management
+
+nano __init__.py       #ctr s ctrl x
+
+mkdir commands && cd commands
+
+nano __init__.py  #ctr s ctrl x
+
+nano wait_for_db.py
+
+
+# внутри файл
+
+import time
+from django.db import connections
+from django.db.utils import OperationalError
+from django.core.management import BaseCommand
+
+
+class Command(BaseCommand):
+    """Django command to pause execution until db is available"""
+
+    def handle(self, *args, **options):
+        self.stdout.write('Waiting for database...')
+        db_conn = None
+        while not db_conn:
+            try:
+                db_conn = connections['default']
+            except OperationalError:
+                self.stdout.write('Database unavailable, waititng 1 second...')
+                time.sleep(1)
+
+        self.stdout.write(self.style.SUCCESS('Database available!'))
+
+
+# внутри файл
+
+
+#выходим до web папки
+
+nano django_settings/settings.py
+
+
+# внутри файл
+
+import os
+
+DEBUG = os.environ.get("DEBUG", True)
+ALLOWED_HOSTS = ["*"]
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    'core',
+]
+
+DATABASES = {
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
+    }
+}
+
+STATIC_ROOT = Path(BASE_DIR/"static")
+
+# внутри файл
+
+
+ nano .env
+
+# внутри файл
+
+# django
+DEBUG=1
+
+
+SQL_ENGINE=django.db.backends.postgresql
+SQL_DATABASE=django_db
+SQL_USER=django_usr
+SQL_PASSWORD=Qwerty12345!
+SQL_HOST=db
+SQL_PORT=5432
+
+# postgres
+POSTGRES_DB=django_db
+POSTGRES_USER=django_usr
+POSTGRES_PASSWORD=Qwerty12345!
+
+# внутри файл
+
+
+python3 manage.py runserver 0.0.0.0:8000
+
+
+cd ..
+
+nano docker-compose.yml
+
+
+
+# внутри файл
+
+version: '3.7'
+
+services:
+
+  db:
+    container_name: db
+    image: postgres:latest
+    restart: on-failure
+    networks:
+      - main
+    env_file:
+      - ./web/.env
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    container_name: web
+    restart: on-failure
+    depends_on:
+      - db
+    networks:
+      - main
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./web/.env
+    image: web
+    volumes:
+      - .:/web
+    ports:
+      - 8000:8000
+    command: >
+      sh -c "python manage.py wait_for_db && python manage.py collectstatic --noinput && 
+             python manage.py makemigrations --noinput && python3 manage.py migrate --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+             # gunicorn django_settings.wsgi -bind 0.0.0.0:8000
+volumes:
+  postgres_data:
+networks:
+   main:
+     driver: bridge
+
+# внутри файл
+
+
+
+
+
+nano Dockerfile
+
+
+# внутри файл
+
+FROM python:latest
+
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+
+RUN apt-get update && apt-get install -y build-essential && apt-get install -y libpq-dev && apt-get install -y gettext \
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir /web_build
+COPY ./web /web_build
+
+COPY ./web/requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
+
+WORKDIR /web_build
+
+# внутри файл
+
+
+nano start
+
+
+# внутри файл
+#!/bin/bash
+
+# sudo apt-get install docker-compose -y && sudo apt autoremove -y
+# docker-compose run web sh -c "django-admin startproject django_settings app"
+# sudo docker-compose build
+sudo docker-compose up --build
+# sudo docker-compose up -d --build
+# sudo docker compose down
+
+# внутри файл
+
+
+source start
+
+
+
+http://0.0.0.0:8000/
+
+
+# настройки редис для докера на node.js
+# https://geshan.com.np/blog/2022/01/redis-docker/
+
+
+
