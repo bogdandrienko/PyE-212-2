@@ -1,0 +1,59 @@
+# Несколько операций, связанных между собой, должны выполнятся в рамках транзакции,
+# т.к. даже успешное выполнение первых, но отказ последующих должно вызывать откат изменений:
+# перевод средств другому человеку.
+
+
+
+# psql
+BEGIN TRANSACTION;
+
+DO $$
+BEGIN
+
+	INSERT INTO accounts (name,balance) VALUES('Alice', 10000);
+	COMMIT TRANSACTION;
+
+exception 
+
+	ROLLBACK TRANSACTION;
+	
+END;
+$$ language plpgsql;
+# psql
+
+
+
+# По умолчанию Django работает в режиме автоматической фиксации. 
+# Каждый запрос немедленно фиксируется в базе данных, если транзакция не активна.
+# Django использует транзакции или точки сохранения автоматически, чтобы гарантировать 
+# целостность операций ORM, которые требуют нескольких запросов, особенно delete() и 
+# :ref:`update() <topics-db-queries-update>`запросы.
+
+# views.py
+from django.db import transaction
+
+@transaction.non_atomic_requests
+def create_users(request):
+    pass
+
+@transaction.atomic
+def create_users(request):
+    pass
+
+# Django откажется от фиксации или отката, когда активен блок atomic(), потому что это нарушит атомарность.
+
+def create_users(request):
+	try:
+		User.objects.create(username="Alice")
+	except Exception as error:
+		print(error)
+		transaction.savepoint_rollback()
+	else:
+		transaction.savepoint_commit()
+	finally:
+		pass
+
+# views.py
+
+
+

@@ -1,0 +1,87 @@
+# Единственный кэш, используемый по умолчанию и сохраняющий данные в оперативной памяти.
+ 
+# settings.py
+CACHES  {
+	'default': {
+		'BACKEND': 'django.core.cache.backend.locmem.LocMemCache',
+	}
+}
+# settings.py
+
+#######################################################################################################
+
+# Кэш, сохраняющий данные в базе данных по умолчанию и дополнительно в оперативной памяти
+
+# settings.py 
+CACHES  {
+	'default': {
+		'BACKEND': 'django.core.cache.backend.db.DatabaseCache',
+		'LOCATION': 'chache_table',
+		'TIMEOUT': '120',
+		'OPTIONS': {
+			'MAX_ENTIES': 200,
+		}
+	},
+	'special': {
+		'BACKEND': 'django.core.cache.backend.locmem.LocMemCache',
+		'LOCATION': 'chache_mem_table',
+	}
+}
+# settings.py 
+
+python manage.py createchachetable
+
+#######################################################################################################
+
+# Библиотека redis для внешнего кэширования
+
+pip install django-redis
+
+# settings.py
+CACHES  {
+	'default': {
+		'BACKEND': 'django_redis.cache.RedisCache',
+		'LOCATION': 'rediss://12345qwertY!@127.0.0.1:3697/0',
+		'TIMEOUT': '120',
+		'OPTIONS': {
+			'MAX_ENTIES': 200,
+			'PASSWORD': '12345qwertY!',
+		}
+	},
+
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backend.cache'
+SESSION_CACHE_ALIAS = 'session_storage'
+# settings.py
+
+#######################################################################################################
+
+
+from django.vies.decorators.cache import chache_page
+default_cache = caches['default']
+special_cache = caches['special']
+
+# кэширование всего контроллера во views
+@chache_page(60*5)
+def home(request):
+	pass
+	
+
+# кэширование всего контроллера и класса в urls
+urlpatterns = [
+	path('home/', cache_page(30*5)(home),
+	path('index/', cache_page(30*5)(IndexViewClass.as_view())),
+]
+
+# кэширование отдельных данных
+default_cache.set('users', User.objects.all(), timeout=120)
+print(default_cache.get('users'))
+
+# кэширование всего сайта
+MIDDLEWARE = [
+	'django.middleware.chache.UpdateCacheMiddleware',
+	'django.contrib.sessions.middleware.SessionsMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.chache.FetchFromCacheMiddleware',
+]
