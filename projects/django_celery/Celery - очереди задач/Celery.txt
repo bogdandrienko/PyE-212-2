@@ -1,0 +1,112 @@
+# тезис
+Для улучшения пользовательского опыта, продолжительные процессы должны 
+выполняться в фоновом режиме вне обычного потока HTTP-запросов/ответов.
+Например:
+
+Отправка писем для подтверждения;
+Веб-скейпинг и краулинг;
+Анализ данных;
+Обработка изображений;
+Генерация отчетов.
+
+При создании приложения, старайтесь отделять задачи, которые должны выполняться в 
+течение жизненного цикла запроса/ответа, например CRUD-операции, от задач, которые 
+должны выполняться в фоновом режиме.
+
+
+
+# установка библиотеки
+
+pip install celery
+
+
+
+# настройка библиотеки
+
+# django_settings/celery.py
+import os
+from celery import Celery
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_settings.settings')
+app = Celery('django_settings')
+app.config_from_object('django.conf:settings', namespace='CELERY')
+app.autodiscover_tasks()
+
+
+@app.task(bind=True)
+def debug_task(self):
+    print(f'Request: {self.request!r}')
+# django_settings/celery.py
+
+
+
+# настройка инициализации
+
+# django_settings/__init__.py:
+from .celery import app as celery_app
+
+__all__ = ('celery_app',)
+# django_settings/__init__.py:
+
+
+
+# настройка библиотеки
+
+# django_settings/settings.py
+CELERY_TIMEZONE = "Asia/Almaty"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+# django_settings/settings.py
+
+
+
+# реализация задач
+
+# django_app/tasks.py
+from celery import shared_task
+from django_app.models import Receipt
+
+
+@shared_task
+def add(x, y):
+    return x + y
+
+
+@shared_task
+def mul(x, y):
+    return x * y
+
+
+@shared_task
+def xsum(numbers):
+    return sum(numbers)
+
+
+@shared_task
+def count_receipts():
+    return Receipt.objects.count()
+
+
+@shared_task
+def rename_widget(id, name):
+    w = Receipt.objects.get(id=id)
+    w.name = name
+    w.save()
+# django_app/tasks.py
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

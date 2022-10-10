@@ -1,0 +1,122 @@
+# https://realpython.com/asynchronous-tasks-with-django-and-celery/
+
+# shell
+sudo apt update -y
+sudo apt install -y redis
+redis-server
+redis-cli
+ping # PONG
+exit
+# shell
+
+
+
+source env/bin/activate
+pip install celery redis django
+pip freeze > requirements.txt
+
+
+
+
+# django_setting/celery.py
+import os
+from celery import Celery
+
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_settings.settings")
+app = Celery("django_settings")
+app.config_from_object("django.conf:settings", namespace="CELERY")
+app.autodiscover_tasks()
+# django_setting/celery.py
+
+
+
+# django_setting/__init__.py
+from .celery import app as celery_app
+
+__all__ = ("celery_app",)
+# django_setting/__init__.py
+
+
+
+# django_setting/settings.py
+CELERY_APP_TIMEZONE = 'Asia/Almaty'
+CELERY_APP_TASK_TRACK_STARTED = True
+CELERY_APP_TASK_TIME_LIMIT = 1800
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+# CELERY_BROKER_URL = "amqp://myuser:mypassword@localhost:5672/myvhost"
+# CELERY_RESULT_BACKEND = "redis://localhost:6379"
+# django_setting/settings.py
+
+
+# sh (env)
+python -m celery -A django_settings worker -l info
+# sh (env)
+
+
+
+# django_app/celery.py
+# parsing(get data from another web-sites), analyze, reports, image refactor, send mass mail
+
+@shared_task
+def add(x, y):
+    return x + y
+
+
+@shared_task
+def count_users():
+    time.sleep(3.0)
+    return User.objects.count()
+
+
+@shared_task
+def send_mass_email(recipients: list, message: dict, skip_error=True):
+    results = []
+    for recipient in recipients:
+        success = False
+        error = ""
+        try:
+            # send_mail(recipient, message)
+            pass
+        except Exception as error:
+            print(error)
+            error = error
+            if skip_error is False:
+                break
+        else:
+            success = True
+        finally:
+            results.append((success, error))
+    # return results  # [(True, ""), (False, "timeout error")]
+    return [(True, ""), (False, "timeout error")]
+# django_app/celery.py
+
+
+# django_app/view.py
+from django_app import celery as current_celery
+from celery.result import AsyncResult
+from django_settings.celery import app as celery_app
+
+task_id = current_celery.send_mass_email.apply_async([1, 2, 3], {}, skip_error=True, countdown=20)  #
+old_task_id = "33779111-0f42-4a96-bdec-d5643e57a018"
+
+result = AsyncResult(old_task_id, app=celery_app)
+# print()
+
+if result.state != "PENDING":
+result = f"status: {result.state} | result: {result.get()}"
+else:
+result = f"status: {result.state} | result: {None}"
+print(result)
+
+
+# django_app/view.py
+
+
+
+# https://sqa-consulting.com/asynchronous-tasks-in-python-with-celery-rabbitmq-redis/  !!! docker + celery
+# https://hub.docker.com/r/eeacms/celery !!! docker + celery
+
+
