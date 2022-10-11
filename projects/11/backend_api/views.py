@@ -35,7 +35,83 @@ def index(request):
 
 @api_view(http_method_names=["GET"])
 @permission_classes([AllowAny])  # @permission_classes([IsAuthenticated])
+def get_all_users(request: HttpRequest) -> Response:
+    users = User.objects.all()  # QuerySet - ORM  # dict != JSON --
+
+    # создаю массив словарей
+    users_serialized = []  # List (Array) - dictionaries (json user object)
+    for user in users:
+        # создаю пустой временный словарь
+        user_dict = {}
+
+        # наполняю временный словарь
+        user_dict["username"] = str(user.username)
+        user_dict["email"] = str(user.email)
+        user_dict["password"] = str(user.password)
+        user_dict["is_staff"] = bool(user.is_staff)
+
+        # добавляю временный словарь в массив словарей
+        users_serialized.append(user_dict)
+
+    import requests
+    response = requests.get(url='https://jsonplaceholder.typicode.com/todos')
+
+    print("response.content: ", response.content[:5], type(response.content))
+    print("response.json(): ", response.json()[:5], type(response.json()))
+
+    # str -> dict
+
+    import json
+
+    str1 = response.content
+    print("str1: ", str1[:5], type(str1))
+    dict1 = json.loads(str1)
+    print("dict1: ", dict1[:5], type(dict1))
+
+    json1 = json.dumps({"name": "Bogdan"})
+    print("json.dumps(): ", json1[:5], type(json1))
+
+    # ЧТЕНИЕ И ЗАПИСЬ В ФАЙЛОВЫЕ ТИПЫ ДАННЫХ
+    # with open('new.json', 'r') as file:
+    #     res_json = json.load(fp=file)  # {"name": True} | [{"name": True}, {"name": True}]
+    #     json.dump({"name": "Bogdan"}, fp=file)
+
+    import aiohttp
+    import asyncio
+
+    async def get_data():
+        async with aiohttp.ClientSession() as session:
+            # get post put delete
+            async with session.get(url='https://jsonplaceholder.typicode.com/todos') as response_obj:
+                async_data = await response_obj.json()
+                print("async_data: ", async_data[:5], type(async_data))
+
+    asyncio.run(get_data())
+
+    res_bytes = b'\x01\x06'
+    print("res_bytes: ", res_bytes, type(res_bytes))
+    res_str = res_bytes.decode(encoding='utf8')
+    print("res_str: ", res_str, type(res_str))
+    res_bytes = res_str.encode(encoding='utf8')
+    print("res_bytes: ", res_bytes, type(res_bytes))
+
+    from rest_framework import serializers
+    class UserCustomSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = '__all__'  # ['room_number', 'date']
+
+    users_new = UserCustomSerializer(instance=users, many=True).data
+
+    # return JsonResponse(data={"users": users_new}, safe=False)  # dict == JSON ++ -> JsonResponse
+    return Response(data={"users": users_new})
+
+
+@api_view(http_method_names=["GET"])
+@permission_classes([AllowAny])  # @permission_classes([IsAuthenticated])
 def receipt(request: HttpRequest) -> Response:
+    # user = request.user  # <User: admin> : object | None
+
     # books = models.ModelBook.objects.all()
     # получить все -- TODO select * from ...
 
