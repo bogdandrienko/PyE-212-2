@@ -1,0 +1,39 @@
+{% extends 'components/base.html' %}
+{% load static %}
+{% load extras %}
+
+
+{% block main %}
+
+
+
+<div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+    <h1 class="display-5 fw-bold">Centered hero</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Primary button</button>
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>
+      </div>
+    </div>
+</div>
+
+<section class="m-0 p-0">
+    {{'HOME'|lower_text}}
+    {{ user_count }}
+    <ul class="row m-0 p-0">
+        {% for todo in todos %}
+            {% if todo.id <= 10 %}
+                <li class="col-4 m-0 p-0 border border-success border-2">{{todo.id}}
+                    <p>{{todo.title|upper}}</p>
+                    {% truncate_float todo.value 3 %}
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</section>
+
+
+{% endblock main %}
+
