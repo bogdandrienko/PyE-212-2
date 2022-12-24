@@ -1,0 +1,12 @@
+.inactive {
+    background-color: rgb(234, 230, 230);
+    cursor: pointer; 
+}  
+
+.active {
+    background-color: #4CAF50;
+    cursor: pointer; 
+    /* border: 1px solid red; */
+    
+   
+}

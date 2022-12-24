@@ -1,0 +1,135 @@
+.wrapper{    
+    display: flex;
+    /* flex-wrap: wrap;
+    
+  
+    width: 100%; */
+
+   
+    
+}
+
+.menu{
+    /* width: 10%; */
+
+   flex: 1;
+ 
+}
+
+.mainBlock{
+    border: 1px solid rgb(43, 20, 20);
+    flex: 10;
+    /* width: 90%; */
+  
+}
+
+.mainExchange{
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.haveExchange{
+    width: 40%;
+    display: flex;
+    flex-direction: column  ;
+    
+    justify-content: space-around;
+}
+.columndir{
+    display: flex;
+    justify-content: space-around;
+    border: 1px solid black;
+}
+
+
+
+
+.inputMoney{
+    margin-top: 20px;
+    height: 100px;
+    border: 1px solid rgb(106, 106, 106);
+    font-size: 2em;
+}
+
+
+
+
+.pageNumber{
+    /* padding: 2px;
+    border: 1px solid grey;
+    color: black;*/
+    cursor: pointer; 
+
+    color: black;
+  
+  
+}
+.pageNumber.selectedPage{
+    /* font-weight: bold;
+    border-color: black;
+    color: red; */
+
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    
+}
+
+.pageNumber :hover:not(.selectedPage) {
+    background-color: rgb(193, 204, 195);
+    border-radius: 5px;
+  }
+
+
+
+.inactive {
+    background-color: grey;
+    cursor: pointer; 
+}  
+
+.active {
+    background-color: #4CAF50;
+    cursor: pointer; 
+}
+
+h3{
+    margin-top: 20px;
+    margin-left: 40%;
+}
+
+.btnclass{
+    padding: 8px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    margin-top: 20px;
+    margin-left: 46%;
+}
+
+/* 
+.mainBlock h1{
+    text-align: center;
+  
+}
+
+.mainExchange{
+    border: 1px solid red;
+    width: 80%;
+    margin: auto;
+}
+
+.currency{
+    width: 10%;
+    display: flex;
+    flex-direction: row;
+    border: 2px solid green;
+}
+
+.haveExchange{
+    width: 48%;
+    display: flex;
+    border: 1px solid red;
+} */

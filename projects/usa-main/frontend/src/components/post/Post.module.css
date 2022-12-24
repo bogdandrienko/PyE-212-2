@@ -1,0 +1,61 @@
+.wrapper{    
+    display: flex;     
+}
+
+.menu{   
+}
+
+.mainBlock{ 
+ width: 100%;
+ 
+}
+    
+
+.mainBlock h1{
+    margin-bottom: 2%;
+    
+    
+  
+}
+.videoBlockMain{
+    margin-top: 2%;
+    
+    display: flex;
+
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+.contentBlock{
+    text-align: center;
+    width: 85%;
+    
+}
+.contentBlock img{
+    
+    width: 100%;
+    
+}
+.contentBlock p{
+    margin-top: 4%;
+    text-align: left;
+}
+
+/* .videoBlock{
+    border: 1px solid red;
+    width: 30%;
+    border: 1px solid rgb(168, 161, 161);
+    border-radius: 15px;
+    margin-bottom: 20px;
+  
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    
+}
+.videoBlock img{
+    width: 100%;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;    
+}
+.videoBlock p{
+    padding: 15px;
+} */
+

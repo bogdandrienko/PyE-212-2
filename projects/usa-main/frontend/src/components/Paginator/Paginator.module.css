@@ -1,0 +1,28 @@
+.paginator{
+    margin: 10px;
+}
+.pageNumber{
+    /* padding: 2px;
+    border: 1px solid grey;
+    color: black;*/
+    cursor: pointer; 
+
+    color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+.pageNumber.selectedPage{
+    /* font-weight: bold;
+    border-color: black;
+    color: red; */
+
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+}
+
+.paginator :hover:not(.selectedPage) {
+    background-color: rgb(193, 204, 195);
+    border-radius: 5px;
+  }

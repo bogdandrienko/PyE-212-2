@@ -1,0 +1,77 @@
+.wrapper{    
+    display: flex;   
+}
+
+.menu{   
+   
+}
+
+.mainBlock{
+  
+    background-color: rgb(243, 243, 243);
+}
+
+
+
+
+
+
+.profileblock{
+
+    display: flex;
+
+   
+    margin: 100px;
+    background-color: white;
+    border-radius: 30px;
+
+}
+
+.profileImage{
+    width: 35%;
+    text-align: center;
+    
+    
+}
+
+.profileImage img{
+    box-sizing: content-box;
+   width: 80%;
+   clip-path: circle(); 
+}
+.profileForm{
+    width: 65%;
+  
+    display: flex;
+    justify-content: center;    
+}
+
+.profileForm form{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 50%;    
+}
+
+.profileForm form input{
+    margin-bottom: 30px;
+    padding: 10px 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: rgb(225, 225, 225);
+    outline: none;
+  
+}
+
+
+.btn{
+    width: 50%;
+    padding: 15px 10px;
+    background-color: #006dff;
+    border-radius: 50px;
+    border: none;
+    color: white;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}

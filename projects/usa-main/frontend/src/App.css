@@ -1,0 +1,19 @@
+
+.app-wrapper{
+  margin: 0 auto;
+  width: 100%;
+  /* border: 1px solid gray; */
+}
+
+
+@media screen and (max-width: 600px){
+
+  .app-wrapper{
+    
+    
+    width: 100%;
+    border: 3px solid blue;
+  }
+
+
+}

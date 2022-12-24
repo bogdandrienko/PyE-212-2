@@ -1,0 +1,63 @@
+.wrapper{    
+    display: flex;     
+}
+
+.menu{   
+}
+
+.mainBlock{ 
+ width: 100%;
+ 
+}
+    
+
+.mainBlock h1{
+    
+    
+    
+  
+}
+.videoBlockMain{
+    margin-top: 2%;
+   
+    display: flex;
+
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.videoBlock{
+    width: 30%;
+    border: 1px solid rgb(168, 161, 161);
+    border-radius: 15px;
+    margin-bottom: 20px;
+  
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    
+}
+.videoBlock img{
+    width: 100%;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;    
+}
+.videoBlock p{
+    padding: 15px;
+}
+
+.topListCategory{
+
+    /* border: 10px solid red; */
+}
+
+.topListCategory ul{
+
+    display: flex;
+    
+}
+
+.topListCategory ul li{
+  
+    margin-right: 15px;
+    list-style-type:none;
+    cursor: pointer;
+}

@@ -1,0 +1,56 @@
+.wrapper{    
+    display: flex;
+   
+    
+}
+
+.menu{
+
+}
+
+.mainBlock{ 
+    width: 100%;
+}
+
+.mainBlock h3{
+    text-align: center;
+  
+}
+
+
+.usersBlock{    
+    border: 1px solid rgb(177, 174, 174);
+    width: 30%;   
+  
+  
+    border-radius: 10px;
+    
+}
+
+.userImgBlock{
+   
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.userTextBlock{
+ 
+    
+    text-align: center;
+}
+
+.usersBlock img{    
+   
+    width: 100%;
+    box-sizing: content-box;
+    
+    clip-path: circle(); 
+
+}
+
+
+
+
