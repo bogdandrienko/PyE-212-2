@@ -1,17 +1,22 @@
 # Environments
-
 .env
 .venv
-
 env/
 venv/
-
 ENV/
-VENV/
-
 env.bak/
 venv.bak/
 
-/node_modules
+node_modules/
+__pycache__/
+*__pycache__/
+*.pyc
+*.pyc
 
-.node_env
+idea
+idea\
+idea/
+.idea
+.idea\
+.idea/
+**/.idea/
